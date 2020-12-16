@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in constraints
 
 /**
  * @ApiResource()
@@ -23,45 +24,54 @@ class Property
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank
      */
     private $title;
 
     /**
+     * @Assert\NotBlank
      * @ORM\Column(type="string", length=255)
      */
     private $description;
 
     /**
+     * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
      */
     private $surface;
 
     /**
+     * @Assert\Positive(message="this value must be positive")     * @Assert\Positive
      * @ORM\Column(type="integer")
      */
     private $nbr_room;
 
     /**
+     * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="float")
      */
     private $rate;
 
     /**
+    * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
      */
     private $max_travelers;
 
-      /**
+    /**
+     * @Assert\NotNull
      * @ORM\Column(type="boolean")
      */
     private $access_handicap;
-
+    
     /**
+     * @Assert\NotNull
      * @ORM\Column(type="string", length=50)
      */
     private $water;
-
+    
     /**
+     * @Assert\NotNull
      * @ORM\Column(type="boolean")
      */
     private $electricity;
@@ -73,10 +83,11 @@ class Property
     private $typeProperty;
 
     /**
+     * @Assert\Positive(message="this value should be positive")
      * @ORM\Column(type="float")
      */
     private $tax;
-
+    
     /**
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="property", orphanRemoval=true)
      */
@@ -121,6 +132,10 @@ class Property
     private $activities;
 
     /**
+     * @Assert\Type(
+     *      type="array",
+     *      message="This value must be an array"
+     * )
      * @ORM\Column(type="array")
      */
     private $status = [];
