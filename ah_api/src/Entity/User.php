@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Entity;
-
 use ApiPlatform\Core\Annotation\ApiResource;
+
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
-* @ApiResource()
+ * @ApiResource()
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
 class User implements UserInterface
@@ -23,6 +23,11 @@ class User implements UserInterface
     private $id;
 
     /**
+     * @ORM\Column(type="string", length=180, unique=true)
+     */
+    private $email;
+
+    /**
      * @ORM\Column(type="json")
      */
     private $roles = [];
@@ -31,44 +36,31 @@ class User implements UserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
-
-     private $email;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-
     private $password;
 
     /**
-     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="user_id", orphanRemoval=true)
-     */
-    private $property;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $reservation;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="reservation", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="user")
      */
     private $reservations;
 
     public function __construct()
     {
-        $this->property = new ArrayCollection();
         $this->reservations = new ArrayCollection();
     }
 
-    public function getId(): ?string
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(string $id): self
+    public function getEmail(): ?string
     {
-        $this->id = $id;
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
 
         return $this;
     }
@@ -80,7 +72,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->id;
+        return (string) $this->email;
     }
 
     /**
@@ -98,21 +90,6 @@ class User implements UserInterface
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-
-        return $this;
-    }
-
-    /**
-     * @see UserInterface
-     */
-        public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
 
         return $this;
     }
@@ -150,48 +127,6 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Property[]
-     */
-    public function getProperty(): Collection
-    {
-        return $this->property;
-    }
-
-    public function addProperty(Property $property): self
-    {
-        if (!$this->property->contains($property)) {
-            $this->property[] = $property;
-            $property->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProperty(Property $property): self
-    {
-        if ($this->property->removeElement($property)) {
-            // set the owning side to null (unless already changed)
-            if ($property->getUserId() === $this) {
-                $property->setUserId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getReservation(): ?int
-    {
-        return $this->reservation;
-    }
-
-    public function setReservation(int $reservation): self
-    {
-        $this->reservation = $reservation;
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Reservation[]
      */
     public function getReservations(): Collection
@@ -203,7 +138,7 @@ class User implements UserInterface
     {
         if (!$this->reservations->contains($reservation)) {
             $this->reservations[] = $reservation;
-            $reservation->setReservation($this);
+            $reservation->setUser($this);
         }
 
         return $this;
@@ -213,8 +148,8 @@ class User implements UserInterface
     {
         if ($this->reservations->removeElement($reservation)) {
             // set the owning side to null (unless already changed)
-            if ($reservation->getReservation() === $this) {
-                $reservation->setReservation(null);
+            if ($reservation->getUser() === $this) {
+                $reservation->setUser(null);
             }
         }
 

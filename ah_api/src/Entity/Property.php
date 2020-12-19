@@ -81,13 +81,7 @@ class Property
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="property", orphanRemoval=true)
      */
     private $reservations;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="properties")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
-
+    
     /**
      * @ORM\ManyToOne(targetEntity=Equipment::class, inversedBy="properties")
      */
@@ -124,12 +118,6 @@ class Property
      * @ORM\Column(type="array")
      */
     private $status = [];
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="property")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user_id;
 
     public function __construct()
     {
@@ -305,19 +293,6 @@ class Property
 
         return $this;
     }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
     public function getEquipment(): ?Equipment
     {
         return $this->equipment;
@@ -361,6 +336,7 @@ class Property
     }
 
     /**
+     * 
      * @return Collection|Indisponibility[]
      */
     public function getIndisponibilities(): Collection
@@ -452,18 +428,6 @@ class Property
     public function setStatus(array $status): self
     {
         $this->status = $status;
-
-        return $this;
-    }
-
-    public function getUserId(): ?User
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(?User $user_id): self
-    {
-        $this->user_id = $user_id;
 
         return $this;
     }

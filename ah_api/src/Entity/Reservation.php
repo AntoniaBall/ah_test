@@ -42,12 +42,6 @@ class Reservation
     private $number_traveler;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reservations")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="reservations")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -75,9 +69,8 @@ class Reservation
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reservations")
-     * @ORM\JoinColumn(nullable=false)
      */
-    private $reservation;
+    private $user;
 
     public function __construct()
     {
@@ -133,18 +126,6 @@ class Reservation
     public function setNumberTraveler(int $number_traveler): self
     {
         $this->number_traveler = $number_traveler;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
 
         return $this;
     }
@@ -226,15 +207,14 @@ class Reservation
 
         return $this;
     }
-
-    public function getReservation(): ?User
+    public function getUser(): ?User
     {
-        return $this->reservation;
+        return $this->user;
     }
 
-    public function setReservation(?User $reservation): self
+    public function setUser(?User $user): self
     {
-        $this->reservation = $reservation;
+        $this->user = $user;
 
         return $this;
     }
