@@ -5,9 +5,12 @@ namespace App\Entity;
 use App\Repository\AddressRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"adress:read"}},
+ *     denormalizationContext={"groups"={"adress:write"}})
  * @ORM\Entity(repositoryClass=AddressRepository::class)
  */
 class Address
@@ -16,36 +19,74 @@ class Address
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
+     * 
+     * @Assert\Positive
+     * @Groups({"adress:read", "adress:write"})
      */
     private $number;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * @Groups({"adress:read", "adress:write"})
+     * 
      */
     private $street;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank
+     * @Assert\NotNull
+     * @Assert\Positive
+     * @Assert\Length(
+     * min = 5,
+     * max = 5,
+     * exactMessage = "Votre code postal doit être composé de {{limit}} caractères."
+     * 
+     * )
+     * @Groups({"adress:read", "adress:write"})
      */
     private $postal_code;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * @Assert\Length(
+     * min = 5,
+     * max = 150,
+     * minMessage = "La ville doit être supérieure à {{ limit }} caractères",
+     * maxMessage = "La ville doit être inférieure à {{ limit }} caractères"
+     * )
+     * @Groups({"adress:read", "adress:write"})
      */
     private $town;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank
+     * @Assert\Length(
+     * max = 80,
+     * maxMessage = "La longueur du champ doit être inférieure à {{ limit }} caractères"
+     * )
+     * @Groups({"adress:read", "adress:write"})
      */
     private $region;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * @Assert\Length(
+     * max = 80,
+     * maxMessage = "La longueur du champ doit être inférieure à {{ limit }} caractères"
+     * )
+     * @Assert\Country
+     * @Groups({"adress:read", "adress:write"})
      */
     private $country;
 

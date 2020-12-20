@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource()
@@ -23,21 +24,28 @@ class Reservation
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank
+     * @Assert\Date
+     * @var string A "Y-m-d" formatted value
      */
     private $date_debut;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank
      */
     private $date_end;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank
+     * @Assert\Date
      */
     private $montant;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank
      */
     private $number_traveler;
 
@@ -50,6 +58,7 @@ class Reservation
     /**
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="reservations")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank
      */
     private $property;
 

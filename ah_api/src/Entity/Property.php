@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource()
@@ -23,46 +24,75 @@ class Property
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank
+     * @Assert\Length(
+     * max = 100,
+     * maxMessage = "La longueur du titre doit être inférieure à {{ limit }} caractères"
+     * )
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * @Assert\Length(
+     * max = 500,
+     * maxMessage = "La longueur de la description doit être inférieure à {{ limit }} caractères"
+     * )
      */
     private $description;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank
+     * @Assert\Positive
+     * @Assert\NotNull
+     * @Assert\LessThan(300)
      */
     private $surface;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank
+     * @Assert\Positive
+     * @Assert\NotNull
+     * @Assert\LessThan(20)
      */
     private $nbr_room;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank
+     * @Assert\Positive
+     * @Assert\NotNull
+     * 
      */
     private $rate;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank
+     * @Assert\Positive
+     * @Assert\NotNull
+     * @Assert\LessThan(25)
      */
     private $max_travelers;
 
       /**
      * @ORM\Column(type="boolean")
+     * @Assert\NotBlank
      */
     private $access_handicap;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank
      */
     private $water;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Assert\NotBlank
      */
     private $electricity;
 
@@ -74,6 +104,7 @@ class Property
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank
      */
     private $tax;
 

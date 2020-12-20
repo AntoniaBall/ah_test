@@ -7,9 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"user:read"}},
+ *     denormalizationContext={"groups"={"user:write"}})
+ * 
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
 class User
@@ -18,46 +23,67 @@ class User
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
+     * @Groups("user:read")
+     * 
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * 
+     * @Groups({"user:read", "user:write"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * 
+     * @Groups({"user:read", "user:write"})
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * 
+     * @Groups({"user:read", "user:write"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email(
+     * message = "The email'{{ value }}' is not a valid email.")
+     * 
+     * @Groups({"user:read", "user:write"})
      */
     private $password;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * 
+     * @Groups({"user:read", "user:write"})
      */
     private $phone;
 
     /**
      * @ORM\Column(type="string", length=20)
+     * 
+     * @Groups("user:read")
      */
     private $role;
 
     /**
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="user", orphanRemoval=true)
+     * 
+     * @Groups("user:read")
      */
     private $reservations;
 
     /**
      * @ORM\OneToMany(targetEntity=Property::class, mappedBy="user", orphanRemoval=true)
+     * 
+     * @Groups("user:read")
      */
     private $properties;
 
