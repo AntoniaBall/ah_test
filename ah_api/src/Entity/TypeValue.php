@@ -7,9 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"typevalue:read"}},
+ *     denormalizationContext={"groups"={"typevalue:write"}})
  * @ORM\Entity(repositoryClass=TypeValueRepository::class)
  */
 class TypeValue
@@ -23,10 +25,12 @@ class TypeValue
 
     /**
      * @ORM\Column(type="string", length=7)
+     * @Groups({"typevalue:read", "typevalue:write"})
      */
     private $name;
 
     /**
+     * @Groups("user:read")
      * @ORM\OneToMany(targetEntity=Propriete::class, mappedBy="typeValue")
      */
     private $Propriete;

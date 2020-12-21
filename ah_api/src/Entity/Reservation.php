@@ -8,9 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"reservation:read"}},
+ *     denormalizationContext={"groups"={"reservation:write"}})
  * @ORM\Entity(repositoryClass=ReservationRepository::class)
  */
 class Reservation
@@ -27,12 +29,14 @@ class Reservation
      * @Assert\NotBlank
      * @Assert\Date
      * @var string A "Y-m-d" formatted value
+     * @Groups({"reservation:read", "reservation:write"})
      */
     private $date_debut;
 
     /**
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank
+     * @Groups({"reservation:read", "reservation:write"})
      */
     private $date_end;
 
@@ -40,18 +44,21 @@ class Reservation
      * @ORM\Column(type="float")
      * @Assert\NotBlank
      * @Assert\Date
+     * @Groups({"reservation:read", "reservation:write"})
      */
     private $montant;
 
     /**
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
+     * @Groups({"reservation:read", "reservation:write"})
      */
     private $number_traveler;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reservations")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("reservation:read")
      */
     private $user;
 
@@ -59,27 +66,32 @@ class Reservation
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="reservations")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank
+     * @Groups("reservation:read")
      */
     private $property;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"reservation:read", "reservation:write"})
      */
     private $paid;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"reservation:read", "reservation:write"})
      */
     private $proprietes = [];
 
     /**
      * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="reservation")
+     * @Groups("reservation:read")
      */
     private $comments;
 
     /**
      * @ORM\Column(type="json")
-     */
+     * @Groups({"reservation:read", "reservation:write"})
+    */
     private $historical = [];
 
     public function __construct()

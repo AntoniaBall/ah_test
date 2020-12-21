@@ -8,9 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"comments:read"}},
+ *     denormalizationContext={"groups"={"comments:write"}})
  * @ORM\Entity(repositoryClass=CommentsRepository::class)
  */
 class Comments
@@ -23,32 +25,42 @@ class Comments
     private $id;
 
     /**
+     * 
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank
      * @Assert\Length(
      * max = 250,
      * maxMessage = "La longueur du commentaire doit être inférieure à {{ limit }} caractères"
      * )
+     * @Groups({"comments:read", "comments:write"})
      */
     private $comment_content;
 
     /**
+     * 
      * @ORM\OneToMany(targetEntity=Pictures::class, mappedBy="comments")
+     * @Groups("comments:read")
      */
     private $pictures;
 
     /**
+     * 
      * @ORM\Column(type="array")
+     * @Groups({"comments:read", "comments:write"})
      */
     private $forbidden_words = [];
 
     /**
+     * 
      * @ORM\ManyToOne(targetEntity=Activities::class, inversedBy="comments")
+     * @Groups("comments:read")
      */
     private $activities;
 
     /**
+     * 
      * @ORM\ManyToOne(targetEntity=Reservation::class, inversedBy="comments")
+     * @Groups("comments:read")
      */
     private $reservation;
 

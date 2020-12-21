@@ -7,9 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"valeur:read"}},
+ *     denormalizationContext={"groups"={"valeur:write"}})
  * @ORM\Entity(repositoryClass=ValeurRepository::class)
  */
 class Valeur
@@ -22,11 +24,13 @@ class Valeur
     private $id;
 
     /**
+     * @Groups({"valeur:read", "valeur:write"})
      * @ORM\Column(type="string", length=100)
      */
     private $valeur;
 
     /**
+     * @Groups("user:read")
      * @ORM\OneToOne(targetEntity=Property::class, inversedBy="valeur", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
@@ -34,6 +38,7 @@ class Valeur
 
 
     /**
+     * @Groups("user:read")
      * @ORM\OneToMany(targetEntity=ProprieteTypeProperty::class, mappedBy="valeur")
      */
     private $proprieteTypeProperties;

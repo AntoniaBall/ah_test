@@ -7,9 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"propriete:read"}},
+ *     denormalizationContext={"groups"={"propriete:write"}})
  * @ORM\Entity(repositoryClass=ProprieteRepository::class)
  */
 class Propriete
@@ -22,26 +25,32 @@ class Propriete
     private $id;
 
     /**
+     * @Groups({"propriete:read", "propriete:write"})
      * @ORM\Column(type="string", length=100)
      */
     private $nom;
 
     /**
+     * @Groups({"propriete:read", "propriete:write"})
      * @ORM\Column(type="boolean")
+     * 
      */
     private $is_required;
 
     /**
+     * @Groups({"propriete:read", "propriete:write"})
      * @ORM\Column(type="string", length=20)
      */
     private $type;
 
     /**
+     * @Groups("propriete:read")
      * @ORM\OneToMany(targetEntity=ProprieteTypeProperty::class, mappedBy="propriete")
      */
     private $proprieteTypeProperties;
 
     /**
+     * @Groups("propriete:read")
      * @ORM\ManyToOne(targetEntity=TypeValue::class, inversedBy="Propriete")
      */
     private $typeValue;

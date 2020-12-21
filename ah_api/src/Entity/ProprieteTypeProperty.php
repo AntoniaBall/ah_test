@@ -5,9 +5,11 @@ namespace App\Entity;
 use App\Repository\ProprieteTypePropertyRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"proprietetypeproperty:read"}},
+ *     denormalizationContext={"groups"={"proprietetypeproperty:write"}})
  * @ORM\Entity(repositoryClass=ProprieteTypePropertyRepository::class)
  */
 class ProprieteTypeProperty
@@ -20,16 +22,19 @@ class ProprieteTypeProperty
     private $id;
 
     /**
+     * @Groups("proprietetypeproperty:read")
      * @ORM\ManyToOne(targetEntity=Propriete::class, inversedBy="proprieteTypeProperties")
      */
     private $propriete;
 
     /**
+     * @Groups("proprietetypeproperty:read")
      * @ORM\ManyToOne(targetEntity=TypeProperty::class, inversedBy="proprieteTypeProperties")
      */
     private $type_property;
 
     /**
+     * @Groups("proprietetypeproperty:read")
      * @ORM\ManyToOne(targetEntity=Valeur::class, inversedBy="proprieteTypeProperties")
      */
     private $valeur;

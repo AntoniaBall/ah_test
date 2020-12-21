@@ -6,9 +6,11 @@ use App\Repository\PicturesRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"picture:read"}},
+ *     denormalizationContext={"groups"={"picture:write"}})
  * @ORM\Entity(repositoryClass=PicturesRepository::class)
  */
 class Pictures
@@ -21,32 +23,38 @@ class Pictures
     private $id;
 
     /**
+     * @Groups({"picture:read", "picture:write"})
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      */
     private $url;
 
     /**
+     * @Groups({"picture:read", "picture:write"})
      * @ORM\Column(type="integer")
      */
     private $max_size;
 
     /**
+     * @Groups({"picture:read", "picture:write"})
      * @ORM\Column(type="array")
      */
     private $status;
 
     /**
+     * @Groups("picture:read")
      * @ORM\ManyToOne(targetEntity=Comments::class, inversedBy="pictures")
      */
     private $comments;
 
     /**
+     * @Groups("picture:read")
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="pictures")
      */
     private $property;
 
     /**
+     * @Groups("picture:read")
      * @ORM\ManyToOne(targetEntity=Activities::class, inversedBy="pictures")
      */
     private $activities;

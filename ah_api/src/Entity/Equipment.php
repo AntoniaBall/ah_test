@@ -8,9 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"equipment:read"}},
+ *     denormalizationContext={"groups"={"equipment:write"}})
  * @ORM\Entity(repositoryClass=EquipmentRepository::class)
  */
 class Equipment
@@ -23,36 +25,44 @@ class Equipment
     private $id;
 
     /**
+     * @Groups({"equipment:read", "equipment:write"})
      * @ORM\Column(type="boolean")
+     * 
      */
     private $pool;
 
     /**
+     * @Groups({"equipment:read", "equipment:write"})
      * @ORM\Column(type="boolean")
      */
     private $baignoire;
 
     /**
+     * @Groups({"equipment:read", "equipment:write"})
      * @ORM\Column(type="boolean")
      */
     private $jaccuzzi;
 
     /**
+     * @Groups({"equipment:read", "equipment:write"})
      * @ORM\Column(type="boolean")
      */
     private $climatiseur;
 
     /**
+     * @Groups({"equipment:read", "equipment:write"})
      * @ORM\Column(type="boolean")
      */
     private $chauffage;
 
     /**
+     * @Groups({"equipment:read", "equipment:write"})
      * @ORM\Column(type="boolean")
      */
     private $wifi;
 
     /**
+     * @Groups("equipment:read")
      * @ORM\OneToMany(targetEntity=Property::class, mappedBy="equipment")
      */
     private $properties;

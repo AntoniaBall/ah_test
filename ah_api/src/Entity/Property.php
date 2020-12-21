@@ -8,9 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"property:read"}},
+ *     denormalizationContext={"groups"={"property:write"}})
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
  */
 class Property
@@ -23,6 +25,7 @@ class Property
     private $id;
 
     /**
+     * @Groups({"property:read", "property:write"})
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank
      * @Assert\Length(
@@ -33,6 +36,7 @@ class Property
     private $title;
 
     /**
+     * @Groups({"property:read", "property:write"})
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Assert\Length(
@@ -43,6 +47,7 @@ class Property
     private $description;
 
     /**
+     * @Groups({"property:read", "property:write"})
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
      * @Assert\Positive
@@ -52,6 +57,7 @@ class Property
     private $surface;
 
     /**
+     * @Groups({"property:read", "property:write"})
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
      * @Assert\Positive
@@ -61,6 +67,7 @@ class Property
     private $nbr_room;
 
     /**
+     * @Groups({"property:read", "property:write"})
      * @ORM\Column(type="float")
      * @Assert\NotBlank
      * @Assert\Positive
@@ -70,88 +77,101 @@ class Property
     private $rate;
 
     /**
+     * @Groups({"property:read", "property:write"})
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
      * @Assert\Positive
-     * @Assert\NotNull
-     * @Assert\LessThan(25)
      */
     private $max_travelers;
 
       /**
+       * @Groups({"property:read", "property:write"})
      * @ORM\Column(type="boolean")
      * @Assert\NotBlank
      */
     private $access_handicap;
 
     /**
+     * @Groups({"property:read", "property:write"})
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank
      */
     private $water;
 
     /**
+     * @Groups({"property:read", "property:write"})
      * @ORM\Column(type="boolean")
      * @Assert\NotBlank
      */
     private $electricity;
 
     /**
+     * @Groups({"property:read", "property:write"})
      * @ORM\ManyToOne(targetEntity=TypeProperty::class, inversedBy="properties")
      * @ORM\JoinColumn(nullable=false)
      */
     private $typeProperty;
 
     /**
+     * @Groups({"property:read", "property:write"})
      * @ORM\Column(type="float")
      * @Assert\NotBlank
      */
     private $tax;
 
     /**
+     * @Groups("property:read")
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="property", orphanRemoval=true)
      */
     private $reservations;
 
     /**
+     * @Groups("property:read")
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="properties")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
     /**
+     * @Groups("property:read")
      * @ORM\ManyToOne(targetEntity=Equipment::class, inversedBy="properties")
      */
     private $equipment;
 
     /**
+     * @Groups("property:read")
      * @ORM\OneToOne(targetEntity=Address::class, inversedBy="property", cascade={"persist", "remove"})
      */
     private $address;
 
 
     /**
+     * @Groups("property:read")
      * @ORM\OneToOne(targetEntity=Valeur::class, mappedBy="property", cascade={"persist", "remove"})
      */
     private $valeur;
 
     /**
+     * @Groups("property:read")
      * @ORM\OneToMany(targetEntity=Indisponibility::class, mappedBy="property")
      */
     private $indisponibilities;
 
     /**
+     * @Groups("property:read")
      * @ORM\OneToMany(targetEntity=Pictures::class, mappedBy="property")
      */
     private $pictures;
 
 
     /**
+     * @Groups("property:read")
      * @ORM\ManyToMany(targetEntity=Activities::class, mappedBy="Property")
      */
     private $activities;
 
     /**
+     * @Groups({"property:read", "property:write"})
      * @ORM\Column(type="array")
      */
     private $status = [];

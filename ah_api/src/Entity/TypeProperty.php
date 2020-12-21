@@ -7,9 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 /**
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"typeproperty:read"}},
+ *     denormalizationContext={"groups"={"typeproperty:write"}})
  * @ORM\Entity(repositoryClass=TypePropertyRepository::class)
  */
 class TypeProperty
@@ -22,16 +25,19 @@ class TypeProperty
     private $id;
 
     /**
+     * @Groups({"typeproperty:read", "typeproperty:write"})
      * @ORM\Column(type="string", length=50)
      */
     private $title;
 
     /**
+     * @Groups({"typeproperty:read", "typeproperty:write"})
      * @ORM\Column(type="string", length=255)
      */
     private $description;
 
     /**
+     * @Groups("typeproperty:read")
      * @ORM\OneToMany(targetEntity=Property::class, mappedBy="typeProperty", orphanRemoval=true)
      */
     private $properties;
@@ -39,6 +45,7 @@ class TypeProperty
 
 
     /**
+     * @Groups("typeproperty:read")
      * @ORM\OneToMany(targetEntity=ProprieteTypeProperty::class, mappedBy="type_property")
      */
     private $proprieteTypeProperties;

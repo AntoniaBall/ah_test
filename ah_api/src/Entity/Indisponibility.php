@@ -7,8 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 /**
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"indisponibility:read"}},
+ *     denormalizationContext={"groups"={"indisponibility:write"}})
  * @ORM\Entity(repositoryClass=IndisponibilityRepository::class)
  */
 class Indisponibility
@@ -21,16 +23,19 @@ class Indisponibility
     private $id;
 
     /**
+     * @Groups({"indisponibility:read", "indisponibility:write"})
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $date_start;
 
     /**
+     * @Groups({"indisponibility:read", "indisponibility:write"})
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $date_end;
 
     /**
+     * @Groups("indisponibility:read")
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="indisponibilities")
      */
     private $property;

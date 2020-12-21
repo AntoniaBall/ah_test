@@ -8,9 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"activities:read"}},
+ *   denormalizationContext={"groups"={"activities:write"}})
  * @ORM\Entity(repositoryClass=ActivitiesRepository::class)
  */
 class Activities
@@ -19,23 +21,27 @@ class Activities
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
      */
     private $id;
 
     /**
+     * 
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank
      * @Assert\Length(
      * min = 10,
      * max = 150,
-     * minMessage = "La description de votre activité doit être supérieure à {{ limit }} caractères",
-     * maxMessage = "La description de votre activité doit être inférieure à {{ limit }} caractères"
+     * minMessage = "La longueur de votre activité doit être supérieure à {{ limit }} caractères",
+     * maxMessage = "La longeur de votre activité doit être inférieure à {{ limit }} caractères"
      * 
      * )
+     * @Groups({"activities:read", "activities:write"})
      */
     private $description;
 
     /**
+     * 
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank
      * @Assert\Length(
@@ -43,24 +49,29 @@ class Activities
      * max = 100,
      * minMessage = "Le titre de votre activité doit être supérieure à {{ limit }} caractères",
      * maxMessage = "Le titre de votre activité doit être inférieure à {{ limit }} caractères"
-     * 
      * )
+     * @Groups({"activities:read", "activities:write"})
      */
     private $title;
 
     /**
+     * 
      * @ORM\ManyToMany(targetEntity=Property::class, inversedBy="activities")
-     * @Assert\NotBlank
+     * @Groups("activities:read")
      */
     private $Property;
 
     /**
+     * 
      * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="activities")
+     * @Groups("activities:read")
      */
     private $comments;
 
     /**
+     * 
      * @ORM\OneToMany(targetEntity=Pictures::class, mappedBy="activities")
+     * @Groups("activities:read")
      */
     private $pictures;
 

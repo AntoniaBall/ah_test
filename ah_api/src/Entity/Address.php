@@ -24,7 +24,12 @@ class Address
     private $id;
 
     /**
+     * 
      * @ORM\Column(type="integer")
+     *  @Assert\Type(
+     *     type="integer",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
      * 
      * @Assert\Positive
      * @Groups({"adress:read", "adress:write"})
@@ -32,6 +37,7 @@ class Address
     private $number;
 
     /**
+     * 
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Groups({"adress:read", "adress:write"})
@@ -41,15 +47,14 @@ class Address
 
     /**
      * @ORM\Column(type="integer")
+     *  
      * @Assert\NotBlank
      * @Assert\NotNull
      * @Assert\Positive
      * @Assert\Length(
      * min = 5,
      * max = 5,
-     * exactMessage = "Votre code postal doit être composé de {{limit}} caractères."
-     * 
-     * )
+     * exactMessage = "Votre code postal doit être composé de {{limit}} caractères.")
      * @Groups({"adress:read", "adress:write"})
      */
     private $postal_code;
