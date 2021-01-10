@@ -19,7 +19,6 @@ class PicturesProperty extends Fixture
             $picture->setURL($faker->imageUrl($width=640, $height=300))
                     ->setMaxSize(650)
                     ->setStatus('en modération');
-
             // $repository = $this->getDoctrine()->getRepository(typeProperty::class);
             // $property = $repository->find(1);
             // $picture->setProperty($property);
