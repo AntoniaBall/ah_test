@@ -42,8 +42,6 @@ class TypeProperty
      */
     private $properties;
 
-
-
     /**
      * @Groups("typeproperty:read")
      * @ORM\OneToMany(targetEntity=ProprieteTypeProperty::class, mappedBy="type_property")
@@ -115,6 +113,35 @@ class TypeProperty
 
         return $this;
     }
+    
+    /**
+     * @return Collection|ProprieteTypeProperty[]
+     */
+    public function getProperties(): Collection
+    {
+        return $this->properties;
+    }
 
-   
+    public function addProperty(Property $property): self
+    {
+        if (!$this->properties->contains($property)) {
+            $this->properties[] = $property;
+            $property->setTypeProperty($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProperty(Property $property): self
+    {
+        if ($this->proprieteTypeProperties->removeElement($property)) {
+            // set the owning side to null (unless already changed)
+            if ($property->getTypeProperty() === $this) {
+                $property->setTypeProperty(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

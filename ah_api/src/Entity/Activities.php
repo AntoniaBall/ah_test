@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Entity\Property;
 
 /**
  * @ApiResource(normalizationContext={"groups"={"activities:read"}},
@@ -110,7 +111,7 @@ class Activities
 
         return $this;
     }
-    
+
     /**
      * @return Collection|Property[]
      */

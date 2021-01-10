@@ -7,8 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+<<<<<<< HEAD
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
+=======
+use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in constraints
+>>>>>>> 8363f295c203dc76cb2efca384e669d56abd59d9
 
 /**
  * @ApiResource(normalizationContext={"groups"={"property:read"}},
@@ -28,15 +32,22 @@ class Property
      * @Groups({"property:read", "property:write"})
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank
+<<<<<<< HEAD
      * @Assert\Length(
      * max = 100,
      * maxMessage = "La longueur du titre doit être inférieure à {{ limit }} caractères"
      * )
+=======
+>>>>>>> 8363f295c203dc76cb2efca384e669d56abd59d9
      */
     private $title;
 
     /**
+<<<<<<< HEAD
      * @Groups({"property:read", "property:write"})
+=======
+     * @Assert\NotBlank
+>>>>>>> 8363f295c203dc76cb2efca384e669d56abd59d9
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Assert\Length(
@@ -47,7 +58,11 @@ class Property
     private $description;
 
     /**
+<<<<<<< HEAD
      * @Groups({"property:read", "property:write"})
+=======
+     * @Assert\Positive(message="this value must be positive")
+>>>>>>> 8363f295c203dc76cb2efca384e669d56abd59d9
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
      * @Assert\Positive
@@ -57,7 +72,11 @@ class Property
     private $surface;
 
     /**
+<<<<<<< HEAD
      * @Groups({"property:read", "property:write"})
+=======
+     * @Assert\Positive(message="this value must be positive")     * @Assert\Positive
+>>>>>>> 8363f295c203dc76cb2efca384e669d56abd59d9
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
      * @Assert\Positive
@@ -67,7 +86,11 @@ class Property
     private $nbr_room;
 
     /**
+<<<<<<< HEAD
      * @Groups({"property:read", "property:write"})
+=======
+     * @Assert\Positive(message="this value must be positive")
+>>>>>>> 8363f295c203dc76cb2efca384e669d56abd59d9
      * @ORM\Column(type="float")
      * @Assert\NotBlank
      * @Assert\Positive
@@ -77,29 +100,46 @@ class Property
     private $rate;
 
     /**
+<<<<<<< HEAD
      * @Groups({"property:read", "property:write"})
+=======
+    * @Assert\Positive(message="this value must be positive")
+>>>>>>> 8363f295c203dc76cb2efca384e669d56abd59d9
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
      * @Assert\Positive
      */
     private $max_travelers;
 
+<<<<<<< HEAD
       /**
        * @Groups({"property:read", "property:write"})
+=======
+    /**
+     * @Assert\NotNull
+>>>>>>> 8363f295c203dc76cb2efca384e669d56abd59d9
      * @ORM\Column(type="boolean")
      * @Assert\NotBlank
      */
     private $access_handicap;
-
+    
     /**
+<<<<<<< HEAD
      * @Groups({"property:read", "property:write"})
+=======
+     * @Assert\NotNull
+>>>>>>> 8363f295c203dc76cb2efca384e669d56abd59d9
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank
      */
     private $water;
-
+    
     /**
+<<<<<<< HEAD
      * @Groups({"property:read", "property:write"})
+=======
+     * @Assert\NotNull
+>>>>>>> 8363f295c203dc76cb2efca384e669d56abd59d9
      * @ORM\Column(type="boolean")
      * @Assert\NotBlank
      */
@@ -108,17 +148,21 @@ class Property
     /**
      * @Groups({"property:read", "property:write"})
      * @ORM\ManyToOne(targetEntity=TypeProperty::class, inversedBy="properties")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $typeProperty;
 
     /**
+<<<<<<< HEAD
      * @Groups({"property:read", "property:write"})
+=======
+     * @Assert\Positive(message="this value should be positive")
+>>>>>>> 8363f295c203dc76cb2efca384e669d56abd59d9
      * @ORM\Column(type="float")
      * @Assert\NotBlank
      */
     private $tax;
-
+    
     /**
      * @Groups("property:read")
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="property", orphanRemoval=true)
@@ -128,7 +172,7 @@ class Property
     /**
      * @Groups("property:read")
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="properties")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $user;
 
@@ -163,7 +207,6 @@ class Property
      */
     private $pictures;
 
-
     /**
      * @Groups("property:read")
      * @ORM\ManyToMany(targetEntity=Activities::class, mappedBy="Property")
@@ -171,7 +214,14 @@ class Property
     private $activities;
 
     /**
+<<<<<<< HEAD
      * @Groups({"property:read", "property:write"})
+=======
+     * @Assert\Type(
+     *      type="array",
+     *      message="This value must be an array"
+     * )
+>>>>>>> 8363f295c203dc76cb2efca384e669d56abd59d9
      * @ORM\Column(type="array")
      */
     private $status = [];

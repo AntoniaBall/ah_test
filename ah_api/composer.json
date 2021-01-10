@@ -13,6 +13,7 @@
         "doctrine/doctrine-bundle": "^2.2",
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.8",
+        "fzaninotto/faker": "^1.9",
         "nelmio/cors-bundle": "^2.1",
         "phpdocumentor/reflection-docblock": "^5.2",
         "symfony/asset": "5.2.*",
@@ -32,8 +33,12 @@
         "symfony/yaml": "5.2.*"
     },
     "require-dev": {
+<<<<<<< HEAD
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "fzaninotto/faker": "^1.9"
+=======
+        "doctrine/doctrine-fixtures-bundle": "^3.4"
+>>>>>>> 8363f295c203dc76cb2efca384e669d56abd59d9
     },
     "config": {
         "optimize-autoloader": true,
