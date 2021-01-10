@@ -3,6 +3,7 @@ api_platform:
     type: api_platform
     prefix: /api
 
+    # api/config/routes.yaml
 authentication_token:
-    path: api/authentication_token
+    path: /login
     methods: ['POST']
