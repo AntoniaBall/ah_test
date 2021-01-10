@@ -25,14 +25,14 @@ class Comments
     private $id;
 
     /**
-     * 
+     * @Groups({"comments:read", "comments:write"})
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank
      * @Assert\Length(
      * max = 250,
      * maxMessage = "La longueur du commentaire doit être inférieure à {{ limit }} caractères"
      * )
-     * @Groups({"comments:read", "comments:write"})
+     * 
      */
     private $comment_content;
 

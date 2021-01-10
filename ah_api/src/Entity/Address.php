@@ -49,13 +49,13 @@ class Address
      * @ORM\Column(type="integer")
      *  
      * @Assert\NotBlank
-     * @Assert\NotNull
+     * 
      * @Assert\Positive
      * @Assert\Length(
      * min = 5,
      * max = 5,
      * exactMessage = "Votre code postal doit être composé de {{limit}} caractères.")
-     * @Groups({"adress:read", "adress:write"})
+     * @Groups("adress:write")
      */
     private $postal_code;
 
