@@ -78,7 +78,7 @@ class Property
 
     /**
      * @ORM\ManyToOne(targetEntity=TypeProperty::class, inversedBy="properties")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $typeProperty;
 
@@ -95,7 +95,7 @@ class Property
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="properties")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $user;
 
@@ -124,7 +124,6 @@ class Property
      * @ORM\OneToMany(targetEntity=Pictures::class, mappedBy="property")
      */
     private $pictures;
-
 
     /**
      * @ORM\ManyToMany(targetEntity=Activities::class, mappedBy="Property")
