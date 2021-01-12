@@ -13,9 +13,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ApiResource(normalizationContext={"groups"={"user:read"}},
- *     denormalizationContext={"groups"={"user:write"}})
- * 
+* @ApiResource(normalizationContext={"groups"={"user:read"}},
+*     denormalizationContext={"groups"={"user:write"}})
+* 
 * @ORM\Entity(repositoryClass=UserRepository::class)
 * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
 */
@@ -33,20 +33,6 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=100)
-     * 
-     * @Groups({"user:read", "user:write"})
-     */
-    private $firstname;
-
-    /**
-     * @ORM\Column(type="string", length=100)
-     * 
-     * @Groups({"user:read", "user:write"})
-     */
-    private $lastname;
-
-    /**
-     * @ORM\Column(type="string", length=100)
      * @Assert\Email(
      * message = "The email'{{ value }}' is not a valid email.")
      * 
@@ -61,14 +47,14 @@ class User implements UserInterface
      * @Groups({"user:read", "user:write"})
      */
     private $password;
-
+    
     /**
      * @ORM\Column(type="integer", nullable=true)
      * 
      * @Groups({"user:read", "user:write"})
      */
     private $phone;
-
+    
     /**
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="user", orphanRemoval=true)
      * 
@@ -77,14 +63,13 @@ class User implements UserInterface
      */
     private $roles = [];
 
-    /**
-     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="user_id", orphanRemoval=true)
+    /*
+     * @ORM\Column(type="boolean")
      */
-    private $property;
+    private $isVerified = false;
 
-   
     /**
-     * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="reservation", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="user", orphanRemoval=true)
      */
     private $reservations;
 
@@ -101,10 +86,6 @@ class User implements UserInterface
         $this->properties = new ArrayCollection();
     }
 
-    /*
-     * @ORM\Column(type="boolean")
-     */
-    private $isVerified = false;
 
     public function getId(): ?int
     {
@@ -119,6 +100,7 @@ class User implements UserInterface
     public function setFirstname(string $firstname): self
     {
         $this->firstname = $firstname;
+        return $this;
     }
 
     /**
@@ -147,18 +129,19 @@ class User implements UserInterface
     {
         $this->roles = $roles;
 
-        return $this;
+        return $this; 
     }
-
+    
     public function getLastname(): ?string
     {
         return $this->lastname;
     }
-
+    
     public function setLastname(string $lastname): self
     {
         $this->lastname = $lastname;
-   
+        
+        return $this;
     }
 
     /**
@@ -231,6 +214,7 @@ class User implements UserInterface
     public function setPhone(?int $phone): self
     {
         $this->phone = $phone;
+        return $this;
     }
 
     // public function removeProperty(Property $property): self

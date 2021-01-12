@@ -32,7 +32,7 @@ class Activities
      * @Assert\NotBlank
      * @Assert\Length(
      * min = 10,
-     * max = 150,
+     * max = 300,
      * minMessage = "La longueur de votre activité doit être supérieure à {{ limit }} caractères",
      * maxMessage = "La longeur de votre activité doit être inférieure à {{ limit }} caractères"
      * 
