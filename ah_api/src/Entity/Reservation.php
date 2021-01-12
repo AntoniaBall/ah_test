@@ -241,4 +241,16 @@ class Reservation
 
         return $this;
     }
+
+    public function getReservation(): ?User
+    {
+        return $this->reservation;
+    }
+
+    public function setReservation(?User $reservation): self
+    {
+        $this->reservation = $reservation;
+
+        return $this;
+    }
 }

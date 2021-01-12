@@ -111,7 +111,6 @@ class Activities
 
         return $this;
     }
-
     /**
      * @return Collection|Property[]
      */
