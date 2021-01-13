@@ -34,7 +34,7 @@ class Property
      * )
      */
     private $title;
-
+    
     /**
      * @Groups({"property:read", "property:write"})
      * @ORM\Column(type="string", length=255)
@@ -59,7 +59,7 @@ class Property
 
     /**
      * @Groups({"property:read", "property:write"})
-     * @Assert\Positive(message="this value must be positive")     * @Assert\Positive
+     * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
      * @Assert\Positive
@@ -128,45 +128,44 @@ class Property
     private $tax;
     
     /**
-     * @Groups("property:read")
+     * @Groups({"property:read", "property:write"})
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="property", orphanRemoval=true)
      */
     private $reservations;
 
     /**
-     * @Groups("property:read")
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="properties")
+     * @Groups({"property:read", "property:write"})
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="properties", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $user;
 
     /**
-     * @Groups("property:read")
+     * @Groups({"property:read", "property:write"})
      * @ORM\ManyToOne(targetEntity=Equipment::class, inversedBy="properties")
      */
     private $equipment;
 
     /**
-     * @Groups("property:read")
+     * @Groups({"property:read", "property:write"})
      * @ORM\OneToOne(targetEntity=Address::class, inversedBy="property", cascade={"persist", "remove"})
      */
     private $address;
 
-
     /**
-     * @Groups("property:read")
+     * @Groups({"property:read", "property:write"})
      * @ORM\OneToOne(targetEntity=Valeur::class, mappedBy="property", cascade={"persist", "remove"})
      */
     private $valeur;
 
     /**
-     * @Groups("property:read")
+     * @Groups({"property:read", "property:write"})
      * @ORM\OneToMany(targetEntity=Indisponibility::class, mappedBy="property")
      */
     private $indisponibilities;
 
     /**
-     * @Groups("property:read")
+     * @Groups({"property:read", "property:write"})
      * @ORM\OneToMany(targetEntity=Pictures::class, mappedBy="property")
      */
     private $pictures;

@@ -74,7 +74,7 @@ class User implements UserInterface
     private $reservations;
 
     /**
-     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="user", orphanRemoval=true, cascade={"persist"})
      * 
      * @Groups("user:read")
      */

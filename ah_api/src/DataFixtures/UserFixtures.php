@@ -3,12 +3,14 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use App\DataFixtures\PropertyFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class UserFixtures extends Fixture
+class UserFixtures extends Fixture implements DependentFixtureInterface
 {
 	public const ADMIN_USER_REFERENCE = 'admin-user';
 	public const LOC_USER_REFERENCE = 'locataire-user';
@@ -31,28 +33,64 @@ class UserFixtures extends Fixture
 			->setPhone((int)$generator->phoneNumber)
 			->setIsVerified(rand(0,1))
 			->setRoles(["ROLE_ADMIN"]);
-		$password = $this->encoder->encodePassword($userAdmin,'azerty12');
-		
-		$userAdmin->setPassword($password);
-		
-		$manager->persist($userAdmin);
-		$manager->flush();
-		$this->addReference(self::ADMIN_USER_REFERENCE, $userAdmin);
-		
-		
-		// USER PROPRIO
-		$userProprio = new User();
-		$userProprio
+			$password = $this->encoder->encodePassword($userAdmin,'azerty12');
+			
+			$userAdmin->setPassword($password);
+			
+			$manager->persist($userAdmin);
+			$this->addReference(self::ADMIN_USER_REFERENCE, $userAdmin);
+			$manager->flush();
+			
+			
+			// USER PROPRIO
+			$userProprio = new User();
+			$userProprio
 			->setEmail("proprio@yopmail.com")
 			->setPhone((int)$generator->phoneNumber)
 			->setIsVerified(rand(0,1))
-			->setRoles(["ROLE_PROPRIO"]);
-		
+			->setRoles(["ROLE_PROPRIO"])
+			->addProperty($this->getReference(PropertyFixtures::CABANES, $userProprio))
+			->addProperty($this->getReference(PropertyFixtures::tipis, $userProprio))
+			->addProperty($this->getReference(PropertyFixtures::roulottes, $userProprio));
+
 		$password = $this->encoder->encodePassword($userProprio,'azerty12');
 		$userProprio->setPassword($password);
 		
 		$manager->persist($userProprio);
 		$manager->flush();
+
+		// USER PROPRIO 1
+			$userProprio1 = new User();
+			$userProprio1
+				->setEmail("proprio1@yopmail.com")
+				->setPhone((int)$generator->phoneNumber)
+				->setIsVerified(rand(0,1))
+				->setRoles(["ROLE_PROPRIO"])
+				->addProperty($this->getReference(PropertyFixtures::yourtes, $userProprio1))
+				->addProperty($this->getReference(PropertyFixtures::bulles, $userProprio1))
+				->addProperty($this->getReference(PropertyFixtures::chalets, $userProprio1))
+				->addProperty($this->getReference(PropertyFixtures::bateaux, $userProprio1));
+			
+			$password = $this->encoder->encodePassword($userProprio1,'azerty12');
+			$userProprio1->setPassword($password);
+				
+			// USER PROPRIO 2
+					$userProprio2 = new User();
+					$userProprio2
+						->setEmail("proprio2@yopmail.com")
+						->setPhone((int)$generator->phoneNumber)
+						->setIsVerified(rand(0,1))
+						->setRoles(["ROLE_PROPRIO"])
+						->addProperty($this->getReference(PropertyFixtures::inclassables, $userProprio2))
+						->addProperty($this->getReference(PropertyFixtures::CABANES_EAU, $userProprio2));
+
+			$password = $this->encoder->encodePassword($userProprio2,'azerty12');
+
+			$userProprio2->setPassword($password);
+
+			$manager->persist($userProprio2);
+
+			$manager->flush();
 		
 		// USER LOCATAIRE
 		$locataire = new User();
@@ -90,6 +128,12 @@ class UserFixtures extends Fixture
         }
 
         $manager->flush();
-    }
+	}
+	public function getDependencies()
+	{
+		return array(
+		PropertyFixtures::class,
+	);
+	}
 }
 

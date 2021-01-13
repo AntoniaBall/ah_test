@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource(normalizationContext={"groups"={"picture:read"}},
+ * @ApiResource(normalizationContext={"groups"={"picture:read", "enable_max_depth"=true}},
  *     denormalizationContext={"groups"={"picture:write"}})
  * @ORM\Entity(repositoryClass=PicturesRepository::class)
  */
@@ -28,13 +28,13 @@ class Pictures
      * @Assert\NotBlank
      */
     private $url;
-
+    
     /**
      * @Groups({"picture:read", "picture:write"})
      * @ORM\Column(type="integer")
      */
     private $max_size;
-
+    
     /**
      * @Groups({"picture:read", "picture:write"})
      * @ORM\Column(type="array")
@@ -49,7 +49,7 @@ class Pictures
 
     /**
      * @Groups("picture:read")
-     * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="pictures")
+     * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="pictures", cascade={"persist"})
      */
     private $property;
 
