@@ -30,6 +30,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 		$userAdmin = new User();
 		$userAdmin
 			->setEmail("admin@yopmail.com")
+			->setFirstname($generator->firstname())
+			->setLastname($generator->lastname)
 			->setPhone((int)$generator->phoneNumber)
 			->setIsVerified(rand(0,1))
 			->setRoles(["ROLE_ADMIN"]);
@@ -39,13 +41,13 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 			
 			$manager->persist($userAdmin);
 			$this->addReference(self::ADMIN_USER_REFERENCE, $userAdmin);
-			$manager->flush();
-			
 			
 			// USER PROPRIO
 			$userProprio = new User();
 			$userProprio
 			->setEmail("proprio@yopmail.com")
+			->setFirstname($generator->firstname())
+			->setLastname($generator->lastname)
 			->setPhone((int)$generator->phoneNumber)
 			->setIsVerified(rand(0,1))
 			->setRoles(["ROLE_PROPRIO"])
@@ -64,6 +66,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 			$userProprio1
 				->setEmail("proprio1@yopmail.com")
 				->setPhone((int)$generator->phoneNumber)
+				->setFirstname($generator->firstname())
+				->setLastname($generator->lastname)
 				->setIsVerified(rand(0,1))
 				->setRoles(["ROLE_PROPRIO"])
 				->addProperty($this->getReference(PropertyFixtures::yourtes, $userProprio1))
@@ -78,6 +82,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 					$userProprio2 = new User();
 					$userProprio2
 						->setEmail("proprio2@yopmail.com")
+						->setFirstname($generator->firstname())
+						->setLastname($generator->lastname)
 						->setPhone((int)$generator->phoneNumber)
 						->setIsVerified(rand(0,1))
 						->setRoles(["ROLE_PROPRIO"])
@@ -96,6 +102,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 		$locataire = new User();
 		$locataire
 			->setEmail("locataire@yopmail.com")
+			->setFirstname($generator->firstname())
+			->setLastname($generator->lastname)
 			->setPhone((int)$generator->phoneNumber)
 			->setIsVerified(rand(0,1))
 			->setRoles(["ROLE_USER"]);
@@ -112,6 +120,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 			$user = (new User);
 			$user
 				->setEmail("user$i@gmail.com")
+				->setFirstname($generator->firstname())
+				->setLastname($generator->lastname)
                 ->setPhone((int)$generator->phoneNumber)
 				->setIsVerified(rand(0,1));
 				

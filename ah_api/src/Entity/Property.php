@@ -25,7 +25,7 @@ class Property
     private $id;
 
     /**
-     * @Groups({"property:read", "property:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read"})
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank
      * @Assert\Length(
@@ -36,7 +36,7 @@ class Property
     private $title;
     
     /**
-     * @Groups({"property:read", "property:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read"})
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Assert\Length(
@@ -47,7 +47,7 @@ class Property
     private $description;
 
     /**
-     * @Groups({"property:read", "property:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read"})
      * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
@@ -58,7 +58,7 @@ class Property
     private $surface;
 
     /**
-     * @Groups({"property:read", "property:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read"})
      * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
@@ -69,7 +69,7 @@ class Property
     private $nbr_room;
 
     /**
-     * @Groups({"property:read", "property:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read"})
      * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="float")
      * @Assert\NotBlank
@@ -80,7 +80,7 @@ class Property
     private $rate;
 
     /**
-     * @Groups({"property:read", "property:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read"})
     * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
@@ -89,7 +89,7 @@ class Property
     private $max_travelers;
 
       /**
-       * @Groups({"property:read", "property:write"})
+       * @Groups({"property:read", "property:write", "typeproperty:read"})
      * @Assert\NotNull
      * @ORM\Column(type="boolean")
      * @Assert\NotBlank
@@ -97,7 +97,7 @@ class Property
     private $access_handicap;
     
     /**
-     * @Groups({"property:read", "property:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read"})
      * @Assert\NotNull
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank
@@ -105,7 +105,7 @@ class Property
     private $water;
     
     /**
-     * @Groups({"property:read", "property:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read"})
      * @Assert\NotNull
      * @ORM\Column(type="boolean")
      * @Assert\NotBlank
@@ -120,7 +120,7 @@ class Property
     private $typeProperty;
 
     /**
-     * @Groups({"property:read", "property:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read"})
      * @Assert\Positive(message="this value should be positive")
      * @ORM\Column(type="float")
      * @Assert\NotBlank
@@ -128,7 +128,7 @@ class Property
     private $tax;
     
     /**
-     * @Groups({"property:read", "property:write"})
+     * @Groups({"property:write"})
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="property", orphanRemoval=true)
      */
     private $reservations;
@@ -160,7 +160,7 @@ class Property
 
     /**
      * @Groups({"property:read", "property:write"})
-     * @ORM\OneToMany(targetEntity=Indisponibility::class, mappedBy="property", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Indisponibility::class, mappedBy="property")
      */
     private $indisponibilities;
 

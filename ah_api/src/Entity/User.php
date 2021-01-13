@@ -36,7 +36,7 @@ class User implements UserInterface
      * @Assert\Email(
      * message = "The email'{{ value }}' is not a valid email.")
      * 
-     * @Groups({"user:read", "user:write"})
+     * @Groups({"user:read", "user:write", "property:read"})
      */
     private $email;
 
@@ -44,14 +44,13 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      * @var string The hashed password
      * 
-     * @Groups({"user:read", "user:write"})
      */
     private $password;
     
     /**
      * @ORM\Column(type="integer", nullable=true)
      * 
-     * @Groups({"user:read", "user:write"})
+     * @Groups({"user:read", "user:write", "property:read"})
      */
     private $phone;
     
@@ -62,12 +61,25 @@ class User implements UserInterface
      * @ORM\Column(type="json")
      */
     private $roles = [];
-
+    
     /*
-     * @ORM\Column(type="boolean")
-     */
+    * @ORM\Column(type="boolean")
+    */
     private $isVerified = false;
-
+    
+    /*
+    * @Groups({"user:read", "user:write", "property:read"})
+    * @ORM\Column(type="string")
+    */
+    private $firstname;
+    
+    
+    /*
+    * @Groups({"user:read", "user:write", "property:read"})
+    * @ORM\Column(type="string")
+    */
+    private $lastname;
+    
     /**
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="user", orphanRemoval=true)
      */
@@ -314,4 +326,5 @@ class User implements UserInterface
 
         return $this;
     }
+
 }
