@@ -15,7 +15,7 @@ class ReservationFixture extends Fixture implements DependentFixtureInterface
         $reservation = new Reservation();
         $reservation->setDateDebut(new \Datetime('now'))
         ->setDateEnd(new \Datetime('next monday'))
-        ->setMontant(1200)
+        ->setMontant(600)
         ->setPaid(1)
         ->setNumberTraveler(3)
         ->setUser($this->getReference(UserFixtures::LOC_USER_REFERENCE))
@@ -24,7 +24,7 @@ class ReservationFixture extends Fixture implements DependentFixtureInterface
         //1 reservation pour l'utilisateur locataire@yopmail.com pour le mois prochain pour un autre bien
         $reservation1 = new Reservation();
         $reservation1->setDateDebut(new \Datetime('first day of next month'))
-        ->setDateEnd(new \Datetime('+6 weeks'))
+        ->setDateEnd(new \Datetime('+5weeks'))
         ->setMontant(1200)
         ->setPaid(1)
         ->setNumberTraveler(3)

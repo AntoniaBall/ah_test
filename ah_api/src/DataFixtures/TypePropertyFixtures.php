@@ -87,7 +87,14 @@ class TypePropertyFixtures extends Fixture implements DependentFixtureInterface
 
         // $this->addReference(self::INCLASSABLE_REF, $inclassables);
         $manager->persist($inclassables);
-        
+
+        $roulottes = new TypeProperty();
+        $roulottes->setTitle('Igloo dans le sud de la france')
+                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder")
+                ->addProperty($this->getReference(PropertyFixtures::roulottes));
+
+        // $this->addReference(self::INCLASSABLE_REF, $inclassables);
+        $manager->persist($roulottes);
         $manager->flush();
     }
 

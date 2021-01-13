@@ -12,7 +12,9 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 class PicturesFixtures extends Fixture
 {
     public const picture_bien = 'picture_bien';
+    public const picture_activite = 'picture_activite';
     public const picture_commentaire= 'picture_commentaire';
+    
     public function load(ObjectManager $manager)
     {
         $faker = Faker\Factory::create('fr_FR');
@@ -31,17 +33,14 @@ class PicturesFixtures extends Fixture
                     ->setStatus('en modération');
         $this->addReference(self::picture_commentaire,$picture_commentaire);
         $manager->persist($picture_commentaire);
+        
+        $picture_activite = new Pictures();
+        $picture_activite->setUrl($faker->imageUrl($width=640, $height=300))
+                    ->setMaxSize(650)
+                    ->setStatus('en modération');
+        $this->addReference(self::picture_activite,$picture_activite);
 
-        // for ($i = 1; $i <= 20; $i++) {
-        //     $picture = new Pictures();
-        //     // $picture->url($pictures[$i]);
-        //     $picture->setURL($faker->imageUrl($width=640, $height=300))
-        //             ->setMaxSize(650)
-        //     // $repository = $this->getDoctrine()->getRepository(typeProperty::class);
-        //     // $property = $repository->find(1);
-        //     // $picture->setProperty($property);
-
-        // }
+        $manager->persist($picture_activite);
 
         $manager->flush();
     }

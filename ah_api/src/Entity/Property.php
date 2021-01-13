@@ -160,7 +160,7 @@ class Property
 
     /**
      * @Groups({"property:read", "property:write"})
-     * @ORM\OneToMany(targetEntity=Indisponibility::class, mappedBy="property")
+     * @ORM\OneToMany(targetEntity=Indisponibility::class, mappedBy="property", cascade={"persist"})
      */
     private $indisponibilities;
 

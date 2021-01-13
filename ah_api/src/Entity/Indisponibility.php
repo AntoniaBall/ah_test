@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ApiResource(normalizationContext={"groups"={"indisponibility:read"}},
  *     denormalizationContext={"groups"={"indisponibility:write"}})
@@ -24,26 +26,31 @@ class Indisponibility
 
     /**
      * @Groups({"indisponibility:read", "indisponibility:write"})
+     * @Assert\Type(
+     *     type="datetime",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
+     * @Assert\GreaterThan("today")
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $date_start;
 
     /**
      * @Groups({"indisponibility:read", "indisponibility:write"})
+     * @Assert\Type(
+     *     type="datetime",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $date_end;
 
     /**
-     * @Groups("indisponibility:read")
-     * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="indisponibilities")
+     * @Groups({"indisponibility:read", "indisponibility:write"})
+     * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="indisponibilities", cascade={"persist"})
      */
     private $property;
 
-    public function __construct()
-    {
-        $this->property = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -74,26 +81,23 @@ class Indisponibility
         return $this;
     }
 
+
     /**
-     * @return Collection|Property[]
-     */
-    public function getProperty(): Collection
+     * Get the value of property
+     */ 
+    public function getProperty()
     {
         return $this->property;
     }
 
-    public function addProperty(Property $property): self
+    /**
+     * Set the value of property
+     *
+     * @return  self
+     */ 
+    public function setProperty($property)
     {
-        if (!$this->property->contains($property)) {
-            $this->property[] = $property;
-        }
-
-        return $this;
-    }
-
-    public function removeProperty(Property $property): self
-    {
-        $this->property->removeElement($property);
+        $this->property = $property;
 
         return $this;
     }

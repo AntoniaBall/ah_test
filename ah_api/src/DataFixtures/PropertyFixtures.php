@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Property;
 use App\Entity\TypeProperty;
+use App\Entity\Indisponibility;
 use App\DataFixtures\TypePropertyFixtures;
 use App\DataFixtures\UserFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -170,11 +171,12 @@ class PropertyFixtures extends Fixture implements DependentFixtureInterface
             ->setTax(0.20)
             ->setAddress($this->getReference(AddressFixture::adr_bateau))
             ->addPicture($this->getReference(PicturesFixtures::picture_bien));
-
+            
             $this->addReference(self::bateaux,$bateaux);
             $manager->persist($bateaux);
-            
+
             $manager->flush();
+            
         }
         
         public function getDependencies()
