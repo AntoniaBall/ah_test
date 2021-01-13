@@ -39,7 +39,7 @@ class Propriete
 
     /**
      * @Groups({"propriete:read", "propriete:write"})
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $type;
 
