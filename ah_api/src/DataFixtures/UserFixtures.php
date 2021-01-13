@@ -10,6 +10,10 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixtures extends Fixture
 {
+	public const ADMIN_USER_REFERENCE = 'admin-user';
+	public const LOC_USER_REFERENCE = 'locataire-user';
+	public const PROP_USER_REFERENCE = 'proprio-user';
+
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
@@ -21,13 +25,54 @@ class UserFixtures extends Fixture
     {
 		$generator = Faker\Factory::create("fr_FR");
 
-		$plainPassword="admine";
+		$userAdmin = new User();
+		$userAdmin
+			->setEmail("admin@yopmail.com")
+			->setPhone((int)$generator->phoneNumber)
+			->setIsVerified(rand(0,1))
+			->setRoles(["ROLE_ADMIN"]);
+		$password = $this->encoder->encodePassword($userAdmin,'azerty12');
+		
+		$userAdmin->setPassword($password);
+		
+		$manager->persist($userAdmin);
+		$manager->flush();
+		$this->addReference(self::ADMIN_USER_REFERENCE, $userAdmin);
+		
+		
+		// USER PROPRIO
+		$userProprio = new User();
+		$userProprio
+			->setEmail("proprio@yopmail.com")
+			->setPhone((int)$generator->phoneNumber)
+			->setIsVerified(rand(0,1))
+			->setRoles(["ROLE_PROPRIO"]);
+		
+		$password = $this->encoder->encodePassword($userProprio,'azerty12');
+		$userProprio->setPassword($password);
+		
+		$manager->persist($userProprio);
+		$manager->flush();
+		
+		// USER LOCATAIRE
+		$locataire = new User();
+		$locataire
+			->setEmail("locataire@yopmail.com")
+			->setPhone((int)$generator->phoneNumber)
+			->setIsVerified(rand(0,1))
+			->setRoles(["ROLE_USER"]);
+		$password = $this->encoder->encodePassword($locataire,'azerty12');
+		$locataire->setPassword($password);
+		
+		$manager->persist($locataire);
+		$manager->flush();
 
-        for ($i=0; $i <10 ; $i++) { 
+		$this->addReference(self::LOC_USER_REFERENCE, $locataire);
+
+		// AUTRES USER LOCATAIRE
+        for ($i=0; $i <5 ; $i++) { 
 			$user = (new User);
 			$user
-			// ->setFirstname($generator->firstName())
-			// ->setLastname($generator->lastName)
 				->setEmail("user$i@gmail.com")
                 ->setPhone((int)$generator->phoneNumber)
 				->setIsVerified(rand(0,1));

@@ -114,7 +114,7 @@ class Property
 
     /**
      * @Groups({"property:read", "property:write"})
-     * @ORM\ManyToOne(targetEntity=TypeProperty::class, inversedBy="properties")
+     * @ORM\ManyToOne(targetEntity=TypeProperty::class, inversedBy="properties", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $typeProperty;
