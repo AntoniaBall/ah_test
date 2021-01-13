@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use Faker;
 use App\Entity\Pictures;
+use App\DataFixtures\PropertyFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -21,6 +22,7 @@ class PicturesFixtures extends Fixture
                     ->setMaxSize(650)
                     ->setStatus('en modération');
         $this->addReference(self::picture_bien,$picture_bien);
+        
         $manager->persist($picture_bien);
 
         $picture_commentaire = new Pictures();

@@ -5,8 +5,9 @@ use App\Entity\TypeProperty;
 use App\Entity\Property;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class TypePropertyFixtures extends Fixture
+class TypePropertyFixtures extends Fixture implements DependentFixtureInterface
 {
     public const cabane_arbre = 'cabane-arbre';
     public const CABANE_EAU_REF = 'cabane-eau';
@@ -86,27 +87,14 @@ class TypePropertyFixtures extends Fixture
 
         // $this->addReference(self::INCLASSABLE_REF, $inclassables);
         $manager->persist($inclassables);
-
-        // $array=[
-        //     '',
-        //     'cabane dans les arbres',
-        //     'cabane sur l\'eau',
-        //     'bulle',
-        //     'tipi',
-        //     'yourte',
-        //     'roulotte',
-        //     'bateau',
-        //     'chalet',
-        //     'inclassable'
-        // ];
-        // for ($i = 1; $i <= 9; $i++) {
-        //     $typeProperty = new TypeProperty();
-        //     $typeProperty->setTitle($array[$i]);
-        //     $typeProperty->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder");
-        //     // $typeProperty->addProperty();
-        //     $manager->persist($typeProperty);
-
-        // }
+        
         $manager->flush();
+    }
+
+    public function getDependencies()
+    {
+        return array(
+            UserFixtures::class,
+        );
     }
 }

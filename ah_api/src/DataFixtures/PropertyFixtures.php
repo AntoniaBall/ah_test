@@ -9,10 +9,10 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class PropertyFixtures extends Fixture
+class PropertyFixtures extends Fixture implements DependentFixtureInterface
 {
-    public const CABANES = 'cabane dans les arbres';
-    public const CABANES_EAU = 'cabane sur l\'eau';
+    public const CABANES = 'cabane-arbre';
+    public const CABANES_EAU = 'cabane-eau';
     public const tipis = 'tipi';
     public const roulottes = 'roulottes';
     public const bulles = 'bulles';
@@ -37,6 +37,7 @@ class PropertyFixtures extends Fixture
             ->addPicture($this->getReference(PicturesFixtures::picture_bien));
             
             $this->addReference(self::CABANES,$cabane);
+
             $manager->persist($cabane);
             
             $cabaneEau = new Property();
@@ -86,19 +87,19 @@ class PropertyFixtures extends Fixture
             $this->addReference(self::tipis,$tipi);
             $manager->persist($tipi);
             
-            // $roulottes = new Property();
-            // $roulottes->setTitle('roulottes')
-            //     ->setDescription('très belle cabane sur l\'eau. Sit amet jelly beans pie apple pie chupa chups candy. I love candy I love pie bear claw chocolate bar sweet tootsie roll I love..')
-            //     ->setAccessHandicap(false)
-            //     ->setWater('eau courante')
-            //     ->setElectricity(true)
-            //     ->setSurface(30)
-            //     ->setRate(95.50)
-            //     ->setNbrRoom(3)
-            //     ->setMaxTravelers(3)
-            //     ->setTax(0.20);
-            // $this->addReference(self::roulottes,$roulottes);
-            // $manager->persist($roulottes);
+            $roulottes = new Property();
+            $roulottes->setTitle('roulottes')
+                ->setDescription('très belle cabane sur l\'eau. Sit amet jelly beans pie apple pie chupa chups candy. I love candy I love pie bear claw chocolate bar sweet tootsie roll I love..')
+                ->setAccessHandicap(false)
+                ->setWater('eau courante')
+                ->setElectricity(true)
+                ->setSurface(30)
+                ->setRate(95.50)
+                ->setNbrRoom(3)
+                ->setMaxTravelers(3)
+                ->setTax(0.20);
+            $this->addReference(self::roulottes,$roulottes);
+            $manager->persist($roulottes);
             
             $chalets = new Property();
             $chalets->setTitle('chalets')
@@ -340,8 +341,7 @@ class PropertyFixtures extends Fixture
     {
         return array(
             UserFixtures::class,
-            TypePropertyFixtures::class,
-            PicturesProperty::class,
+            PicturesFixtures::class,
         );
     }
 }
