@@ -5,6 +5,7 @@ lexik_jwt_authentication:
     token_ttl:   '%env(JWT_TTL)%'
     user_identity_field: email
     
+
  # token encoding/decoding settings
     encoder:
         # token encoder/decoder service - default implementation based on the lcobucci/jwt library
