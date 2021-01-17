@@ -153,7 +153,7 @@ class Property
     private $equipment;
 
     /**
-     * @Groups({"property:read", "property:write", "user:write"})
+     * @Groups({"property:read", "property:write", "user:write", "address:write"})
      * @ORM\OneToOne(targetEntity=Address::class, inversedBy="property", cascade={"persist", "remove"})
      */
     private $address;
@@ -395,7 +395,7 @@ class Property
     {
         return $this->address;
     }
-
+    
     public function setAddress(Address $address): self
     {
         $this->address = $address;
