@@ -149,11 +149,14 @@ class Property
     /**
      * @Groups({"property:read", "property:write", "user:write", "equipment:write"})
      * @ORM\ManyToOne(targetEntity=Equipment::class, inversedBy="properties", cascade={"persist", "remove"})
+     * @Assert\Valid
      */
     private $equipment;
 
     /**
      * @Groups({"property:read", "property:write", "user:write", "address:write"})
+     * 
+     * @Assert\Valid
      * @ORM\OneToOne(targetEntity=Address::class, inversedBy="property", cascade={"persist", "remove"})
      */
     private $address;
@@ -165,8 +168,10 @@ class Property
     private $valeur;
 
     /**
-     * @Groups({"property:read", "property:write", "user:write"})
-     * @ORM\OneToMany(targetEntity=Indisponibility::class, mappedBy="property")
+     * @Groups({"property:read", "property:write", "user:write", "indisponibility:write"})
+     * @Assert\Valid
+     * 
+     * @ORM\OneToMany(targetEntity=Indisponibility::class, mappedBy="property", cascade={"persist"})
      */
     private $indisponibilities;
 
