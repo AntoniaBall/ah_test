@@ -43,6 +43,7 @@ class Property
      * max = 100,
      * maxMessage = "La longueur du titre doit être inférieure à {{ limit }} caractères"
      * )
+     * @Assert\NotNull
      */
     private $title;
     
@@ -70,11 +71,12 @@ class Property
 
     /**
      * @Groups({"property:read", "property:write", "typeproperty:read"})
+     * @ORM\Column(type="integer")
      * @Assert\Positive(message="this value must be positive")
-     * @ORM\Column(type="integer") 
+     * @Assert\NotNull
+     * @Assert\LessThan(5)
     */
-    private $nbr_room;
-    //  @Assert\LessThan(5)
+    private $nbrRoom;
 
     /**
      * @Groups({"property:read", "property:write", "typeproperty:read", "user:write"})
@@ -89,17 +91,16 @@ class Property
 
     /**
      * @Groups({"property:read", "property:write", "typeproperty:read", "user:write"})
-    * @Assert\Positive(message="this value must be positive")
+     * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
-     * @Assert\Positive
      */
-    private $max_travelers;
+    private $maxTravelers;
 
     /**
      * @Groups({"property:read", "property:write", "typeproperty:read", "user:write"})
      * @ORM\Column(type="boolean")
      */
-    private $access_handicap;
+    private $accessHandicap;
     
     /**
      * @Groups({"property:read", "property:write", "typeproperty:read", "user:write"})
@@ -230,12 +231,12 @@ class Property
 
     public function getAccessHandicap(): ?bool
     {
-        return $this->access_handicap;
+        return $this->accessHandicap;
     }
 
-    public function setAccessHandicap(bool $access_handicap): self
+    public function setAccessHandicap(bool $accessHandicap): self
     {
-        $this->access_handicap = $access_handicap;
+        $this->accessHandicap = $accessHandicap;
 
         return $this;
     }
@@ -278,12 +279,12 @@ class Property
 
     public function getNbrRoom(): ?int
     {
-        return $this->nbr_room;
+        return $this->nbrRoom;
     }
 
-    public function setNbrRoom(int $nbr_room): self
+    public function setNbrRoom(int $nbrRoom): self
     {
-        $this->nbr_room = $nbr_room;
+        $this->nbrRoom = $nbrRoom;
 
         return $this;
     }
@@ -302,12 +303,12 @@ class Property
 
     public function getMaxTravelers(): ?int
     {
-        return $this->max_travelers;
+        return $this->maxTravelers;
     }
 
-    public function setMaxTravelers(int $max_travelers): self
+    public function setMaxTravelers(int $maxTravelers): self
     {
-        $this->max_travelers = $max_travelers;
+        $this->maxTravelers = $maxTravelers;
 
         return $this;
     }
