@@ -73,7 +73,6 @@ class User implements UserInterface
     */
     private $firstname;
     
-    
     /*
     * @Groups({"user:read", "user:write", "property:read"})
     * @ORM\Column(type="string")
