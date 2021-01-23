@@ -49,7 +49,7 @@ class Pictures
 
     /**
      * @Groups("picture:read")
-     * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="pictures", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="pictures")
      */
     private $property;
 

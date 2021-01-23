@@ -46,11 +46,10 @@ class Indisponibility
     private $dateEnd;
 
     /**
-     * @Groups({"indisponibility:read", "indisponibility:write"})
-     * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="indisponibilities")
+     * @Groups("indisponibility:read")
+     * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="indisponibilities", cascade={"persist"})
      */
     private $property;
-
 
     public function getId(): ?int
     {
@@ -62,9 +61,6 @@ class Indisponibility
         return $this->dateStart;
     }
 
-    /**
-     * @Groups({"indisponibility:write", "property:write"})
-     */
     public function setDateStart(?\DateTimeInterface $dateStart): self
     {
         $this->dateStart = $dateStart;
@@ -76,9 +72,7 @@ class Indisponibility
     {
         return $this->dateEnd;
     }
-    /**
-     * @Groups({"indisponibility:write", "property:write"})
-     */
+
     public function setDateEnd(?\DateTimeInterface $dateEnd): self
     {
         $this->dateEnd = $dateEnd;

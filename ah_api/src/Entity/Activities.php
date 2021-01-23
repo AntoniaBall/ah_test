@@ -60,7 +60,7 @@ class Activities
      * @ORM\ManyToMany(targetEntity=Property::class, inversedBy="activities")
      * @Groups("activities:read")
      */
-    private $Property;
+    private $property;
 
     /**
      * 

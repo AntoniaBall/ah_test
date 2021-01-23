@@ -49,7 +49,7 @@ class Property
     private $title;
     
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write","indisponibility:write","activities:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write", "indisponibility:write","activities:write"})
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Assert\Length(
@@ -60,7 +60,7 @@ class Property
     private $description;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write","indisponibility:write","activities:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write", "indisponibility:write","activities:write"})
      * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
@@ -71,7 +71,7 @@ class Property
     private $surface;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write","indisponibility:write","activities:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write","activities:write"})
      * @ORM\Column(type="integer")
      * @Assert\Positive(message="this value must be positive")
      * @Assert\NotNull
@@ -80,7 +80,7 @@ class Property
     private $nbrRoom;
 
     /**
-    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write","indisponibility:write","activities:write"})
+    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write","activities:write"})
      * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="float")
      * @Assert\NotBlank
@@ -91,20 +91,20 @@ class Property
     private $rate;
 
     /**
-    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write","indisponibility:write","activities:write"})
+    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write", "activities:write"})
      * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
      */
     private $maxTravelers;
 
     /**
-    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write","indisponibility:write","activities:write"})
+    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write", "activities:write"})
      * @ORM\Column(type="boolean")
      */
     private $accessHandicap;
     
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write","indisponibility:write","activities:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write", "activities:write"})
      * @Assert\NotNull
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank
@@ -112,7 +112,7 @@ class Property
     private $water;
     
     /**
-    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write","indisponibility:write","activities:write"})
+    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write", "activities:write"})
      * @Assert\NotNull
      * @ORM\Column(type="boolean")
      * @Assert\NotBlank
@@ -127,7 +127,7 @@ class Property
     private $typeProperty;
 
     /**
-    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write","indisponibility:write","activities:write"})
+    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write", "activities:write"})
     * @Assert\Positive(message="this value should be positive")
      * @ORM\Column(type="float")
      * @Assert\NotBlank
@@ -141,7 +141,7 @@ class Property
     private $reservations;
 
     /**
-     * @Groups({"property:read", "property:write", "user:write", "picture:write"})
+     * @Groups({"property:read", "property:write", "user:write"})
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="properties", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
@@ -170,9 +170,7 @@ class Property
 
     /**
      * @Groups({"property:read", "property:write", "user:write", "indisponibility:write"})
-     * @Assert\Valid
-     * 
-     * @ORM\OneToMany(targetEntity=Indisponibility::class, mappedBy="property", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Indisponibility::class, mappedBy="property", cascade={"persist", "remove"})
      */
     private $indisponibilities;
 
@@ -184,12 +182,12 @@ class Property
 
     /**
      * @Groups({"property:read", "property:write", "user:write", "activities:write"})
-     * @ORM\ManyToMany(targetEntity=Activities::class, mappedBy="Property", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity=Activities::class, mappedBy="property", cascade={"persist", "remove"})
      */
     private $activities;
 
     /**
-     * @Groups({"property:read", "property:write", "user:write","indisponibility:write"})
+     * @Groups({"property:read", "property:write", "user:write", "indisponibility:write"})
      * @Assert\Type(
      *      type="string",
      *      message="This value must be a string"
@@ -446,14 +444,14 @@ class Property
         return $this;
     }
 
-    // public function removeIndisponibility(Indisponibility $indisponibility): self
-    // {
-    //     if ($this->indisponibilities->removeElement($indisponibility)) {
-    //         $indisponibility->removeProperty($this);
-    //     }
+     public function removeIndisponibility(Indisponibility $indisponibility): self
+     {
+        if ($this->indisponibilities->removeElement($indisponibility)) {
+            $indisponibility->removeProperty($this);
+        }
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
     /**
      * @return Collection|Pictures[]
