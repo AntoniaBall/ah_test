@@ -22,6 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in con
  * itemOperations={
  *    "get",
  *    "put"={"security"="is_granted('ROLE_PROPRIO') or object.owner == user"},
+ *    "delete"={"security"="is_granted('ROLE_PROPRIO') or object.owner == user"},
  * }
  * )
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
@@ -190,15 +191,16 @@ class Property
     /**
      * @Groups({"property:read", "property:write", "user:write"})
      * @Assert\Type(
-     *      type="array",
-     *      message="This value must be an array"
+     *      type="string",
+     *      message="This value must be a string"
      * )
-     * @ORM\Column(type="array")
+     * @ORM\Column(type="string")
      */
-    private $status = [];
+    private $status;
 
     public function __construct()
     {
+        $this->status="draft";
         $this->reservations = new ArrayCollection();
         $this->indisponibilities = new ArrayCollection();
         $this->pictures = new ArrayCollection();
@@ -510,12 +512,12 @@ class Property
         return $this;
     }
 
-    public function getStatus(): ?array
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    public function setStatus(array $status): self
+    public function setStatus(string $status): self
     {
         $this->status = $status;
 

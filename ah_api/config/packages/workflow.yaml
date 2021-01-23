@@ -1,0 +1,30 @@
+framework:
+    workflows: 
+       create_property:
+            type: 'workflow'
+            audit_trail:
+                enabled: true
+            marking_store:
+                type: 'method'
+                property: 'status'
+            supports:
+                - App\Entity\Property
+            initial_marking: draft
+            places:
+                - draft
+                - reviewing
+                - published
+                - rejected
+            transitions:
+                to_review: 
+                    guard: "is_fully_authenticated() and is_granted('ROLE_PROPRIO')"
+                    from: draft
+                    to: reviewing
+                publish:
+                    guard: "is_fully_authenticated() and is_granted('ROLE_ADMIN')"
+                    from: reviewing
+                    to: published
+                rejected:
+                    guard: "is_fully_authenticated() and is_granted('ROLE_ADMIN')"
+                    from: reviewing
+                    to: rejected
