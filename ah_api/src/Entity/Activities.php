@@ -78,7 +78,7 @@ class Activities
 
     public function __construct()
     {
-        $this->Property = new ArrayCollection();
+        $this->property = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->pictures = new ArrayCollection();
     }
@@ -121,8 +121,8 @@ class Activities
 
     public function addProperty(Property $property): self
     {
-        if (!$this->Property->contains($property)) {
-            $this->Property[] = $property;
+        if (!$this->property->contains($property)) {
+            $this->property[] = $property;
         }
 
         return $this;
@@ -130,7 +130,7 @@ class Activities
 
     public function removeProperty(Property $property): self
     {
-        $this->Property->removeElement($property);
+        $this->property->removeElement($property);
 
         return $this;
     }
