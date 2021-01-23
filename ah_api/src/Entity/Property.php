@@ -37,7 +37,7 @@ class Property
     private $id;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write", "indisponibility:write"})
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank
      * @Assert\Length(
@@ -49,7 +49,7 @@ class Property
     private $title;
     
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write","indisponibility:write"})
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Assert\Length(
@@ -60,7 +60,7 @@ class Property
     private $description;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write","indisponibility:write"})
      * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
@@ -71,7 +71,7 @@ class Property
     private $surface;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write","indisponibility:write"})
      * @ORM\Column(type="integer")
      * @Assert\Positive(message="this value must be positive")
      * @Assert\NotNull
@@ -80,7 +80,7 @@ class Property
     private $nbrRoom;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write","indisponibility:write"})
      * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="float")
      * @Assert\NotBlank
@@ -91,20 +91,20 @@ class Property
     private $rate;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write","indisponibility:write"})
      * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
      */
     private $maxTravelers;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write", "indisponibility:write"})
      * @ORM\Column(type="boolean")
      */
     private $accessHandicap;
     
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write","indisponibility:write"})
      * @Assert\NotNull
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank
@@ -112,7 +112,7 @@ class Property
     private $water;
     
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write","indisponibility:write"})
      * @Assert\NotNull
      * @ORM\Column(type="boolean")
      * @Assert\NotBlank
@@ -141,7 +141,7 @@ class Property
     private $reservations;
 
     /**
-     * @Groups({"property:read", "property:write", "user:write"})
+     * @Groups({"property:read", "property:write", "user:write", "picture:write"})
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="properties", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
@@ -177,13 +177,13 @@ class Property
     private $indisponibilities;
 
     /**
-     * @Groups({"property:read", "property:write", "user:write"})
-     * @ORM\OneToMany(targetEntity=Pictures::class, mappedBy="property")
+     * @Groups({"property:read", "property:write", "user:write", "picture:write"})
+     * @ORM\OneToMany(targetEntity=Pictures::class, mappedBy="property", cascade={"persist", "remove"})
      */
     private $pictures;
 
     /**
-     * @Groups("property:read")
+     * @Groups({"property:read"})
      * @ORM\ManyToMany(targetEntity=Activities::class, mappedBy="Property")
      */
     private $activities;

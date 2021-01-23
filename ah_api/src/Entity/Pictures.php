@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource(normalizationContext={"groups"={"picture:read", "enable_max_depth"=true}},
+ * @ApiResource(normalizationContext={"groups"={"picture:read"}},
  *     denormalizationContext={"groups"={"picture:write"}})
  * @ORM\Entity(repositoryClass=PicturesRepository::class)
  */
@@ -23,20 +23,20 @@ class Pictures
     private $id;
 
     /**
-     * @Groups({"picture:read", "picture:write"})
+     * @Groups({"picture:read", "picture:write", "property:write"})
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      */
     private $url;
     
     /**
-     * @Groups({"picture:read", "picture:write"})
+     * @Groups({"picture:read", "picture:write", "property:write"})
      * @ORM\Column(type="integer")
      */
-    private $max_size;
+    private $maxSize;
     
     /**
-     * @Groups({"picture:read", "picture:write"})
+     * @Groups({"picture:read", "picture:write", "property:write"})
      * @ORM\Column(type="array")
      */
     private $status;
@@ -59,6 +59,10 @@ class Pictures
      */
     private $activities;
 
+    public function __construct(){
+        $this->status = "en modération";
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -78,12 +82,12 @@ class Pictures
 
     public function getMaxSize(): ?int
     {
-        return $this->max_size;
+        return $this->maxSize;
     }
 
-    public function setMaxSize(int $max_size): self
+    public function setMaxSize(int $maxSize): self
     {
-        $this->max_size = $max_size;
+        $this->maxSize = $maxSize;
 
         return $this;
     }
