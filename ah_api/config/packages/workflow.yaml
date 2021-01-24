@@ -1,7 +1,7 @@
 framework:
     workflows: 
        create_property:
-            type: 'workflow'
+            type: 'state_machine'
             audit_trail:
                 enabled: true
             marking_store:
@@ -16,7 +16,7 @@ framework:
                 - published
                 - rejected
             transitions:
-                to_review: 
+                review: 
                     guard: "is_fully_authenticated() and is_granted('ROLE_PROPRIO')"
                     from: draft
                     to: reviewing

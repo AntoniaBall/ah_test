@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in constraints
+use App\Controller\PropertyController;
+use App\EventListener\AddPropertyListener;
 
 /**
  * @ApiResource(attributes={
@@ -23,15 +25,21 @@ use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in con
  *    "get",
  *    "put"={"security"="is_granted('ROLE_PROPRIO') or object.owner == user"},
  *    "delete"={"security"="is_granted('ROLE_PROPRIO') or object.owner == user"},
+ *    "status"={
+ *          "method"="PATCH",
+ *          "path"="/properties/{id}/{transition}",
+ *          "controller"=PropertyController::class
+ *      }
  * }
  * )
+ * @ORM\EntityListeners({AddPropertyListener::class})
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
  */
 class Property
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
+     * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
      */
     private $id;

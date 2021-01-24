@@ -6,37 +6,42 @@ use App\Entity\Property;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Workflow\Registry;
+use Symfony\Component\Workflow\Exception\TransitionException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Workflow\Exception\LogicException;
 
-/**
- * @Route("/api/properties")
- */
 class PropertyController extends AbstractController
 {
     /**
-     * @Route("/{id}/status/{transition}", name="validate_property")
      * 
+     * Route("/api/properties/{id}/{transition}", method={"PATCH"})
      */
-    public function validateProperties(Request $request, Property $property, String $transition): Response
-    {
-        /*
-        * changement statut ajout
-        * transition: draft, rejected, published
-        */
-        $workflow = $this->workflowRegistry->get($property);
-        if($workflow->can($property, $transition))
-        {
-            $workflow->apply($property, $transition);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($property);
-            $em->flush();
-        }
+    public function __construct(Registry $workflow){
+        $this->workflow = $workflow;
     }
 
-    /**
-     * @Route("/admin/properties", name="property_validate")
-     */
-    public function changeState(): Response
+    public function __invoke(Property $property, String $transition = "") : JsonResponse
     {
-        // get properties with last session   
+        $workflow = $this->workflow->get($property);
+
+        try{
+            
+            if($workflow->can($property, $transition))
+            {
+                $workflow->apply($property, $transition);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($property);
+                $em->flush();
+            }
+    
+        }catch (TransitionException $exception){
+            throw new HttpException(400, `Can not transition to $transition`);
+  
+        }
+        
+        return new JsonResponse($property);
+
     }
 }
