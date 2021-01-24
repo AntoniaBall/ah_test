@@ -5,9 +5,9 @@ api_platform:
         json: ['application/merge-patch+json']
     swagger:
         versions: [3]
-    eager_loading:
-        fetch_partial: true
-         api_keys:
+        api_keys:
              apiKey:
                 name: Authorization
                 type: header
+    eager_loading:
+        fetch_partial: true

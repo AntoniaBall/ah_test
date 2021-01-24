@@ -9,15 +9,35 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use function Symfony\Component\String\u;
+use App\Controller\CommentController;
 
 /**
- * @ApiResource(normalizationContext={"groups"={"comments:read"}},
- *     denormalizationContext={"groups"={"comments:write"}})
- * @ORM\Entity(repositoryClass=CommentsRepository::class)
- */
+*
+* @ApiResource(
+*     attributes={"security"="is_granted('IS_AUTHENTICATED_FULLY')"},
+*     order={​​​​​​​"PublishedAt"="DESC"}​​​​​​​,
+*     collectionOperations={
+*          "get"={​​​​​​​"normalization_context"={​​​​​​​"groups"="comments:list"}​​​​​​​},
+*          "post" = { "security_post_denormalize" = "is_granted('COMMENT_CREATE', object)" },
+*          "controller"=CommentController::class
+*     },
+*     itemOperations={
+*          "get" = { "security" = "is_granted('COMMENT_READ', object)" },
+*          "put" = { "security" = "is_granted('COMMENT_EDIT', object) and (object.owner == user and previous_object.owner == user)" },
+*          "delete" = { "security" = "is_granted('COMMENT_DELETE', object) and (object.owner == user and previous_object.owner == user)" }
+*     },
+* )
+*
+* @ApiFilter(SearchFilter::class, properties={"Activities": "exact"})
+* @ORM\Entity(repositoryClass= CommentsRepository::class)
+*/
 class Comments
 {
     /**
+     * @Groups({"comments:list"})
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -25,7 +45,8 @@ class Comments
     private $id;
 
     /**
-     * @Groups({"comments:read", "comments:write"})
+     *
+     * @Groups({"comments:list"})
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank
      * @Assert\Length(
@@ -37,32 +58,49 @@ class Comments
     private $comment_content;
 
     /**
-     * 
+     *
+     * @Groups({"comments:list"})
      * @ORM\OneToMany(targetEntity=Pictures::class, mappedBy="comments")
-     * @Groups("comments:read")
      */
     private $pictures;
 
     /**
      * 
      * @ORM\Column(type="array")
-     * @Groups({"comments:read", "comments:write"})
+     *
      */
     private $forbidden_words = [];
 
     /**
-     * 
+     *
+     * @Groups({"comments:list"})
      * @ORM\ManyToOne(targetEntity=Activities::class, inversedBy="comments")
-     * @Groups("comments:read")
      */
     private $activities;
 
     /**
      * 
      * @ORM\ManyToOne(targetEntity=Reservation::class, inversedBy="comments")
-     * @Groups("comments:read")
+     *
+     * @Groups({"comments:list"})
      */
     private $reservation;
+
+   
+    
+    /**
+     * @ORM\Column(type="datetime")
+     *
+     * @Groups({"comments:list"})
+     */
+    private $PublishedAt;
+
+    /**
+     * @Groups({"comments:list"})
+     * @ORM\ManyToOne(targetEntity=user::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
 
     public function __construct()
     {
@@ -150,6 +188,32 @@ class Comments
     public function setReservation(?Reservation $reservation): self
     {
         $this->reservation = $reservation;
+
+        return $this;
+    }
+
+  
+ 
+    public function getPublishedAt(): ?\DateTimeInterface
+    {
+        return $this->PublishedAt;
+    }
+
+    public function setPublishedAt(\DateTimeInterface $PublishedAt): self
+    {
+        $this->PublishedAt = $PublishedAt;
+
+        return $this;
+    }
+
+    public function getUser(): ?user
+    {
+        return $this->user;
+    }
+
+    public function setUser(?user $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

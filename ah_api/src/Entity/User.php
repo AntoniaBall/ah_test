@@ -68,6 +68,7 @@ class User implements UserInterface
     private $isVerified = false;
     
     /*
+    * @Groups({"read:comment"})
     * @Groups({"user:read", "user:write", "property:read"})
     * @ORM\Column(type="string")
     */
@@ -91,6 +92,17 @@ class User implements UserInterface
      * @Groups("user:read")
      */
     private $properties;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $activation_token;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $rest_token;
+
 
     public function __construct()
     {
@@ -327,4 +339,29 @@ class User implements UserInterface
         return $this;
     }
 
+    public function getActivationToken(): ?string
+    {
+        return $this->activation_token;
+    }
+
+    public function setActivationToken(?string $activation_token): self
+    {
+        $this->activation_token = $activation_token;
+
+        return $this;
+    }
+
+    public function getRestToken(): ?string
+    {
+        return $this->rest_token;
+    }
+
+    public function setRestToken(?string $rest_token): self
+    {
+        $this->rest_token = $rest_token;
+
+        return $this;
+    }
+
+    
 }

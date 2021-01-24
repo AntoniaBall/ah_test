@@ -33,7 +33,7 @@ class ReservationFixture extends Fixture implements DependentFixtureInterface
 
         $manager->persist($reservation);
         $manager->persist($reservation1);
-
+        $this->addReference("Reservation_1", $reservation);
         $manager->flush();
     }
     public function getDependencies()
