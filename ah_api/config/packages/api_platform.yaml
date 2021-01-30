@@ -11,3 +11,5 @@ api_platform:
                 type: header
     eager_loading:
         fetch_partial: true
+    messenger:
+        enabled: true

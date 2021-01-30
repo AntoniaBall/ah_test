@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Property;
+use App\Message\AddPropertyMessage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,34 +15,17 @@ use Symfony\Component\Workflow\Exception\LogicException;
 
 class PropertyController extends AbstractController
 {
-    public function __construct(Registry $workflow){
-        $this->workflow = $workflow;
-    }
-    
     /**
-     * 
-     * Route("/api/properties/{id}/{transition}", method={"PATCH"})
+     * Route("/api/envoi-message")
      */
-    public function __invoke(Property $property, String $transition) : Property
+    public function index(MessageBusInterface $bus)
     {
-        $workflow = $this->workflow->get($property);
+        // will cause the SmsNotificationHandler to be called
+        $bus->dispatch(new AddPropertyMessage('Look! I created a message!'));
 
-        try{
-            // si le user est propriétaire
-            if($workflow->can($property, $transition))
-            {
-                $workflow->apply($property, $transition);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($property);
-                $em->flush();
-            }
-    
-        }catch (TransitionException $exception){
-            throw new HttpException(400, `Can not transition to $transition`);
-  
-        }
-        
-        return $property;
+        // // or use the shortcut
+        // $this->dispatchMessage(new AddPropertyMessage('Look! I created a message!'));
+
+        // ...
     }
-
 }
