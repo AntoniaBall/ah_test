@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in constraints
 use App\Controller\PropertyController;
@@ -24,15 +25,10 @@ use App\EventListener\AddPropertyListener;
  * itemOperations={
  *    "get",
  *    "put"={"security"="is_granted('ROLE_PROPRIO') or object.owner == user"},
+ *    "patch"={"security"="is_granted('ROLE_ADMIN')", "denormalization_context"={"groups"={"admin:write"}}},
  *    "delete"={"security"="is_granted('ROLE_PROPRIO') or object.owner == user"},
- *    "status"={
- *          "method"="PATCH",
- *          "path"="/properties/{id}/{transition}",
- *          "controller"=PropertyController::class
- *      }
  * }
  * )
- * @ORM\EntityListeners({AddPropertyListener::class})
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
  */
 class Property
@@ -195,7 +191,7 @@ class Property
     private $activities;
 
     /**
-     * @Groups({"property:read", "property:write", "user:write", "indisponibility:write"})
+     * @Groups({"property:read", "admin:write","user:write", "indisponibility:write"})
      * @Assert\Type(
      *      type="string",
      *      message="This value must be a string"
@@ -455,7 +451,7 @@ class Property
      public function removeIndisponibility(Indisponibility $indisponibility): self
      {
         if ($this->indisponibilities->removeElement($indisponibility)) {
-            $indisponibility->removeProperty($this);
+            return $this;
         }
 
         return $this;

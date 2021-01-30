@@ -14,20 +14,20 @@ use Symfony\Component\Workflow\Exception\LogicException;
 
 class PropertyController extends AbstractController
 {
+    public function __construct(Registry $workflow){
+        $this->workflow = $workflow;
+    }
+    
     /**
      * 
      * Route("/api/properties/{id}/{transition}", method={"PATCH"})
      */
-    public function __construct(Registry $workflow){
-        $this->workflow = $workflow;
-    }
-
-    public function __invoke(Property $property, String $transition = "") : JsonResponse
+    public function __invoke(Property $property, String $transition) : Property
     {
         $workflow = $this->workflow->get($property);
 
         try{
-            
+            // si le user est propriétaire
             if($workflow->can($property, $transition))
             {
                 $workflow->apply($property, $transition);
@@ -41,7 +41,7 @@ class PropertyController extends AbstractController
   
         }
         
-        return new JsonResponse($property);
-
+        return $property;
     }
+
 }

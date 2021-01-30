@@ -2,14 +2,16 @@
 
 namespace App\Message;
 
-use App\Entity\Property;
-
 class AddPropertyMessage {
-    public $property;
+    public $content;
 
-    public function __construct(Property $property)
+    public function __construct(String $content)
     {
-        $this->property = $property;
+        $this->content = $content;
     }
-
+    
+    public function getContent(): string
+    {
+        return $this->content;
+    }
 }

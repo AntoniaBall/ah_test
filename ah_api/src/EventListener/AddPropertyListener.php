@@ -13,7 +13,7 @@ class AddPropertyListener {
 
     public function postPersist(Property $property)
     {
-        $this->bus->dispatch(new AddPropertyMessage($property));
+        $this->bus->dispatch(new AddPropertyMessage('review en cours'));
     }
 }
 
