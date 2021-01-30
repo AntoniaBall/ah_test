@@ -5,7 +5,6 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Message\AddPropertyMessage;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class IndexController extends AbstractController
@@ -17,7 +16,6 @@ class IndexController extends AbstractController
     // public function index(MessageBusInterface $bus): Response
     public function index(\Swift_Mailer $mailer)
     {
-        // $bus->dispatch(new AddPropertyMessage('sending email'));
         $message=(new \Swift_Message('Hello Email'))
         ->setFrom('admin@yopmail.com')
         ->setTo('antonia.balluais@gmail.com')

@@ -8,5 +8,3 @@ framework:
             symfony_serializer:
                 format: 'jsonld'
         
-        routing:
-            'App\Message\AddPropertyMessage' : async

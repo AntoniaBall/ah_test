@@ -11,7 +11,6 @@ use ApiPlatform\Core\Annotation\ApiProperty;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in constraints
 use App\Controller\PropertyController;
-use App\EventListener\PropertyListener;
 
 /**
  * @ApiResource(attributes={
@@ -29,7 +28,6 @@ use App\EventListener\PropertyListener;
  *    "delete"={"security"="is_granted('ROLE_PROPRIO') or object.owner == user"},
  * }
  * )
- * @ORM\EntityListeners({PropertyListener::class})
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
  */
 class Property

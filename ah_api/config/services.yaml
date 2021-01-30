@@ -34,8 +34,6 @@ services:
             arguments: ['@App\Swagger\SwaggerDecorator.inner']
             autoconfigure: false
 
-    App\Handler\AddPropertyHandler:
-        tags: [messenger.message_handler]
 
     App\DataPersister\BienPersister:
         decorates: 'api_platform.doctrine.orm.data_persister'
