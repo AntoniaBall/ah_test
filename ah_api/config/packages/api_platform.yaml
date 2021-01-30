@@ -3,11 +3,10 @@ api_platform:
         paths: ['%kernel.project_dir%/src/Entity']
     patch_formats:
         json: ['application/merge-patch+json']
-        jsonld: { mime_types: [ "application/json" ] }
     swagger:
         versions: [3]
         api_keys:
-            apiKey:
+             apiKey:
                 name: Authorization
                 type: header
     eager_loading:

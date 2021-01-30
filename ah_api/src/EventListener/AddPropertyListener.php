@@ -16,3 +16,4 @@ class AddPropertyListener {
         $this->bus->dispatch(new AddPropertyMessage($property));
     }
 }
+

@@ -17,6 +17,7 @@ services:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
+            - '../src/Entity/'
             - '../src/Kernel.php'
             - '../src/Tests/'
 
@@ -32,10 +33,3 @@ services:
             decorates: 'api_platform.swagger.normalizer.documentation'
             arguments: ['@App\Swagger\SwaggerDecorator.inner']
             autoconfigure: false
-
-    # add user id on JWT response
-    App\EventListener\JWTCreatedListener:
-        arguments: [ '@request_stack' ]
-        tags:
-            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
-

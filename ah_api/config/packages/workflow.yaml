@@ -28,3 +28,4 @@ framework:
                     guard: "is_fully_authenticated() and is_granted('ROLE_ADMIN')"
                     from: reviewing
                     to: rejected
+
