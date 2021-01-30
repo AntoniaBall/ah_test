@@ -11,8 +11,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource(normalizationContext={"groups"={"comments:read"}},
- *     denormalizationContext={"groups"={"comments:write"}})
+ * @ApiResource(
+ * normalizationContext={"groups"={"comments:read"}},
+ * denormalizationContext={"groups"={"comments:write"}}
+ * )
  * @ORM\Entity(repositoryClass=CommentsRepository::class)
  */
 class Comments

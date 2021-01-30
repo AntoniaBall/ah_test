@@ -25,7 +25,7 @@ class Indisponibility
     private $id;
 
     /**
-     * @Groups({"indisponibility:read", "indisponibility:write"})
+     * @Groups({"indisponibility:read", "indisponibility:write", "property:write"})
      * @Assert\Type(
      *     type="datetime",
      *     message="The value {{ value }} is not a valid {{ type }}."
@@ -33,24 +33,23 @@ class Indisponibility
      * @Assert\GreaterThan("today")
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $date_start;
+    private $dateStart;
 
     /**
-     * @Groups({"indisponibility:read", "indisponibility:write"})
+     * @Groups({"indisponibility:read", "indisponibility:write", "property:write"})
      * @Assert\Type(
      *     type="datetime",
      *     message="The value {{ value }} is not a valid {{ type }}."
      * )
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $date_end;
+    private $dateEnd;
 
     /**
-     * @Groups({"indisponibility:read", "indisponibility:write"})
+     * @Groups("indisponibility:read")
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="indisponibilities", cascade={"persist"})
      */
     private $property;
-
 
     public function getId(): ?int
     {
@@ -59,28 +58,27 @@ class Indisponibility
 
     public function getDateStart(): ?\DateTimeInterface
     {
-        return $this->date_start;
+        return $this->dateStart;
     }
 
-    public function setDateStart(?\DateTimeInterface $date_start): self
+    public function setDateStart(?\DateTimeInterface $dateStart): self
     {
-        $this->date_start = $date_start;
+        $this->dateStart = $dateStart;
 
         return $this;
     }
 
     public function getDateEnd(): ?\DateTimeInterface
     {
-        return $this->date_end;
+        return $this->dateEnd;
     }
 
-    public function setDateEnd(?\DateTimeInterface $date_end): self
+    public function setDateEnd(?\DateTimeInterface $dateEnd): self
     {
-        $this->date_end = $date_end;
+        $this->dateEnd = $dateEnd;
 
         return $this;
     }
-
 
     /**
      * Get the value of property

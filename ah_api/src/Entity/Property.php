@@ -7,36 +7,52 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in constraints
+use App\Controller\PropertyController;
 
 /**
- * @ApiResource(normalizationContext={"groups"={"property:read"}},
- *     denormalizationContext={"groups"={"property:write"}})
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"property:read"}},
+ *     "denormalization_context"={"groups"={"property:write"}}
+ * },
+ * collectionOperations={
+ *    "get",
+ *    "post"={"security"="is_granted('ROLE_PROPRIO')"}
+ * },
+ * itemOperations={
+ *    "get",
+ *    "put"={"security"="is_granted('ROLE_PROPRIO') or object.owner == user"},
+ *    "patch"={"security"="is_granted('ROLE_ADMIN')", "denormalization_context"={"groups"={"admin:write"}}},
+ *    "delete"={"security"="is_granted('ROLE_PROPRIO') or object.owner == user"},
+ * }
+ * )
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
  */
 class Property
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
+     * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write", "indisponibility:write", "activities:write"})
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank
      * @Assert\Length(
      * max = 100,
      * maxMessage = "La longueur du titre doit être inférieure à {{ limit }} caractères"
      * )
+     * @Assert\NotNull
      */
     private $title;
     
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write", "indisponibility:write","activities:write"})
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Assert\Length(
@@ -47,7 +63,7 @@ class Property
     private $description;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write", "indisponibility:write","activities:write"})
      * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
@@ -58,18 +74,16 @@ class Property
     private $surface;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read"})
-     * @Assert\Positive(message="this value must be positive")
+     * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write","activities:write"})
      * @ORM\Column(type="integer")
-     * @Assert\NotBlank
-     * @Assert\Positive
+     * @Assert\Positive(message="this value must be positive")
      * @Assert\NotNull
-     * @Assert\LessThan(20)
-     */
-    private $nbr_room;
+     * @Assert\LessThan(5)
+    */
+    private $nbrRoom;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read"})
+    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write","activities:write"})
      * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="float")
      * @Assert\NotBlank
@@ -80,24 +94,20 @@ class Property
     private $rate;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read"})
-    * @Assert\Positive(message="this value must be positive")
+    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write", "activities:write"})
+     * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
-     * @Assert\NotBlank
-     * @Assert\Positive
      */
-    private $max_travelers;
+    private $maxTravelers;
 
-      /**
-       * @Groups({"property:read", "property:write", "typeproperty:read"})
-     * @Assert\NotNull
+    /**
+    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write", "activities:write"})
      * @ORM\Column(type="boolean")
-     * @Assert\NotBlank
      */
-    private $access_handicap;
+    private $accessHandicap;
     
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write", "activities:write"})
      * @Assert\NotNull
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank
@@ -105,7 +115,7 @@ class Property
     private $water;
     
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read"})
+    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write", "activities:write"})
      * @Assert\NotNull
      * @ORM\Column(type="boolean")
      * @Assert\NotBlank
@@ -113,81 +123,85 @@ class Property
     private $electricity;
 
     /**
-     * @Groups({"property:read", "property:write"})
+     * @Groups({"property:read", "property:write", "user:write"})
      * @ORM\ManyToOne(targetEntity=TypeProperty::class, inversedBy="properties", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $typeProperty;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read"})
-     * @Assert\Positive(message="this value should be positive")
+    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write", "activities:write"})
+    * @Assert\Positive(message="this value should be positive")
      * @ORM\Column(type="float")
      * @Assert\NotBlank
      */
     private $tax;
     
     /**
-     * @Groups({"property:write"})
+     * @Groups({"property:read", "user:write"})
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="property", orphanRemoval=true)
      */
     private $reservations;
 
     /**
-     * @Groups({"property:read", "property:write"})
+     * @Groups({"property:read", "property:write", "user:write"})
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="properties", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $user;
 
     /**
-     * @Groups({"property:read", "property:write"})
-     * @ORM\ManyToOne(targetEntity=Equipment::class, inversedBy="properties")
+     * @Groups({"property:read", "property:write", "user:write", "equipment:write"})
+     * @ORM\ManyToOne(targetEntity=Equipment::class, inversedBy="properties", cascade={"persist", "remove"})
+     * @Assert\Valid
      */
     private $equipment;
 
     /**
-     * @Groups({"property:read", "property:write"})
+     * @Groups({"property:read", "property:write", "user:write", "address:write"})
+     * 
+     * @Assert\Valid
      * @ORM\OneToOne(targetEntity=Address::class, inversedBy="property", cascade={"persist", "remove"})
      */
     private $address;
 
     /**
-     * @Groups({"property:read", "property:write"})
+     * @Groups({"property:read", "property:write", "user:write"})
      * @ORM\OneToOne(targetEntity=Valeur::class, mappedBy="property", cascade={"persist", "remove"})
      */
     private $valeur;
 
     /**
-     * @Groups({"property:read", "property:write"})
-     * @ORM\OneToMany(targetEntity=Indisponibility::class, mappedBy="property")
+     * @Groups({"property:read", "property:write", "user:write", "indisponibility:write"})
+     * @ORM\OneToMany(targetEntity=Indisponibility::class, mappedBy="property", cascade={"persist", "remove"})
      */
     private $indisponibilities;
 
     /**
-     * @Groups({"property:read", "property:write"})
-     * @ORM\OneToMany(targetEntity=Pictures::class, mappedBy="property")
+     * @Groups({"property:read", "property:write", "user:write", "picture:write"})
+     * @ORM\OneToMany(targetEntity=Pictures::class, mappedBy="property", cascade={"persist", "remove"})
      */
     private $pictures;
 
     /**
-     * @Groups("property:read")
-     * @ORM\ManyToMany(targetEntity=Activities::class, mappedBy="Property")
+     * @Groups({"property:read", "property:write", "user:write", "activities:write"})
+     * @ORM\ManyToMany(targetEntity=Activities::class, mappedBy="property", cascade={"persist", "remove"})
      */
     private $activities;
 
     /**
-     * @Groups({"property:read", "property:write"})
+     * @Groups({"property:read", "admin:write","user:write", "indisponibility:write"})
      * @Assert\Type(
-     *      type="array",
-     *      message="This value must be an array"
+     *      type="string",
+     *      message="This value must be a string"
      * )
-     * @ORM\Column(type="array")
+     * @ORM\Column(type="string")
      */
-    private $status = [];
+    private $status;
 
     public function __construct()
     {
+        $this->status="draft";
         $this->reservations = new ArrayCollection();
         $this->indisponibilities = new ArrayCollection();
         $this->pictures = new ArrayCollection();
@@ -225,12 +239,12 @@ class Property
 
     public function getAccessHandicap(): ?bool
     {
-        return $this->access_handicap;
+        return $this->accessHandicap;
     }
 
-    public function setAccessHandicap(bool $access_handicap): self
+    public function setAccessHandicap(bool $accessHandicap): self
     {
-        $this->access_handicap = $access_handicap;
+        $this->accessHandicap = $accessHandicap;
 
         return $this;
     }
@@ -273,12 +287,12 @@ class Property
 
     public function getNbrRoom(): ?int
     {
-        return $this->nbr_room;
+        return $this->nbrRoom;
     }
 
-    public function setNbrRoom(int $nbr_room): self
+    public function setNbrRoom(int $nbrRoom): self
     {
-        $this->nbr_room = $nbr_room;
+        $this->nbrRoom = $nbrRoom;
 
         return $this;
     }
@@ -297,12 +311,12 @@ class Property
 
     public function getMaxTravelers(): ?int
     {
-        return $this->max_travelers;
+        return $this->maxTravelers;
     }
 
-    public function setMaxTravelers(int $max_travelers): self
+    public function setMaxTravelers(int $maxTravelers): self
     {
-        $this->max_travelers = $max_travelers;
+        $this->maxTravelers = $maxTravelers;
 
         return $this;
     }
@@ -427,16 +441,16 @@ class Property
     {
         if (!$this->indisponibilities->contains($indisponibility)) {
             $this->indisponibilities[] = $indisponibility;
-            $indisponibility->addProperty($this);
+            $indisponibility->setProperty($this);
         }
 
         return $this;
     }
 
-    public function removeIndisponibility(Indisponibility $indisponibility): self
-    {
+     public function removeIndisponibility(Indisponibility $indisponibility): self
+     {
         if ($this->indisponibilities->removeElement($indisponibility)) {
-            $indisponibility->removeProperty($this);
+            return $this;
         }
 
         return $this;
@@ -499,12 +513,12 @@ class Property
         return $this;
     }
 
-    public function getStatus(): ?array
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    public function setStatus(array $status): self
+    public function setStatus(string $status): self
     {
         $this->status = $status;
 

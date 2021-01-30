@@ -6,7 +6,8 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class JWTCreatedListener {
-        /**
+    
+    /**
      * @var RequestStack
      */
     private $requestStack;
