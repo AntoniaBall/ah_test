@@ -8,8 +8,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiProperty;
+use App\Validator\Constraints\MinimalProperties;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in constraints
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Controller\PropertyController;
 
 /**
@@ -119,6 +120,7 @@ class Property
      * @Assert\NotNull
      * @ORM\Column(type="boolean")
      * @Assert\NotBlank
+     * @MinimalProperties
      */
     private $electricity;
 
