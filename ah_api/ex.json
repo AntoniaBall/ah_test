@@ -36,7 +36,12 @@
     "activities": [
         {
             "title": "centre equestre au bord de la piscine",
-            "description": "centre équestre pas loin d'ici"
+            "description": "centre équestre pas loin d'ici",
+            "pictures": [
+                {
+                    
+                }
+            ]
         }
     ]
 }
