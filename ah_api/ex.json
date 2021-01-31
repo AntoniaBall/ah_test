@@ -1,0 +1,42 @@
+{
+    "title": "test nouveau bien sans workflow",
+    "description": "string description et atebatetmie",
+    "surface": 250,
+    "nbrRoom": 2,
+    "rate": 90,
+    "maxTravelers": 10,
+    "water": "eau courante",
+    "electricity": true,
+    "typeProperty": "/api/type_properties/326",
+    "tax": 0.80,
+    "accessHandicap": true,
+    "user": "/api/users/503",
+    "equipment": {
+        "pool": false,
+        "baignoire": false,
+        "jaccuzzi": true,
+        "climatiseur": true,
+        "chauffage": true,
+        "wifi": true
+    },
+    "address": {
+        "number": 221,
+        "street": "Backer Street",
+        "postalCode": 75016,
+        "town": "Paris",
+        "region": "Ile-de-France",
+        "country": "FR"
+    },
+    "indisponibilities": [
+        {
+            "dateStart": "2021-12-31T00:00:00+01:00",
+            "dateEnd": "2022-01-03T00:00:00+01:00"
+        }
+    ],
+    "activities": [
+        {
+            "title": "centre equestre au bord de la piscine",
+            "description": "centre équestre pas loin d'ici"
+        }
+    ]
+}

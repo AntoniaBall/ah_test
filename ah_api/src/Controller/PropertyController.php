@@ -22,7 +22,7 @@ class PropertyController extends AbstractController
         // will cause the SmsNotificationHandler to be called
 
         // // or use the shortcut
-
+        
         // ...
     }
 }
