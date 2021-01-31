@@ -9,24 +9,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-final class PicturesController
+final class PicturesController extends AbstractController  
 {
-    // /**
-    //  * @Route("/pictures", name="pictures")
-    //  */
-    // public function index(): Response
-    // {
-    //     return $this->render('pictures/index.html.twig', [
-    //         'controller_name' => 'PicturesController',
-    //     ]);
-    // }
+    private $params;
 
-    // post action add pictures file
+    public function __construct(ParameterBagInterface $params)
+    {
+        $this->params = $params;
+    }
+
     public function __invoke(Request $request): Pictures
     {
-        // var_dump("coucou");
-        // die();
         $uploadedFile = $request->files->get('file');
 
         if (!$uploadedFile) {
@@ -37,6 +32,7 @@ final class PicturesController
         $mediaObject = new Pictures();
         $mediaObject->file = $uploadedFile;
 
+        $mediaObject->setUrl($this->params->get('pictures-directory'));
         return $mediaObject;
     }
 

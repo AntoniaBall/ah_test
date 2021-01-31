@@ -100,7 +100,7 @@ class Pictures
      * @ORM\ManyToOne(targetEntity=Activities::class, inversedBy="pictures")
      */
     private $activities;
-
+    
     /**
      * @var File|null
      * 
@@ -108,8 +108,9 @@ class Pictures
      * @Vich\UploadableField(mapping="pictures", fileNameProperty="filePath")
      */
     public $file;
-
+    
     /**
+     * @Groups("picture:read")
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $filePath;

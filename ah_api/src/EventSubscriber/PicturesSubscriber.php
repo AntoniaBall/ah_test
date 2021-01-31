@@ -31,27 +31,29 @@ final class PicturesSubscriber implements EventSubscriberInterface
     {
         $controllerResult = $event->getControllerResult();
         $request = $event->getRequest();
-
+        
+        
         if ($controllerResult instanceof Response || !$request->attributes->getBoolean('_api_respond', true)) {
             return;
         }
-
-        if (!($attributes = RequestAttributesExtractor::extractAttributes($request)) || !\is_a($attributes['resource_class'], MediaObject::class, true)) {
+        
+        if (!($attributes = RequestAttributesExtractor::extractAttributes($request)) || !\is_a($attributes['resource_class'], Pictures::class, true)) {
             return;
         }
-
+        
         $pictures = $controllerResult;
-
+        
         if (!is_iterable($pictures)) {
             $pictures = [$pictures];
         }
+
 
         foreach ($pictures as $picture) {
             if (!$picture instanceof Pictures) {
                 continue;
             }
-
-            $picture->url = $this->storage->resolveUri($picture, 'file');
+            $picture->setUrl($controllerResult->file->getPathName());
         }
+
     }
 }
