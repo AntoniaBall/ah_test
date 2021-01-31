@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Pictures;
 use App\Repository\PropertyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -180,8 +181,10 @@ class Property
     private $indisponibilities;
 
     /**
+     * @var Pictures|null
      * @Groups({"property:read", "property:write", "user:write", "picture:write"})
      * @ORM\OneToMany(targetEntity=Pictures::class, mappedBy="property", cascade={"persist", "remove"})
+     * @ApiProperty(iri="http://schema.org/image")
      */
     private $pictures;
 
