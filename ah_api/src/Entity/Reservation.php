@@ -14,6 +14,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(normalizationContext={"groups"={"reservation:read"}},
  *     denormalizationContext={"groups"={"reservation:write"}})
  * @ORM\Entity(repositoryClass=ReservationRepository::class)
+ * collectionOperations={
+ *    "get",
+ *    "post"={"security"="is_granted('ROLE_USER')"}
+ * }
  */
 class Reservation
 {
@@ -26,24 +30,24 @@ class Reservation
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\NotBlank
+     * @Assert\GreaterThan("today")
      * @Assert\Date
      * @var string A "Y-m-d" formatted value
      * @Groups({"reservation:read", "reservation:write"})
      */
-    private $date_debut;
-
+    private $dateStart;
+    
     /**
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank
+     * @Assert\Date
      * @Groups({"reservation:read", "reservation:write"})
      */
-    private $date_end;
+    private $dateEnd;
 
     /**
      * @ORM\Column(type="float")
      * @Assert\NotBlank
-     * @Assert\Date
      * @Groups({"reservation:read", "reservation:write"})
      */
     private $montant;
@@ -53,7 +57,7 @@ class Reservation
      * @Assert\NotBlank
      * @Groups({"reservation:read", "reservation:write"})
      */
-    private $number_traveler;
+    private $numberTraveler;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reservations")
@@ -96,6 +100,7 @@ class Reservation
 
     public function __construct()
     {
+        $this->paid = false;
         $this->setUser($this->getUser());
         $this->comments = new ArrayCollection();
     }
@@ -105,26 +110,26 @@ class Reservation
         return $this->id;
     }
 
-    public function getDateDebut(): ?\DateTimeInterface
+    public function getdateStart(): ?\DateTimeInterface
     {
-        return $this->date_debut;
+        return $this->dateStart;
     }
 
-    public function setDateDebut(\DateTimeInterface $date_debut): self
+    public function setdateStart(\DateTimeInterface $dateStart): self
     {
-        $this->date_debut = $date_debut;
+        $this->dateStart = $dateStart;
 
         return $this;
     }
 
     public function getDateEnd(): ?\DateTimeInterface
     {
-        return $this->date_end;
+        return $this->dateEnd;
     }
 
-    public function setDateEnd(\DateTimeInterface $date_end): self
+    public function setDateEnd(\DateTimeInterface $dateEnd): self
     {
-        $this->date_end = $date_end;
+        $this->dateEnd = $dateEnd;
 
         return $this;
     }
@@ -143,12 +148,12 @@ class Reservation
 
     public function getNumberTraveler(): ?int
     {
-        return $this->number_traveler;
+        return $this->numberTraveler;
     }
 
-    public function setNumberTraveler(int $number_traveler): self
+    public function setNumberTraveler(int $numberTraveler): self
     {
-        $this->number_traveler = $number_traveler;
+        $this->numberTraveler = $numberTraveler;
 
         return $this;
     }
