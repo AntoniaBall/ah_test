@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\Reservation;
 use App\Entity\Property;
 use ApiPlatform\Core\EventListener\EventPriorities;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -43,10 +44,12 @@ final class ReservationSubscriber implements EventSubscriberInterface
     * Pour débugger, faire un dump de tes variables ici
     */
         $object = $event->getControllerResult();
-        // si l'objet est un bien ou une réservation setter le user au user connecté actuellement
+
         if ($object instanceof Reservation){
             $object->setUser($this->tokenStorage->getToken()->getUser());
             $event->setControllerResult($object);
         }
+        
+        return true;
     }
 }

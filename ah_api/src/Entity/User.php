@@ -15,7 +15,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
 * @ApiResource(normalizationContext={"groups"={"user:read"}},
-*     denormalizationContext={"groups"={"user:write"}})
+*     denormalizationContext={"groups"={"user:write"}}
+*)
 * 
 * @ORM\Entity(repositoryClass=UserRepository::class)
 * @UniqueEntity(fields={"email"}, message="There is already an account with this email")

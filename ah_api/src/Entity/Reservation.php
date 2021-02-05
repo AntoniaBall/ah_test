@@ -12,12 +12,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Type;
 /**
  * @ApiResource(normalizationContext={"groups"={"reservation:read"}},
- *     denormalizationContext={"groups"={"reservation:write"}})
- * @ORM\Entity(repositoryClass=ReservationRepository::class)
+ *     denormalizationContext={"groups"={"reservation:write"}},
  * collectionOperations={
- *    "get",
+ *    "get"={"security"="is_granted('ROLE_USER') or object.owner == user"},
  *    "post"={"security"="is_granted('ROLE_USER')"}
  * }
+ * )
+ * @ORM\Entity(repositoryClass=ReservationRepository::class)
  */
 class Reservation
 {
@@ -61,14 +62,13 @@ class Reservation
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reservations")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups("reservation:read")
+     * @Groups({"reservation:read", "reservation:write"})
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="reservations")
      * @ORM\JoinColumn(nullable=false)
-     * @Assert\NotBlank
      * @Groups("reservation:read")
      */
     private $property;
@@ -107,7 +107,6 @@ class Reservation
     {
         $this->status="en attente";
         $this->paid = false;
-        $this->setUser($this->getUser());
         $this->comments = new ArrayCollection();
     }
 
