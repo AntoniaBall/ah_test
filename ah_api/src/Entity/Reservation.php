@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
-
+use Symfony\Component\Validator\Constraints\Type;
 /**
  * @ApiResource(normalizationContext={"groups"={"reservation:read"}},
  *     denormalizationContext={"groups"={"reservation:write"}})
@@ -31,16 +31,15 @@ class Reservation
     /**
      * @ORM\Column(type="datetime")
      * @Assert\GreaterThan("today")
-     * @Assert\Date
-     * @var string A "Y-m-d" formatted value
+     * @Assert\Type("\DateTimeInterface")
      * @Groups({"reservation:read", "reservation:write"})
      */
     private $dateStart;
-    
+
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\NotBlank
-     * @Assert\Date
+     * @Assert\GreaterThan("today")
+     * @Assert\Type("\DateTimeInterface")
      * @Groups({"reservation:read", "reservation:write"})
      */
     private $dateEnd;
@@ -98,8 +97,15 @@ class Reservation
     */
     private $historical = [];
 
+    /**
+     * Assert\Choice({"en attente", "payée", "rejetée"})
+     * @ORM\Column(type="string", length=20)
+     */
+    private $status;
+
     public function __construct()
     {
+        $this->status="en attente";
         $this->paid = false;
         $this->setUser($this->getUser());
         $this->comments = new ArrayCollection();
@@ -256,6 +262,18 @@ class Reservation
     public function setReservation(?User $reservation): self
     {
         $this->reservation = $reservation;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
