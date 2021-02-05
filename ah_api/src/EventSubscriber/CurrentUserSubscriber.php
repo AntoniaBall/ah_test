@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\Property;
 use ApiPlatform\Core\EventListener\EventPriorities;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -41,10 +42,13 @@ final class CurrentUserSubscriber implements EventSubscriberInterface
     /**
     * Pour débugger, faire un dump de tes variables ici
     */
-    
-        $object = $event->getControllerResult();
 
-        $object->setUser($this->tokenStorage->getToken()->getUser());
-        $event->setControllerResult($object);
+        $object = $event->getControllerResult();
+        // var_dump($object);
+        // die();
+        if ($object instanceof Property){
+            $object->setUser($this->tokenStorage->getToken()->getUser());
+            $event->setControllerResult($object);
+        }
     }
 }
