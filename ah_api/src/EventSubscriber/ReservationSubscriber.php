@@ -41,10 +41,12 @@ final class ReservationSubscriber implements EventSubscriberInterface
     public function addReservationAction(ViewEvent $event)
     {
     /**
-    * Pour débugger, faire un dump de tes variables ici
+    * récupérer le résultat du controlleur
     */
         $object = $event->getControllerResult();
-
+        
+        var_dump("coucou");
+        die();
         if ($object instanceof Reservation){
             $object->setUser($this->tokenStorage->getToken()->getUser());
             $event->setControllerResult($object);
