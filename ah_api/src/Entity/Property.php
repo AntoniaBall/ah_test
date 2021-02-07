@@ -437,7 +437,7 @@ class Property
     /**
      * @return Collection|Disponibility[]
      */
-    public function geDisponibilities(): Collection
+    public function getDisponibilities(): Collection
     {
         return $this->disponibilities;
     }
