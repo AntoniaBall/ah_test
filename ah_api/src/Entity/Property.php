@@ -175,10 +175,10 @@ class Property
     private $valeur;
 
     /**
-     * @Groups({"property:read", "property:write", "user:write", "indisponibility:write"})
-     * @ORM\OneToMany(targetEntity=Indisponibility::class, mappedBy="property", cascade={"persist", "remove"})
+     * @Groups({"property:read", "property:write", "user:write", "disponibility:write"})
+     * @ORM\OneToMany(targetEntity=Disponibility::class, mappedBy="property", cascade={"persist", "remove"})
      */
-    private $indisponibilities;
+    private $disponibilities;
 
     /**
      * @var Pictures|null
@@ -208,7 +208,7 @@ class Property
     {
         $this->status="draft";
         $this->reservations = new ArrayCollection();
-        $this->indisponibilities = new ArrayCollection();
+        $this->disponibilities = new ArrayCollection();
         $this->pictures = new ArrayCollection();
         $this->activities = new ArrayCollection();
     }
@@ -435,26 +435,26 @@ class Property
     }
 
     /**
-     * @return Collection|Indisponibility[]
+     * @return Collection|Disponibility[]
      */
-    public function getIndisponibilities(): Collection
+    public function geDisponibilities(): Collection
     {
-        return $this->indisponibilities;
+        return $this->disponibilities;
     }
 
-    public function addIndisponibility(Indisponibility $indisponibility): self
+    public function addDisponibility(Disponibility $disponibility): self
     {
-        if (!$this->indisponibilities->contains($indisponibility)) {
-            $this->indisponibilities[] = $indisponibility;
-            $indisponibility->setProperty($this);
+        if (!$this->disponibilities->contains($disponibility)) {
+            $this->disponibilities[] = $disponibility;
+            $disponibility->setProperty($this);
         }
 
         return $this;
     }
 
-     public function removeIndisponibility(Indisponibility $indisponibility): self
+     public function removeDisponibility(Disponibility $disponibility): self
      {
-        if ($this->indisponibilities->removeElement($indisponibility)) {
+        if ($this->disponibilities->removeElement($disponibility)) {
             return $this;
         }
 

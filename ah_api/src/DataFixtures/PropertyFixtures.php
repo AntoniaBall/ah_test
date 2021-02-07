@@ -4,7 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Property;
 use App\Entity\TypeProperty;
-use App\Entity\Indisponibility;
+use App\Entity\Disponibility;
 use App\DataFixtures\TypePropertyFixtures;
 use App\DataFixtures\UserFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;

@@ -13,21 +13,23 @@ class ReservationFixture extends Fixture implements DependentFixtureInterface
     {
         //1 reservation pour l'utilisateur locataire@yopmail.com dans les jours à venir
         $reservation = new Reservation();
-        $reservation->setDateDebut(new \Datetime('now'))
+        $reservation->setDateStart(new \Datetime('now'))
         ->setDateEnd(new \Datetime('next monday'))
         ->setMontant(600)
         ->setPaid(1)
         ->setNumberTraveler(3)
+        ->setStripeToken('tok_1IHxljKzuq8ewRYyYBlC0GSz')
         ->setUser($this->getReference(UserFixtures::LOC_USER_REFERENCE))
         ->setProperty($this->getReference(PropertyFixtures::CABANES_EAU));
         
         //1 reservation pour l'utilisateur locataire@yopmail.com pour le mois prochain pour un autre bien
         $reservation1 = new Reservation();
-        $reservation1->setDateDebut(new \Datetime('first day of next month'))
+        $reservation1->setDateStart(new \Datetime('first day of next month'))
         ->setDateEnd(new \Datetime('+5weeks'))
         ->setMontant(1200)
         ->setPaid(1)
         ->setNumberTraveler(3)
+        ->setStripeToken('tok_1IHxljKzuq8ewRYyYBlC0GSz')
         ->setUser($this->getReference(UserFixtures::LOC_USER_REFERENCE))
         ->setProperty($this->getReference(PropertyFixtures::CABANES));
 

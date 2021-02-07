@@ -26,8 +26,10 @@ class ReservationController extends AbstractController
 
     }
 
-    public function __invoke(Request $request) : Reservation
+    public function __invoke(Reservation $data, Request $request) : Reservation
     {
+        // dump($data);
+
         $requestBody = json_decode($request->getContent(), true);
 
         if (!isset($requestBody["stripeToken"])){
@@ -49,7 +51,7 @@ class ReservationController extends AbstractController
         // créer un objet paiement
         
         //retourne la nouvelle reservation
-        return $newReservation;
+        return $data;
 
     }
 }

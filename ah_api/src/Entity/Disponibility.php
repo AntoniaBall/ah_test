@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\IndisponibilityRepository;
+use App\Repository\DisponibilityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,11 +11,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource(normalizationContext={"groups"={"indisponibility:read"}},
- *     denormalizationContext={"groups"={"indisponibility:write"}})
- * @ORM\Entity(repositoryClass=IndisponibilityRepository::class)
+ * @ApiResource(normalizationContext={"groups"={"disponibility:read"}},
+ *     denormalizationContext={"groups"={"disponibility:write"}})
+ * @ORM\Entity(repositoryClass=DisponibilityRepository::class)
  */
-class Indisponibility
+class Disponibility
 {
     /**
      * @ORM\Id
@@ -25,7 +25,7 @@ class Indisponibility
     private $id;
 
     /**
-     * @Groups({"indisponibility:read", "indisponibility:write", "property:write"})
+     * @Groups({"disponibility:read", "disponibility:write", "property:write"})
      * @Assert\Type(
      *     type="datetime",
      *     message="The value {{ value }} is not a valid {{ type }}."
@@ -36,7 +36,7 @@ class Indisponibility
     private $dateStart;
 
     /**
-     * @Groups({"indisponibility:read", "indisponibility:write", "property:write"})
+     * @Groups({"disponibility:read", "disponibility:write", "property:write"})
      * @Assert\Type(
      *     type="datetime",
      *     message="The value {{ value }} is not a valid {{ type }}."
@@ -46,8 +46,8 @@ class Indisponibility
     private $dateEnd;
 
     /**
-     * @Groups("indisponibility:read")
-     * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="indisponibilities", cascade={"persist"})
+     * @Groups("disponibility:read")
+     * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="disponibilities", cascade={"persist"})
      */
     private $property;
 
