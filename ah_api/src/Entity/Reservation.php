@@ -116,9 +116,10 @@ class Reservation
      * @ORM\Column(type="string", length=255)
      */
     private $stripeToken;
-
+    
     /**
-     * @ORM\OneToMany(targetEntity=Paiement::class, mappedBy="reservation", orphanRemoval=true)
+     * @Groups({"reservation:read", "reservation:write", "paiement:write"})
+     * @ORM\OneToMany(targetEntity=Paiement::class, mappedBy="reservation", orphanRemoval=true, cascade={"persist"})
      */
     private $paiements;
     

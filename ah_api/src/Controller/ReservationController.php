@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Reservation;
+use App\Entity\Paiement;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,16 +15,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Services\PaymentService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Security\Core\Security;
 
 class ReservationController extends AbstractController
 {
+    private $security;
     private $paimentService;
     private $params;
 
-    public function __construct(PaymentService $paiementService, ParameterBagInterface $params)
+    public function __construct(PaymentService $paiementService, ParameterBagInterface $params, Security $security)
     {
         $this->paimentService= $paiementService;
         $this->params = $params;
+        $this->security = $security;
 
     }
 
@@ -31,8 +35,6 @@ class ReservationController extends AbstractController
     {
         // verifier si datestart et dateend disponibility
         $disponibilities = $data->getProperty()->getDisponibilities()->toArray();
-
-        // dump($data->getDateStart());
 
         $interval = date_diff($data->getDateEnd(), $data->getDateStart()); // 6 days
 
@@ -53,24 +55,57 @@ class ReservationController extends AbstractController
                 }
             }
         }
-        
-        $bien = $data->getProperty()->getMaxTravelers();
 
-        if($data->getNumberTraveler() >$data->getProperty()->getMaxTravelers())
-        {
+        if($data->getNumberTraveler() > $data->getProperty()->getMaxTravelers()) {
             throw new HttpException(400, "Le nombre de voyageurs est supérieur à la capacité du bien que vous voulez réserver");
         }
         
-        // si user n'a pas une autre reservation (pas plus de 2 reservations)
-        // $user = $data->getUser()->getReservations();
+        // vérifier qu'il n'y a pas de reservation acceptée et dont la date de fin est inf à today
+        
+        // $reservations = $data->getUser()->getReservations()->toArray();
+        // // dump($reservations);
+        
+        // foreach ($reservations as $reservation)
+        // {
+        //     if ($reservation->getStatus()=== "acceptee" && $reservation->getDateEnd() < new \Datetime('now'))
+        //     {
+        //         throw new HttpException(400, "Vous avez déjà une réservation en cours");
+                
+        //     }
+        //     // vérifier si plus d'une réservation acceptée et dateEnd
+        //     dump($reservation->getDateEnd());
+        //     dump($reservation->getDateEnd());
+        // }
 
-        if (count($data->getUser()->getReservations())) {
-            throw new HttpException(400, "Vous avez déjà plus de 2 reservations en cours ou entamés");
-            
-        }
+        // PREPARER PAIEMENT
+        // dump($data->getStripeToken());
 
-        // $requestBody = json_decode($request->getContent(), true);
+        \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
 
+        $event = \Stripe\Charge::create(array(
+            "amount" => $data->getMontant() * 1000,
+            "currency" => "eur",
+            "source" => "tok_visa",
+            "description" => "First test charge!"
+        ));
+
+        // dump($event["amount"]);
+
+        $em = $this->getDoctrine()->getManager();
+        
+        // enregister le paiement & evenement id
+        $paiement = new Paiement();
+        $paiement->setReservation($data);
+        $paiement->setDatePaiement(new \Datetime('now'));
+        $paiement->setTokenStripe($data->getStripeToken());
+        $paiement->setRetourStripe("en attente");
+        $paiement->setEventId($event["id"]);
+        $paiement->setMontant($event["amount"]);
+
+        $em->persist($paiement);
+        $em->flush();
+
+        // dump("coucou");
         // if (!isset($requestBody["stripeToken"])){
         //     $response = new Response();
         //     $response->setContent(json_encode([
@@ -83,13 +118,14 @@ class ReservationController extends AbstractController
         // }
 
         $newReservation = new Reservation();
+        // $newReservation->setUser($currentUser);
 
         // si token, demander le paiement à l'api stripe
-        $this->paimentService->createCharge();
+        // $this->paimentService->createCharge();
 
         // créer un objet paiement
         
-        die();
+        // die();
         //retourne la nouvelle reservation
         return $data;
 
