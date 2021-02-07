@@ -60,9 +60,15 @@ class ReservationController extends AbstractController
         {
             throw new HttpException(400, "Le nombre de voyageurs est supérieur à la capacité du bien que vous voulez réserver");
         }
-
-        // si user n'a pas une autre reservation (pas plus de 2 reservations)
         
+        // si user n'a pas une autre reservation (pas plus de 2 reservations)
+        // $user = $data->getUser()->getReservations();
+
+        if (count($data->getUser()->getReservations())) {
+            throw new HttpException(400, "Vous avez déjà plus de 2 reservations en cours ou entamés");
+            
+        }
+
         // $requestBody = json_decode($request->getContent(), true);
 
         // if (!isset($requestBody["stripeToken"])){
