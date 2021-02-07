@@ -34,35 +34,35 @@ class ReservationController extends AbstractController
 
         // dump($data->getDateStart());
 
+        $interval = date_diff($data->getDateEnd(), $data->getDateStart()); // 6 days
+
         foreach($disponibilities as $disponibility)
         {
-            $interval = date_diff($data->getDateEnd(), $data->getDateStart()); // 6 days
-            
             // dates de diff reservation
             $dates = new \DatePeriod(
                 $data->getDateStart(),
                 new \DateInterval('P1D'),
                 $data->getDateEnd(),
             );
-
             foreach($dates as $date){
-            //verifier que l'intervalle dateStart et dateEnd sont disponibles, sinon renvoyer une erreur
+            // 1- verifier que l'intervalle dateStart et dateEnd sont disponibles, sinon renvoyer une erreur
                 if (new \DateTime($date->format('Y-m-d')) < $disponibility->getDateStart()){
                     throw new HttpException(400,"Le bien n'est pas disponible à ces dates de fin");
                 } else if (new \DateTime($date->format('Y-m-d')) > $disponibility->getDateEnd()){
                     throw new HttpException(400,"Le bien n'est pas disponible à ces dates de fin");
                 }
-                // die("coucou");
             }
+        }
+        
+        $bien = $data->getProperty()->getMaxTravelers();
 
-            // var_dump($disponibility->getDateStart());
-            // var_dump($disponibility->getDateEnd());
+        if($data->getNumberTraveler() >$data->getProperty()->getMaxTravelers())
+        {
+            throw new HttpException(400, "Le nombre de voyageurs est supérieur à la capacité du bien que vous voulez réserver");
         }
 
-        // numbertraveeler < maxtravelers
-
         // si user n'a pas une autre reservation (pas plus de 2 reservations)
-
+        
         // $requestBody = json_decode($request->getContent(), true);
 
         // if (!isset($requestBody["stripeToken"])){
