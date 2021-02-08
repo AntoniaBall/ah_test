@@ -10,11 +10,10 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 
-  /**
-    * Cette classe est un écouteur d'évenements qui va écouter toutes les opérations post de l'application, 
-    * et executera la méthode public function setCurrentUser à chaque fois qu'un post opération est fait
-    */
-    
+/**
+  * Cette classe est un écouteur d'évenements qui va écouter toutes les opérations post de l'application, 
+  * et executera la méthode public function setCurrentUser à chaque fois qu'un post opération est fait
+*/
 final class CurrentUserSubscriber implements EventSubscriberInterface
 {
     /**

@@ -34,9 +34,14 @@ class ReservationController extends AbstractController
     public function __invoke(Reservation $data, Request $request) : Reservation
     {
         // verifier si datestart et dateend disponibility
-        $disponibilities = $data->getProperty()->getDisponibilities()->toArray();
-
+        $disponibilities = $data->getProperty()->getDisponibilities();
+        // dump($disponibilities);
+        // die();
         $interval = date_diff($data->getDateEnd(), $data->getDateStart()); // 6 days
+
+        if (!$data->getStripeToken()) {
+            throw new HttpException(400, "Aucun paiement initié pour cette réservation");
+        }
 
         foreach($disponibilities as $disponibility)
         {
@@ -49,7 +54,7 @@ class ReservationController extends AbstractController
             foreach($dates as $date){
             // 1- verifier que l'intervalle dateStart et dateEnd sont disponibles, sinon renvoyer une erreur
                 if (new \DateTime($date->format('Y-m-d')) < $disponibility->getDateStart()){
-                    throw new HttpException(400,"Le bien n'est pas disponible à ces dates de fin");
+                    throw new HttpException(400, "Le bien n'est pas disponible à ces dates de fin");
                 } else if (new \DateTime($date->format('Y-m-d')) > $disponibility->getDateEnd()){
                     throw new HttpException(400,"Le bien n'est pas disponible à ces dates de fin");
                 }
@@ -59,7 +64,7 @@ class ReservationController extends AbstractController
         if($data->getNumberTraveler() > $data->getProperty()->getMaxTravelers()) {
             throw new HttpException(400, "Le nombre de voyageurs est supérieur à la capacité du bien que vous voulez réserver");
         }
-        
+
         // vérifier qu'il n'y a pas de reservation acceptée et dont la date de fin est inf à today
         
         // $reservations = $data->getUser()->getReservations()->toArray();
@@ -80,14 +85,24 @@ class ReservationController extends AbstractController
         // PREPARER PAIEMENT
         // dump($data->getStripeToken());
 
-        \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
+        // \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
 
-        $event = \Stripe\Charge::create(array(
-            "amount" => $data->getMontant() * 1000,
-            "currency" => "eur",
-            "source" => "tok_visa",
-            "description" => "First test charge!"
-        ));
+        // // $event = \Stripe\Charge::create(array(
+        // //     "amount" => $data->getMontant() * 1000,
+        // //     "currency" => "eur",
+        // //     "source" => "tok_visa",
+        // //     "description" => "First test charge!"
+        // // ));
+
+        // // create a payment intent event
+        
+        // $event = \Stripe\PaymentIntent::create([
+        //     "amount" => $data->getMontant() * 1000,
+        //     'currency' => 'eur',
+        //     'payment_method_types' => ['card'],
+        //   ]);
+
+        // charge_created - charge_succeeded - charge_failure
 
         // dump($event["amount"]);
 
@@ -99,33 +114,29 @@ class ReservationController extends AbstractController
         $paiement->setDatePaiement(new \Datetime('now'));
         $paiement->setTokenStripe($data->getStripeToken());
         $paiement->setRetourStripe("en attente");
-        $paiement->setEventId($event["id"]);
-        $paiement->setMontant($event["amount"]);
+        $paiement->setEventId($data->getStripeToken());
+        $paiement->setMontant($data->getMontant()*100);
 
         $em->persist($paiement);
         $em->flush();
 
-        // dump("coucou");
-        // if (!isset($requestBody["stripeToken"])){
-        //     $response = new Response();
-        //     $response->setContent(json_encode([
-        //         'status' => 400,
-        //         'message' => 'Bad Request',
-        //         'description' => 'API Key Stripe missing'
-        //     ]));
-        //     $response->setStatusCode(400);
-        //     return $response;
-        // }
-
         $newReservation = new Reservation();
+
+        // enlever dates de disponibilites du bien
+
+        $property = $data->getProperty();
+
+        // REMOVE DISPONIBILITY
+        
+        // $property->removeDisponibility($disponibilities);
+        dump($property->getDisponibilities());
+        die();
         // $newReservation->setUser($currentUser);
 
         // si token, demander le paiement à l'api stripe
         // $this->paimentService->createCharge();
 
-        // créer un objet paiement
-        
-        // die();
+        // die("fin controlleur");
         //retourne la nouvelle reservation
         return $data;
 

@@ -22,23 +22,30 @@ class PaiementController extends AbstractController
         if (!$event){
             throw new HttpException(400, "No JSON Body from Stripe");
         }
-        
-        // dump($event);
-    
+
         $repository = $this->getDoctrine()->getRepository(Paiement::class);
+        
+        // $paiement = $repository->findPaiementByEvent($event["object"]["id"]);
+        $paiement = $repository->findPaiementByEvent($event["data"]["object"]["id"]);
+
+        dump($event["data"]["object"]["id"]);
+        die();
+        
+        $reservation = $paiement->getReservation();
         switch ($event["object"]["status"]) {
             case 'succeeded':
-                // récupérer le paiement relatif à l'id de l'event
-                $paiement = $repository->findPaiementByEvent($event["object"]["id"]);
-
+                $reservation->setStatus("acceptee");
+                $reservation->setPaid(true);
                 dump($paiement);
                 die("paiementsucceed");
             break;
             case 'payment_method.attached':
-                // $paymentMethod = $event->data->object; // contains a \Stripe\PaymentMethod
+                $reservation->setStatus("acceptee");
+                $reservation->setPaid(true);
                 die("paymentfailed");
             break;
-            // ... handle other event types
+            case 'failed':
+                echo "failed";
             default:
             echo 'Received unknown event type ' . $event["object"]["id"];
         }
