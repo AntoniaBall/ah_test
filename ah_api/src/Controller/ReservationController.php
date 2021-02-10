@@ -58,58 +58,34 @@ class ReservationController extends AbstractController
         // trouver toutes les réservations de ce bien
         $em = $this->getDoctrine()->getManager();
         
-        
         foreach($periodes as $period){
             $isDisponible = $this->getDoctrine()
-            ->getRepository(Reservation::class)
-            ->findAcceptedReservations($period);
+                                ->getRepository(Reservation::class)
+                                ->findAcceptedReservations($period, $data->getProperty()->getId());
 
             if ($isDisponible !== []){
                 throw new HttpException(400, "Le bien n'est plus disponible à ces dates renseignées");
             }
         }
         
+        if($data->getNumberTraveler() > $data->getProperty()->getMaxTravelers()) {
+            throw new HttpException(400, "Le nombre de voyageurs est supérieur à la capacité du bien que vous voulez réserver");
+        }
+        
+        // vérifier que l'utilisateur n'a pas plus de 2 reservations en attente
+        $userReservationsCount = $this->getDoctrine()
+                ->getRepository(Reservation::class)
+                ->getCountReservationsByUser($data->getUser());
+
+        if ($userReservationsCount[0][1] > 10){
+            throw new HttpException(400, "Vous avez plus de 2 reservations en attente");
+            
+        }
+        dump($userReservationsCount[0][1]);
         die();
-        //     // dates de diff reservation
-        //     $dates = new \DatePeriod(
-        //         $data->getDateStart(),
-        //         new \DateInterval('P1D'),
-         //         $data->getDateEnd(),
-              //     );
-                                //     foreach($dates as $date){
-                                    //     // 1- verifier que l'intervalle dateStart et dateEnd sont disponibles, sinon renvoyer une erreur
-                                    //         if (new \DateTime($date->format('Y-m-d')) < $disponibility->getDateStart()){
-    
-                                        //         } else if (new \DateTime($date->format('Y-m-d')) > $disponibility->getDateEnd()){
-                                            //             throw new HttpException(400,"Le bien n'est pas disponible à ces dates de fin");
-                                            //         }
-                                            //     }
-                                            // }
-                                            
-                                            // if($data->getNumberTraveler() > $data->getProperty()->getMaxTravelers()) {
-                                            //     throw new HttpException(400, "Le nombre de voyageurs est supérieur à la capacité du bien que vous voulez réserver");
-                                            // }
-                                            
-                                            // vérifier qu'il n'y a pas de reservation acceptée et dont la date de fin est inf à today
-                                            
-                                            // $reservations = $data->getUser()->getReservations()->toArray();
-                                            // // dump($reservations);
-                                            
-                                            // foreach ($reservations as $reservation)
-                                            // {
-                                                //     if ($reservation->getStatus()=== "acceptee" && $reservation->getDateEnd() < new \Datetime('now'))
-                                                //     {
-                                                    //         throw new HttpException(400, "Vous avez déjà une réservation en cours");
-                                                    
-                                                    //     }
-                                                    //     // vérifier si plus d'une réservation acceptée et dateEnd
-                                                    //     dump($reservation->getDateEnd());
-                                                    //     dump($reservation->getDateEnd());
-                                                    // }
-                                                    
-                                                    // PREPARER PAIEMENT
-                                                    // dump($data->getStripeToken());
-                                                    
+        // PREPARER PAIEMENT
+        // dump($data->getStripeToken());
+                              
                                                     // \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
                                                     
                                                     // // $event = \Stripe\Charge::create(array(
@@ -126,13 +102,10 @@ class ReservationController extends AbstractController
                                                             //     'currency' => 'eur',
         //     'payment_method_types' => ['card'],
         //   ]);
-
         // charge_created - charge_succeeded - charge_failure
-
         // dump($event["amount"]);
 
-
-
+        die();
         // enregister le paiement & créer le payment intent
         $paiement = new Paiement();
         $paiement->setReservation($data);

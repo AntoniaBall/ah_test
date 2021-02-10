@@ -36,7 +36,7 @@ class ReservationRepository extends ServiceEntityRepository
     }
     */
 
-    public function findAcceptedReservations($day)
+    public function findAcceptedReservations($day, $property)
     {
         return $this->createQueryBuilder('r')
             ->select('r.id')
@@ -44,7 +44,22 @@ class ReservationRepository extends ServiceEntityRepository
             ->setParameter('val', 'accepte')
             ->andWhere('r.dateStart <= :day')
             ->andWhere('r.dateEnd >= :day')
+            ->andWhere('r.property >= :property')
             ->setParameter('day', $day)
+            ->setParameter('property', $property)
+            ->getQuery()
+            ->getResult()
+            ;
+        }
+        
+        public function getCountReservationsByUser($user)
+        {
+            return $this->createQueryBuilder('r')
+            ->select('count(r.id)')
+            ->where('r.user = :user')
+            ->andWhere('r.status= :status')
+            ->setParameter('status', 'en attente')
+            ->setParameter('user', $user)
             ->getQuery()
             ->getResult()
         ;
