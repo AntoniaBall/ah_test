@@ -14,6 +14,7 @@ class ActivitiesFixtures extends Fixture implements DependentFixtureInterface
         $equitation = new Activities();
         $equitation->setTitle('Equitation')
                     ->setDescription('centre d\'equitation proche du logement')
+                    ->addProperty($this->getReference(PropertyFixtures::bateaux))
                     ->addPicture($this->getReference(PicturesFixtures::picture_activite));
                     
         $manager->persist($equitation);
@@ -39,6 +40,7 @@ class ActivitiesFixtures extends Fixture implements DependentFixtureInterface
     {
         return array(
             PicturesFixtures::class,
+            PropertyFixtures::class
         );
     }
 }

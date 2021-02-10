@@ -125,12 +125,13 @@ class ReservationController extends AbstractController
         // enlever dates de disponibilites du bien
 
         $property = $data->getProperty();
+        dump($property->getProperty());
 
         // REMOVE DISPONIBILITY
         
         // $property->removeDisponibility($disponibilities);
-        dump($property->getDisponibilities());
-        die();
+        // dump($property->getDisponibilities());
+        // die();
         // $newReservation->setUser($currentUser);
 
         // si token, demander le paiement à l'api stripe
