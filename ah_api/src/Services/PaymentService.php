@@ -4,6 +4,11 @@ namespace App\Services;
 
 class PaymentService {
 
+    // create stripe webhook stripeHooks
+
+    // confirmPaymentIntent
+
+    // refundPaymentIntent
     public function createCharge($montant)
     {
         \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));

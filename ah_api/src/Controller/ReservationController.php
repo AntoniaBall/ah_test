@@ -25,7 +25,7 @@ class ReservationController extends AbstractController
 
     public function __construct(PaymentService $paiementService, ParameterBagInterface $params, Security $security)
     {
-        $this->paimentService= $paiementService;
+        $this->paimentService = $paiementService;
         $this->params = $params;
         $this->security = $security;
 
@@ -33,8 +33,13 @@ class ReservationController extends AbstractController
 
     public function __invoke(Reservation $data, Request $request) : Reservation
     {
+        // dump($data->getDateStart());
+        // die();
+        // CREER DEMANDE DE RESERVATION AVEC INFOS DE PAIEMENT
+
         // verifier si datestart et dateend disponibility
-        $disponibilities = $data->getProperty()->getDisponibilities();
+        $disponibilities = $data->getProperty()->getDisponibilities()->toArray();
+
         // dump($disponibilities);
         // die();
         $interval = date_diff($data->getDateEnd(), $data->getDateStart()); // 6 days
@@ -43,66 +48,82 @@ class ReservationController extends AbstractController
             throw new HttpException(400, "Aucun paiement initié pour cette réservation");
         }
 
-        dump($data->getstripeToken());
+        // récupérer tous les jours de reservations
+        $periodes = new \DatePeriod(
+            $data->getDateStart(),
+            new \DateInterval('P1D'),
+            $data->getDateEnd()->modify("+1 day")
+        );
+        
+        // trouver toutes les réservations de ce bien
+        $em = $this->getDoctrine()->getManager();
+        
+        
+        foreach($periodes as $period){
+            $isDisponible = $this->getDoctrine()
+            ->getRepository(Reservation::class)
+            ->findAcceptedReservations($period);
 
-        // get the paiment id and pass it to service
-
-        // foreach($disponibilities as $disponibility)
-        // {
+            if ($isDisponible !== []){
+                throw new HttpException(400, "Le bien n'est plus disponible à ces dates renseignées");
+            }
+        }
+        
+        die();
         //     // dates de diff reservation
         //     $dates = new \DatePeriod(
         //         $data->getDateStart(),
         //         new \DateInterval('P1D'),
-        //         $data->getDateEnd(),
-        //     );
-        //     foreach($dates as $date){
-        //     // 1- verifier que l'intervalle dateStart et dateEnd sont disponibles, sinon renvoyer une erreur
-        //         if (new \DateTime($date->format('Y-m-d')) < $disponibility->getDateStart()){
-        //             throw new HttpException(400, "Le bien n'est pas disponible à ces dates de fin");
-        //         } else if (new \DateTime($date->format('Y-m-d')) > $disponibility->getDateEnd()){
-        //             throw new HttpException(400,"Le bien n'est pas disponible à ces dates de fin");
-        //         }
-        //     }
-        // }
-
-        if($data->getNumberTraveler() > $data->getProperty()->getMaxTravelers()) {
-            throw new HttpException(400, "Le nombre de voyageurs est supérieur à la capacité du bien que vous voulez réserver");
-        }
-
-        // vérifier qu'il n'y a pas de reservation acceptée et dont la date de fin est inf à today
-        
-        // $reservations = $data->getUser()->getReservations()->toArray();
-        // // dump($reservations);
-        
-        // foreach ($reservations as $reservation)
-        // {
-        //     if ($reservation->getStatus()=== "acceptee" && $reservation->getDateEnd() < new \Datetime('now'))
-        //     {
-        //         throw new HttpException(400, "Vous avez déjà une réservation en cours");
-                
-        //     }
-        //     // vérifier si plus d'une réservation acceptée et dateEnd
-        //     dump($reservation->getDateEnd());
-        //     dump($reservation->getDateEnd());
-        // }
-
-        // PREPARER PAIEMENT
-        // dump($data->getStripeToken());
-
-        // \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
-
-        // // $event = \Stripe\Charge::create(array(
-        // //     "amount" => $data->getMontant() * 1000,
-        // //     "currency" => "eur",
-        // //     "source" => "tok_visa",
-        // //     "description" => "First test charge!"
-        // // ));
-
-        // // create a payment intent event
-        
-        // $event = \Stripe\PaymentIntent::create([
-        //     "amount" => $data->getMontant() * 1000,
-        //     'currency' => 'eur',
+         //         $data->getDateEnd(),
+              //     );
+                                //     foreach($dates as $date){
+                                    //     // 1- verifier que l'intervalle dateStart et dateEnd sont disponibles, sinon renvoyer une erreur
+                                    //         if (new \DateTime($date->format('Y-m-d')) < $disponibility->getDateStart()){
+    
+                                        //         } else if (new \DateTime($date->format('Y-m-d')) > $disponibility->getDateEnd()){
+                                            //             throw new HttpException(400,"Le bien n'est pas disponible à ces dates de fin");
+                                            //         }
+                                            //     }
+                                            // }
+                                            
+                                            // if($data->getNumberTraveler() > $data->getProperty()->getMaxTravelers()) {
+                                            //     throw new HttpException(400, "Le nombre de voyageurs est supérieur à la capacité du bien que vous voulez réserver");
+                                            // }
+                                            
+                                            // vérifier qu'il n'y a pas de reservation acceptée et dont la date de fin est inf à today
+                                            
+                                            // $reservations = $data->getUser()->getReservations()->toArray();
+                                            // // dump($reservations);
+                                            
+                                            // foreach ($reservations as $reservation)
+                                            // {
+                                                //     if ($reservation->getStatus()=== "acceptee" && $reservation->getDateEnd() < new \Datetime('now'))
+                                                //     {
+                                                    //         throw new HttpException(400, "Vous avez déjà une réservation en cours");
+                                                    
+                                                    //     }
+                                                    //     // vérifier si plus d'une réservation acceptée et dateEnd
+                                                    //     dump($reservation->getDateEnd());
+                                                    //     dump($reservation->getDateEnd());
+                                                    // }
+                                                    
+                                                    // PREPARER PAIEMENT
+                                                    // dump($data->getStripeToken());
+                                                    
+                                                    // \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
+                                                    
+                                                    // // $event = \Stripe\Charge::create(array(
+                                                        // //     "amount" => $data->getMontant() * 1000,
+                                                        // //     "currency" => "eur",
+                                                        // //     "source" => "tok_visa",
+                                                        // //     "description" => "First test charge!"
+                                                        // // ));
+                                                        
+                                                        // // create a payment intent event
+                                                        
+                                                        // $event = \Stripe\PaymentIntent::create([
+                                                            //     "amount" => $data->getMontant() * 1000,
+                                                            //     'currency' => 'eur',
         //     'payment_method_types' => ['card'],
         //   ]);
 
@@ -110,9 +131,7 @@ class ReservationController extends AbstractController
 
         // dump($event["amount"]);
 
-        $em = $this->getDoctrine()->getManager();
 
-        // die("fin controlleur");
 
         // enregister le paiement & créer le payment intent
         $paiement = new Paiement();
@@ -145,6 +164,5 @@ class ReservationController extends AbstractController
 
         //retourne la nouvelle reservation
         return $data;
-
     }
 }

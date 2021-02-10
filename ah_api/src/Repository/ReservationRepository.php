@@ -36,15 +36,17 @@ class ReservationRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Reservation
+    public function findAcceptedReservations($day)
     {
         return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
+            ->select('r.id')
+            ->where('r.status = :val')
+            ->setParameter('val', 'accepte')
+            ->andWhere('r.dateStart <= :day')
+            ->andWhere('r.dateEnd >= :day')
+            ->setParameter('day', $day)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
-    */
 }
