@@ -43,23 +43,27 @@ class ReservationController extends AbstractController
             throw new HttpException(400, "Aucun paiement initié pour cette réservation");
         }
 
-        foreach($disponibilities as $disponibility)
-        {
-            // dates de diff reservation
-            $dates = new \DatePeriod(
-                $data->getDateStart(),
-                new \DateInterval('P1D'),
-                $data->getDateEnd(),
-            );
-            foreach($dates as $date){
-            // 1- verifier que l'intervalle dateStart et dateEnd sont disponibles, sinon renvoyer une erreur
-                if (new \DateTime($date->format('Y-m-d')) < $disponibility->getDateStart()){
-                    throw new HttpException(400, "Le bien n'est pas disponible à ces dates de fin");
-                } else if (new \DateTime($date->format('Y-m-d')) > $disponibility->getDateEnd()){
-                    throw new HttpException(400,"Le bien n'est pas disponible à ces dates de fin");
-                }
-            }
-        }
+        dump($data->getstripeToken());
+
+        // get the paiment id and pass it to service
+
+        // foreach($disponibilities as $disponibility)
+        // {
+        //     // dates de diff reservation
+        //     $dates = new \DatePeriod(
+        //         $data->getDateStart(),
+        //         new \DateInterval('P1D'),
+        //         $data->getDateEnd(),
+        //     );
+        //     foreach($dates as $date){
+        //     // 1- verifier que l'intervalle dateStart et dateEnd sont disponibles, sinon renvoyer une erreur
+        //         if (new \DateTime($date->format('Y-m-d')) < $disponibility->getDateStart()){
+        //             throw new HttpException(400, "Le bien n'est pas disponible à ces dates de fin");
+        //         } else if (new \DateTime($date->format('Y-m-d')) > $disponibility->getDateEnd()){
+        //             throw new HttpException(400,"Le bien n'est pas disponible à ces dates de fin");
+        //         }
+        //     }
+        // }
 
         if($data->getNumberTraveler() > $data->getProperty()->getMaxTravelers()) {
             throw new HttpException(400, "Le nombre de voyageurs est supérieur à la capacité du bien que vous voulez réserver");
@@ -107,8 +111,10 @@ class ReservationController extends AbstractController
         // dump($event["amount"]);
 
         $em = $this->getDoctrine()->getManager();
-        
-        // enregister le paiement & evenement id
+
+        // die("fin controlleur");
+
+        // enregister le paiement & créer le payment intent
         $paiement = new Paiement();
         $paiement->setReservation($data);
         $paiement->setDatePaiement(new \Datetime('now'));
@@ -124,8 +130,8 @@ class ReservationController extends AbstractController
 
         // enlever dates de disponibilites du bien
 
-        $property = $data->getProperty();
-        dump($property->getProperty());
+        // $property = $data->getProperty();
+        // dump($property->getProperty());
 
         // REMOVE DISPONIBILITY
         
@@ -137,7 +143,6 @@ class ReservationController extends AbstractController
         // si token, demander le paiement à l'api stripe
         // $this->paimentService->createCharge();
 
-        // die("fin controlleur");
         //retourne la nouvelle reservation
         return $data;
 

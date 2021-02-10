@@ -14,16 +14,16 @@ class DisponibilityFixtures extends Fixture implements DependentFixtureInterface
   {
       $dateStart = new \Datetime("2021-04-01");
       $dateEnd = new \Datetime("2021-05-11");
- 
-      $Disponibility = new Disponibility();
- 
-      $Disponibility->setDateStart($dateStart)
-                      ->setDateEnd($dateEnd)
-                      ->setProperty($this->getReference(PropertyFixtures::CABANES));
- 
-      $manager->persist($Disponibility);
-      $manager->flush();
-      $this->addReference(self::noel, $Disponibility);
+
+      // // $Disponibility = new Disponibility();
+
+      // //     $Disponibility->setjourDispo($dateStart);
+      // //     $manager->persist($Disponibility);
+
+
+  
+      //   $this->addReference(self::noel, $disponibility);
+      // $manager->flush();
   }
  
   public function getDependencies()

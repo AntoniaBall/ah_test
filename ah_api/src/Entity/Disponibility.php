@@ -25,6 +25,12 @@ class Disponibility
     private $id;
 
     /**
+     * @Groups("disponibility:read")
+     * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="disponibilities", cascade={"persist"})
+     */
+    private $property;
+    
+    /**
      * @Groups({"disponibility:read", "disponibility:write", "property:write"})
      * @Assert\Type(
      *     type="datetime",
@@ -33,51 +39,11 @@ class Disponibility
      * @Assert\GreaterThan("today")
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $dateStart;
-
-    /**
-     * @Groups({"disponibility:read", "disponibility:write", "property:write"})
-     * @Assert\Type(
-     *     type="datetime",
-     *     message="The value {{ value }} is not a valid {{ type }}."
-     * )
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $dateEnd;
-
-    /**
-     * @Groups("disponibility:read")
-     * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="disponibilities", cascade={"persist"})
-     */
-    private $property;
-
+    private $jourDispo;
+    
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getDateStart(): ?\DateTimeInterface
-    {
-        return $this->dateStart;
-    }
-
-    public function setDateStart(?\DateTimeInterface $dateStart): self
-    {
-        $this->dateStart = $dateStart;
-
-        return $this;
-    }
-
-    public function getDateEnd(): ?\DateTimeInterface
-    {
-        return $this->dateEnd;
-    }
-
-    public function setDateEnd(?\DateTimeInterface $dateEnd): self
-    {
-        $this->dateEnd = $dateEnd;
-
-        return $this;
     }
 
     /**
@@ -96,6 +62,18 @@ class Disponibility
     public function setProperty($property)
     {
         $this->property = $property;
+
+        return $this;
+    }
+
+    public function getJourDispo(): ?\DateTimeInterface
+    {
+        return $this->jourDispo;
+    }
+
+    public function setJourDispo(?\DateTimeInterface $jourDispo): self
+    {
+        $this->jourDispo = $jourDispo;
 
         return $this;
     }
