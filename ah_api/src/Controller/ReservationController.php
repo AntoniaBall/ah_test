@@ -81,14 +81,13 @@ class ReservationController extends AbstractController
             throw new HttpException(400, "Vous avez plus de 2 reservations en attente");
             
         }
-        dump($userReservationsCount[0][1]);
-        die();
+
         // PREPARER PAIEMENT
         // dump($data->getStripeToken());
                               
-                                                    // \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
-                                                    
-                                                    // // $event = \Stripe\Charge::create(array(
+        // \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
+                              
+        // // $event = \Stripe\Charge::create(array(
                                                         // //     "amount" => $data->getMontant() * 1000,
                                                         // //     "currency" => "eur",
                                                         // //     "source" => "tok_visa",
@@ -102,10 +101,7 @@ class ReservationController extends AbstractController
                                                             //     'currency' => 'eur',
         //     'payment_method_types' => ['card'],
         //   ]);
-        // charge_created - charge_succeeded - charge_failure
-        // dump($event["amount"]);
 
-        die();
         // enregister le paiement & créer le payment intent
         $paiement = new Paiement();
         $paiement->setReservation($data);
@@ -119,23 +115,7 @@ class ReservationController extends AbstractController
         $em->flush();
 
         $newReservation = new Reservation();
-
-        // enlever dates de disponibilites du bien
-
-        // $property = $data->getProperty();
-        // dump($property->getProperty());
-
-        // REMOVE DISPONIBILITY
         
-        // $property->removeDisponibility($disponibilities);
-        // dump($property->getDisponibilities());
-        // die();
-        // $newReservation->setUser($currentUser);
-
-        // si token, demander le paiement à l'api stripe
-        // $this->paimentService->createCharge();
-
-        //retourne la nouvelle reservation
         return $data;
     }
 }

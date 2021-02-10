@@ -16,11 +16,16 @@ use Symfony\Component\Validator\Constraints\Type;
  * @ApiResource(normalizationContext={"groups"={"reservation:read"}},
  *     denormalizationContext={"groups"={"reservation:write"}},
  * collectionOperations={
- *    "get"={"security"="is_granted('ROLE_USER') or object.user == user"},
  *    "post"={
  *          "security"="is_granted('ROLE_USER')",
  *          "controller"=ReservationController::class
- *}
+ *      }
+ * },
+ * itemOperations={
+ *     "get"={
+ *     "access_control"="is_granted('ROLE_USER') and object.getUser() == user or object.getProperty().getUser() == user",
+ *      "access_control_message"="Only the creator can edit a cheese listing"
+ *     },
  * }
  * )
  * @ORM\Entity(repositoryClass=ReservationRepository::class)
@@ -65,6 +70,7 @@ class Reservation
     private $numberTraveler;
     
     /**
+     * @var User
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reservations")
      * @Assert\NotNull
      * @ORM\JoinColumn(nullable=false)
