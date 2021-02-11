@@ -32,12 +32,12 @@ class Activities
      * @Assert\NotBlank
      * @Assert\Length(
      * min = 10,
-     * max = 150,
+     * max = 300,
      * minMessage = "La longueur de votre activité doit être supérieure à {{ limit }} caractères",
      * maxMessage = "La longeur de votre activité doit être inférieure à {{ limit }} caractères"
      * 
      * )
-     * @Groups({"activities:read", "activities:write"})
+     * @Groups({"activities:read", "activities:write", "property:write"})
      */
     private $description;
 
@@ -51,7 +51,7 @@ class Activities
      * minMessage = "Le titre de votre activité doit être supérieure à {{ limit }} caractères",
      * maxMessage = "Le titre de votre activité doit être inférieure à {{ limit }} caractères"
      * )
-     * @Groups({"activities:read", "activities:write"})
+     * @Groups({"activities:read", "activities:write", "property:write"})
      */
     private $title;
 
@@ -60,7 +60,7 @@ class Activities
      * @ORM\ManyToMany(targetEntity=Property::class, inversedBy="activities")
      * @Groups("activities:read")
      */
-    private $Property;
+    private $property;
 
     /**
      * 
@@ -72,13 +72,13 @@ class Activities
     /**
      * 
      * @ORM\OneToMany(targetEntity=Pictures::class, mappedBy="activities")
-     * @Groups("activities:read")
+     * @Groups({"activities:read", "picture:write"})
      */
     private $pictures;
 
     public function __construct()
     {
-        $this->Property = new ArrayCollection();
+        $this->property = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->pictures = new ArrayCollection();
     }
@@ -111,7 +111,6 @@ class Activities
 
         return $this;
     }
-
     /**
      * @return Collection|Property[]
      */
@@ -122,8 +121,8 @@ class Activities
 
     public function addProperty(Property $property): self
     {
-        if (!$this->Property->contains($property)) {
-            $this->Property[] = $property;
+        if (!$this->property->contains($property)) {
+            $this->property[] = $property;
         }
 
         return $this;
@@ -131,7 +130,7 @@ class Activities
 
     public function removeProperty(Property $property): self
     {
-        $this->Property->removeElement($property);
+        $this->property->removeElement($property);
 
         return $this;
     }

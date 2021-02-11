@@ -39,7 +39,7 @@ class Propriete
 
     /**
      * @Groups({"propriete:read", "propriete:write"})
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $type;
 
@@ -59,8 +59,6 @@ class Propriete
     {
         $this->proprieteTypeProperties = new ArrayCollection();
     }
-
-   
 
     public function getId(): ?int
     {

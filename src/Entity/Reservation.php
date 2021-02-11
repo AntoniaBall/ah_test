@@ -96,6 +96,7 @@ class Reservation
 
     public function __construct()
     {
+        $this->setUser($this->getUser());
         $this->comments = new ArrayCollection();
     }
 
@@ -238,6 +239,18 @@ class Reservation
     public function setHistorical(array $historical): self
     {
         $this->historical = $historical;
+
+        return $this;
+    }
+
+    public function getReservation(): ?User
+    {
+        return $this->reservation;
+    }
+
+    public function setReservation(?User $reservation): self
+    {
+        $this->reservation = $reservation;
 
         return $this;
     }

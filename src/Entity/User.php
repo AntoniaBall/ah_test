@@ -2,22 +2,25 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
- * @ApiResource(normalizationContext={"groups"={"user:read"}},
- *     denormalizationContext={"groups"={"user:write"}})
- * 
- * @ORM\Entity(repositoryClass=UserRepository::class)
- */
-class User
+* @ApiResource(normalizationContext={"groups"={"user:read"}},
+*     denormalizationContext={"groups"={"user:write"}})
+* 
+* @ORM\Entity(repositoryClass=UserRepository::class)
+* @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+*/
+class User implements UserInterface
 {
     /**
      * @ORM\Id
@@ -31,67 +34,72 @@ class User
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\Email(
+     * message = "The email'{{ value }}' is not a valid email.")
      * 
-     * @Groups({"user:read", "user:write"})
-     */
-    private $firstname;
-
-    /**
-     * @ORM\Column(type="string", length=100)
-     * 
-     * @Groups({"user:read", "user:write"})
-     */
-    private $lastname;
-
-    /**
-     * @ORM\Column(type="string", length=100)
-     * 
-     * @Groups({"user:read", "user:write"})
+     * @Groups({"user:read", "user:write", "property:read"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\Email(
-     * message = "The email'{{ value }}' is not a valid email.")
+     * @var string The hashed password
      * 
-     * @Groups({"user:read", "user:write"})
      */
     private $password;
-
+    
     /**
      * @ORM\Column(type="integer", nullable=true)
      * 
-     * @Groups({"user:read", "user:write"})
+     * @Groups({"user:read", "user:write", "property:read"})
      */
     private $phone;
-
-    /**
-     * @ORM\Column(type="string", length=20)
-     * 
-     * @Groups("user:read")
-     */
-    private $role;
-
+    
     /**
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="user", orphanRemoval=true)
      * 
-     * @Groups("user:read")
+     * 
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+    
+    /*
+    * @ORM\Column(type="boolean")
+    */
+    private $isVerified = false;
+    
+    /*
+    * @Groups({"user:read", "user:write", "property:read"})
+    * @ORM\Column(type="string")
+    */
+    private $firstname;
+
+    /*
+    * @Groups({"user:read", "user:write", "property:read"})
+    * @ORM\Column(type="string")
+    */
+    private $lastname;
+    
+    /**
+     * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="user", orphanRemoval=true)
      */
     private $reservations;
 
     /**
-     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="user", orphanRemoval=true, cascade={"persist"})
      * 
      * @Groups("user:read")
      */
     private $properties;
+
+    private UserPasswordEncoderInterface $encoder;
 
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
         $this->properties = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -106,22 +114,81 @@ class User
     public function setFirstname(string $firstname): self
     {
         $this->firstname = $firstname;
-
         return $this;
     }
 
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUsername(): string
+    {
+        return (string) $this->id;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this; 
+    }
+    
     public function getLastname(): ?string
     {
         return $this->lastname;
     }
-
+    
     public function setLastname(string $lastname): self
     {
         $this->lastname = $lastname;
-
+        
         return $this;
     }
 
+    /**
+     * @see UserInterface
+     */
+    public function getPassword(): string
+    {
+        return (string) $this->password;
+    }
+
+    public function setPassword($password): self
+    {
+        $this->password = $password;
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getSalt()
+    {
+        // not needed when using the "bcrypt" algorithm in security.yaml
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->password = null;
+    }
+    
     public function getEmail(): ?string
     {
         return $this->email;
@@ -134,17 +201,23 @@ class User
         return $this;
     }
 
-    public function getPassword(): ?string
+    /**
+     * @return Collection|Property[]
+     */
+    public function getProperty(): Collection
     {
-        return $this->password;
+        return $this->property;
     }
 
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
+    // public function addProperty(Property $property): self
+    // {
+    //     if (!$this->property->contains($property)) {
+    //         $this->property[] = $property;
+    //         $property->setUserId($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getPhone(): ?int
     {
@@ -154,18 +227,29 @@ class User
     public function setPhone(?int $phone): self
     {
         $this->phone = $phone;
-
         return $this;
     }
 
-    public function getRole(): ?string
+    // public function removeProperty(Property $property): self
+    // {
+    //     if ($this->property->removeElement($property)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($property->getUserId() === $this) {
+    //             $property->setUserId(null);
+    //         }
+    //     }
+
+    //     return $this;
+    // }
+
+    public function getReservation(): ?int
     {
-        return $this->role;
+        return $this->reservation;
     }
 
-    public function setRole(string $role): self
+    public function setReservation(int $reservation): self
     {
-        $this->role = $role;
+        $this->reservation = $reservation;
 
         return $this;
     }
@@ -183,6 +267,7 @@ class User
         if (!$this->reservations->contains($reservation)) {
             $this->reservations[] = $reservation;
             $reservation->setUser($this);
+            $reservation->setReservation($this);
         }
 
         return $this;
@@ -194,6 +279,9 @@ class User
             // set the owning side to null (unless already changed)
             if ($reservation->getUser() === $this) {
                 $reservation->setUser(null);
+            }
+            if ($reservation->getReservation() === $this) {
+                $reservation->setReservation(null);
             }
         }
 
@@ -226,7 +314,18 @@ class User
                 $property->setUser(null);
             }
         }
+    }
+    
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
+
 }

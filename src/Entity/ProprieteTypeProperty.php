@@ -20,7 +20,7 @@ class ProprieteTypeProperty
      * @ORM\Column(type="integer")
      */
     private $id;
-
+    
     /**
      * @Groups("proprietetypeproperty:read")
      * @ORM\ManyToOne(targetEntity=Propriete::class, inversedBy="proprieteTypeProperties")

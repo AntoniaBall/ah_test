@@ -25,7 +25,7 @@ class TypeProperty
     private $id;
 
     /**
-     * @Groups({"typeproperty:read", "typeproperty:write"})
+     * @Groups({"typeproperty:read", "typeproperty:write", "property:read"})
      * @ORM\Column(type="string", length=50)
      */
     private $title;
@@ -91,7 +91,7 @@ class TypeProperty
     {
         return $this->proprieteTypeProperties;
     }
-
+    
     public function addProprieteTypeProperty(ProprieteTypeProperty $proprieteTypeProperty): self
     {
         if (!$this->proprieteTypeProperties->contains($proprieteTypeProperty)) {
