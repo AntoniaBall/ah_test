@@ -25,7 +25,7 @@ use App\Controller\PropertyController;
  * },
  * itemOperations={
  *    "get",
- *    "put"={"security"="is_granted('ROLE_PROPRIO') or object.owner == user"},
+ *    "put"={"security"="is_granted('ROLE_PROPRIO') and object.owner == user"},
  *    "patch"={"security"="is_granted('ROLE_ADMIN')", "denormalization_context"={"groups"={"admin:write"}}},
  *    "delete"={"security"="is_granted('ROLE_PROPRIO') or object.owner == user"},
  * }
@@ -42,7 +42,7 @@ class Property
     private $id;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write", "indisponibility:write", "activities:write"})
+     * @Groups({"property:read", "property:write", "reservation:read", "typeproperty:read", "user:write", "picture:write", "indisponibility:write", "activities:write"})
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank
      * @Assert\Length(
@@ -147,7 +147,7 @@ class Property
     private $reservations;
 
     /**
-     * @Groups({"property:read", "property:write", "user:write"})
+     * @Groups({"property:read", "property:write", "user:write", "reservation:read"})
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="properties", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
@@ -200,6 +200,8 @@ class Property
      *      type="string",
      *      message="This value must be a string"
      * )
+     * 
+     * @ApiProperty(security="is_granted('ROLE_PROPRIO')")
      * @ORM\Column(type="string")
      */
     private $status;

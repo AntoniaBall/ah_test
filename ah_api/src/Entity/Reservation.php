@@ -11,21 +11,26 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Type;
+use ApiPlatform\Core\Serializer\Filter\GroupFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
 
 /**
  * @ApiResource(normalizationContext={"groups"={"reservation:read"}},
  *     denormalizationContext={"groups"={"reservation:write"}},
  * collectionOperations={
+ *    "get",
  *    "post"={
  *          "security"="is_granted('ROLE_USER')",
- *          "controller"=ReservationController::class
+ *          "controller"=ReservationController::class,
+ *          "security_message"="Only users can add reservation"
  *      }
  * },
  * itemOperations={
  *     "get"={
- *     "access_control"="is_granted('ROLE_USER') and object.getUser() == user or object.getProperty().getUser() == user",
- *      "access_control_message"="Only the creator can edit a cheese listing"
+ *          "security"="object.getUser() == user or object.getProperty().getUser() == user",
+ *          "security_message"="Only the owner of the proprio of the bien can see this"
  *     },
+ *     "put"={"security"="is_granted('ROLE_PROPRIO')", "denormalization_context"={"groups"={"admin:write"}}},
  * }
  * )
  * @ORM\Entity(repositoryClass=ReservationRepository::class)
@@ -82,7 +87,7 @@ class Reservation
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="reservations")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotNull
-     * @Groups({"reservation:read", "reservation:write"})
+     * @Groups({"reservation:read", "reservation:write", "property:read"})
      */
     private $property;
     
@@ -111,6 +116,7 @@ class Reservation
     private $historical = [];
     
     /**
+     * @Groups({"reservation:read"})
      * @Assert\Choice({"en attente", "payee", "rejetee"})
      * @ORM\Column(type="string", length=20)
      */
