@@ -173,6 +173,9 @@
     "php": {
         "version": "7.4"
     },
+    "php-amqplib/php-amqplib": {
+        "version": "v2.12.1"
+    },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"
     },
@@ -181,6 +184,9 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "1.4.0"
+    },
+    "phpseclib/phpseclib": {
+        "version": "2.0.30"
     },
     "psr/cache": {
         "version": "1.0.1"
