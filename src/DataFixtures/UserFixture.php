@@ -26,7 +26,7 @@ class UserFixture extends Fixture
                 ->setEmail($generator->email)
                 ->setPassword('password')
                 ->setPhone((int)$generator->phoneNumber)
-                ->setRole('admin');
+                ->setRoles(['ROLE_ADMIN']);
 
             $manager->persist($usertest);
         }
