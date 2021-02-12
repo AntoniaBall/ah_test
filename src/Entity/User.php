@@ -69,7 +69,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="user", orphanRemoval=true)
      * 
-     * 
+     * @Groups({"user:write"})
      * @ORM\Column(type="json")
      */
     private $roles = [];
@@ -135,7 +135,7 @@ class User implements UserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        // $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
