@@ -5,7 +5,7 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-abstract class BaseFixture extends Fixture{
+abstract class BaseFixtures extends Fixture{
     protected function createMany(string $className, int $count, callable $factory)
     {
         for ($i = 0; $i < $count; $i++) {

@@ -8,7 +8,7 @@ use Doctrine\Persistence\ObjectManager;
 use Faker;
 
 
-class TypePropertyFixture extends Fixture
+class TypePropertyFixture_old extends Fixture
 {
     public function load(ObjectManager $manager)
     {

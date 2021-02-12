@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,10 +13,20 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Controller\RegistrationController;
 
 /**
 * @ApiResource(normalizationContext={"groups"={"user:read"}},
-*     denormalizationContext={"groups"={"user:write"}})
+*     denormalizationContext={"groups"={"user:write"}},
+*     collectionOperations={
+*           "register"={
+*                   "method"="POST",
+*                   "path"="/register",
+*                   "controller"=RegistrationController::class,
+*                   "read"=false
+*           }
+*     }
+*)
 * 
 * @ORM\Entity(repositoryClass=UserRepository::class)
 * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
@@ -26,7 +37,6 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * 
      * @Groups("user:read")
      * 
      */
@@ -40,10 +50,11 @@ class User implements UserInterface
      * @Groups({"user:read", "user:write", "property:read"})
      */
     private $email;
-
+    
     /**
      * @ORM\Column(type="string", length=255)
      * @var string The hashed password
+     * @Groups({"user:write"})
      * 
      */
     private $password;

@@ -16,3 +16,6 @@ config/jwt/*.pem
 
 #assets
 public/images/*
+
+keys.txt
+keys1.txt
