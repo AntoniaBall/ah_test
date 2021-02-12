@@ -43,3 +43,6 @@ services:
 
     App\DataPersister\BienPersister:
         decorates: 'api_platform.doctrine.orm.data_persister'
+        
+    App\DataPersister\UserPersister:
+        decorates: 'api_platform.doctrine.orm.data_persister'

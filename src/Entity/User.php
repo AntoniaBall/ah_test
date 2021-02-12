@@ -79,17 +79,17 @@ class User implements UserInterface
     */
     private $isVerified = false;
     
-    /*
-    * @Groups({"user:read", "user:write", "property:read"})
-    * @ORM\Column(type="string")
-    */
-    private $firstname;
+    /**
+     * @ORM\Column(type="string", length=50)
+     * @Groups({"user:read", "user:write", "property:read"})
+     */
+    private $firstName;    
 
-    /*
-    * @Groups({"user:read", "user:write", "property:read"})
-    * @ORM\Column(type="string")
-    */
-    private $lastname;
+     /**
+     * @ORM\Column(type="string", length=50)
+     * @Groups({"user:read", "user:write", "property:read"})
+     */
+    private $lastName;  
     
     /**
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="user", orphanRemoval=true)
@@ -117,16 +117,6 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
-
-    public function setFirstname(string $firstname): self
-    {
-        $this->firstname = $firstname;
-        return $this;
-    }
 
     /**
      * A visual identifier that represents this user.
@@ -157,18 +147,6 @@ class User implements UserInterface
         return $this; 
     }
     
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-    
-    public function setLastname(string $lastname): self
-    {
-        $this->lastname = $lastname;
-        
-        return $this;
-    }
-
     /**
      * @see UserInterface
      */
@@ -339,4 +317,44 @@ class User implements UserInterface
         return $this;
     }
 
+
+    /**
+     * Get the value of lastName
+     */ 
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * Set the value of lastName
+     *
+     * @return  self
+     */ 
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of firstName
+     */ 
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * Set the value of firstName
+     *
+     * @return  self
+     */ 
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
 }

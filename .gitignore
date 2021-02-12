@@ -17,5 +17,7 @@ config/jwt/*.pem
 #assets
 public/images/*
 
+doctrine.sh
+
 keys.txt
 keys1.txt

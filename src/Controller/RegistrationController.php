@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
@@ -25,7 +24,7 @@ class RegistrationController extends AbstractController
         $this->emailVerifier = $emailVerifier;
     }
 
-    public function __invoke(User $data, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, UserAuthenticationAuthenticator $authenticator): User
+    public function __invoke(User $data, GuardAuthenticatorHandler $guardHandler, UserAuthenticationAuthenticator $authenticator): User
     {
         // dump($data);
         // die();
@@ -41,7 +40,7 @@ class RegistrationController extends AbstractController
             // $data->setPassword(
             //     $passwordEncoder->encodePassword(
             //         $data,
-            //         $data->get('plainPassword')->getData()
+            //         $data->getPassword()
             //     )
             // );
 
