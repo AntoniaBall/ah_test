@@ -85,7 +85,8 @@
             "@auto-scripts",
             "chmod -R 777 public/",
             "chmod -R 777 config/",
-            "chmod +x jwt.sh"
+            "chmod +x jwt.sh",
+            "mkdir -p config/jwt"
         ],
         "post-update-cmd": [
             "@auto-scripts"
