@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Controller\ReservationController;
+use App\Controller\ValidationReservationController;
 use App\Repository\ReservationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -31,6 +32,12 @@ use ApiPlatform\Core\Annotation\ApiFilter;
  *          "security_message"="Only the owner of the proprio of the bien can see this"
  *     },
  *     "put"={"security"="is_granted('ROLE_PROPRIO')", "denormalization_context"={"groups"={"admin:write"}}},
+ *     "patch"={
+ *          "security"="is_granted('ROLE_PROPRIO')",
+ *          "path"="/reservations/{id}/status",
+ *          "controller"=ValidationReservationController::class,
+ *          "security_message"="Only proprio can validate or reject a reservation"
+ *      }
  * }
  * )
  * @ORM\Entity(repositoryClass=ReservationRepository::class)

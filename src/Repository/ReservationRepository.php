@@ -41,7 +41,7 @@ class ReservationRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('r')
             ->select('r.id')
             ->where('r.status = :val')
-            ->setParameter('val', 'accepte')
+            ->setParameter('val', 'acceptee')
             ->andWhere('r.dateStart <= :day')
             ->andWhere('r.dateEnd >= :day')
             ->andWhere('r.property >= :property')

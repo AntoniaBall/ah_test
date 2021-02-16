@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Security;
 
-class ReservationController extends AbstractController
+class ValidationReservationController extends AbstractController
 {
     private $security;
     private $paimentService;
@@ -32,25 +32,23 @@ class ReservationController extends AbstractController
 
     public function __invoke(Reservation $data, Request $request) : Reservation
     {
-        // CREER DEMANDE DE RESERVATION AVEC INFOS DE PAIEMENT
-        $disponibilities = $data->getProperty()->getDisponibilities()->toArray();
+        // pour le proprio valider les reservations et ce qu'il s'en suit
 
-        // dump($disponibilities);
-        // die();
+        $bodyRequest = json_decode($request->getContent(), true);
 
-        $interval = date_diff($data->getDateEnd(), $data->getDateStart()); // 6 days
-
-        if (!$data->getStripeToken()) {
-            throw new HttpException(400, "Aucun paiement initié pour cette réservation");
+        if (!$bodyRequest){
+            throw new HttpException(400, "Please provide a valid JSON");
         }
 
-        // récupérer tous les jours de reservations
-        $periodes = new \DatePeriod(
-            $data->getDateStart(),
-            new \DateInterval('P1D'),
-            $data->getDateEnd()->modify("+1 day")
-        );
+        // affectee la décision "validee" ou "rejetee"
+        if (!in_array($bodyRequest["status"], ["acceptee", "rejetee"])){
+            throw new HttpException(400, "Please provide a correct answer");
+        }
         
+        dump("ok continue");
+        dump($bodyRequest["status"]);
+        die();
+
         // trouver toutes les réservations de ce bien
         $em = $this->getDoctrine()->getManager();
         
@@ -71,14 +69,10 @@ class ReservationController extends AbstractController
         // vérifier que l'utilisateur n'a pas plus de 2 reservations en attente
         $userReservationsCount = $this->getDoctrine()
                 ->getRepository(Reservation::class)
-                ->getCountReservationsByUser($this->security->getUser());
+                ->getCountReservationsByUser($data->getUser());
 
-        // dump(
-        //     $this->security->getUser()
-        // );
-        // die();
-        if ($userReservationsCount[0][1] > 3){
-            throw new HttpException(400, "Vous avez plus de 3 reservations en attente");
+        if ($userReservationsCount[0][1] > 10){
+            throw new HttpException(400, "Vous avez plus de 2 reservations en attente");
             
         }
 

@@ -45,9 +45,8 @@ final class ReservationSubscriber implements EventSubscriberInterface
     */
         $object = $event->getControllerResult();
         
-        // var_dump("coucou");
-        // die();
         if ($object instanceof Reservation){
+            var_dump("coucou");
             $object->setUser($this->tokenStorage->getToken()->getUser());
             $event->setControllerResult($object);
         }
