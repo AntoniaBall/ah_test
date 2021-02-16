@@ -50,7 +50,7 @@ class ReservationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
             ;
-        }
+    }
         
         public function getCountReservationsByUser($user)
         {
@@ -63,5 +63,23 @@ class ReservationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
-    }
-}
+        }
+
+        public function getOtherWaitingReservations($day, $property, $reservationId)
+        {
+            return $this->createQueryBuilder('r')
+            ->select('r.id')
+            ->where('r.status = :val')
+            ->setParameter('val', 'en attente')
+            ->andWhere('r.dateStart <= :day')
+            ->andWhere('r.dateEnd >= :day')
+            ->andWhere('r.property = :property')
+            ->andWhere('r.id != :reservationId')
+            ->setParameter('day', $day)
+            ->setParameter('reservationId', $reservationId)
+            ->setParameter('property', $property)
+            ->getQuery()
+            ->getResult()
+            ;
+        }
+}   

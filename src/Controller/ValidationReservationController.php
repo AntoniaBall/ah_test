@@ -45,23 +45,27 @@ class ValidationReservationController extends AbstractController
             throw new HttpException(400, "Please provide a correct answer");
         }
         
-        dump("ok continue");
-        dump($bodyRequest["status"]);
-        die();
-
-        // trouver toutes les réservations de ce bien
+        // $data->setStatus($bodyRequest["status"]);
+        
+        $periodes = new \DatePeriod(
+            $data->getDateStart(),
+            new \DateInterval('P1D'),
+            $data->getDateEnd()->modify("+1 day")
+        );
+        
+        // trouver toutes les réservations de ce bien entre les 2 dates
         $em = $this->getDoctrine()->getManager();
         
         foreach($periodes as $period){
-            $isDisponible = $this->getDoctrine()
-                                ->getRepository(Reservation::class)
-                                ->findAcceptedReservations($period, $data->getProperty()->getId());
-            // dump($isDisponible);
-            if ($isDisponible !== []){
-                throw new HttpException(400, "Le bien n'est plus disponible à ces dates renseignées");
-            }
+            $reservation = $this->getDoctrine()
+            ->getRepository(Reservation::class)
+            ->getOtherWaitingReservations($period, $data->getProperty()->getId(), $data->getId());
+            $reservatiions[] = $reservation;
         }
-        
+
+        dump($reservatiions);
+        die();
+
         if($data->getNumberTraveler() > $data->getProperty()->getMaxTravelers()) {
             throw new HttpException(400, "Le nombre de voyageurs est supérieur à la capacité du bien que vous voulez réserver");
         }
