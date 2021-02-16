@@ -53,66 +53,78 @@ class ValidationReservationController extends AbstractController
             $data->getDateEnd()->modify("+1 day")
         );
         
+        $statusUpdate = $bodyRequest["status"] === "acceptee" ? "rejetee" : "acceptee";
+
         // trouver toutes les réservations de ce bien entre les 2 dates
         $em = $this->getDoctrine()->getManager();
         
         foreach($periodes as $period){
-            $reservation = $this->getDoctrine()
+            $otherResa = $this->getDoctrine()
             ->getRepository(Reservation::class)
             ->getOtherWaitingReservations($period, $data->getProperty()->getId(), $data->getId());
-            $reservatiions[] = $reservation;
-        }
 
-        dump($reservatiions);
-        die();
+            // $otherResa->setStatus($statusUpdate);
 
-        if($data->getNumberTraveler() > $data->getProperty()->getMaxTravelers()) {
-            throw new HttpException(400, "Le nombre de voyageurs est supérieur à la capacité du bien que vous voulez réserver");
+            // $reservation = $this->getDoctrine()->getRepository(Reservation::class)->find($data->getId()); // array
+            // dump($otherResa[0]);
+            // $resa->setStatus($statusUpdate);
+            $reservations[] = $otherResa;
+            // $reservatiions[] = $reservation;
         }
         
-        // vérifier que l'utilisateur n'a pas plus de 2 reservations en attente
-        $userReservationsCount = $this->getDoctrine()
-                ->getRepository(Reservation::class)
-                ->getCountReservationsByUser($data->getUser());
-
-        if ($userReservationsCount[0][1] > 10){
-            throw new HttpException(400, "Vous avez plus de 2 reservations en attente");
-            
+        foreach ($reservations[0] as $otherReservation){
+            $otherReservation->setStatus($statusUpdate);
         }
+        // dump($reservations[0]);
+        // die();
 
-        // PREPARER PAIEMENT
-        // dump($data->getStripeToken());
+        // if($data->getNumberTraveler() > $data->getProperty()->getMaxTravelers()) {
+        //     throw new HttpException(400, "Le nombre de voyageurs est supérieur à la capacité du bien que vous voulez réserver");
+        // }
+        
+        // // vérifier que l'utilisateur n'a pas plus de 2 reservations en attente
+        // $userReservationsCount = $this->getDoctrine()
+        //         ->getRepository(Reservation::class)
+        //         ->getCountReservationsByUser($data->getUser());
+
+        // if ($userReservationsCount[0][1] > 10){
+        //     throw new HttpException(400, "Vous avez plus de 2 reservations en attente");
+            
+        // }
+
+        // // PREPARER PAIEMENT
+        // // dump($data->getStripeToken());
                               
-        // \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
+        // // \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
                               
-        // // $event = \Stripe\Charge::create(array(
-                                                        // //     "amount" => $data->getMontant() * 1000,
-                                                        // //     "currency" => "eur",
-                                                        // //     "source" => "tok_visa",
-                                                        // //     "description" => "First test charge!"
-                                                        // // ));
+        // // // $event = \Stripe\Charge::create(array(
+        //                                                 // //     "amount" => $data->getMontant() * 1000,
+        //                                                 // //     "currency" => "eur",
+        //                                                 // //     "source" => "tok_visa",
+        //                                                 // //     "description" => "First test charge!"
+        //                                                 // // ));
                                                         
-                                                        // // create a payment intent event
+        //                                                 // // create a payment intent event
                                                         
-                                                        // $event = \Stripe\PaymentIntent::create([
-                                                            //     "amount" => $data->getMontant() * 1000,
-                                                            //     'currency' => 'eur',
-        //     'payment_method_types' => ['card'],
-        //   ]);
+        //                                                 // $event = \Stripe\PaymentIntent::create([
+        //                                                     //     "amount" => $data->getMontant() * 1000,
+        //                                                     //     'currency' => 'eur',
+        // //     'payment_method_types' => ['card'],
+        // //   ]);
 
-        // enregister le paiement & créer le payment intent
-        $paiement = new Paiement();
-        $paiement->setReservation($data);
-        $paiement->setDatePaiement(new \Datetime('now'));
-        $paiement->setTokenStripe($data->getStripeToken());
-        $paiement->setRetourStripe("en attente");
-        $paiement->setEventId($data->getStripeToken());
-        $paiement->setMontant($data->getMontant()*100);
+        // // enregister le paiement & créer le payment intent
+        // $paiement = new Paiement();
+        // $paiement->setReservation($data);
+        // $paiement->setDatePaiement(new \Datetime('now'));
+        // $paiement->setTokenStripe($data->getStripeToken());
+        // $paiement->setRetourStripe("en attente");
+        // $paiement->setEventId($data->getStripeToken());
+        // $paiement->setMontant($data->getMontant()*100);
 
-        $em->persist($paiement);
-        $em->flush();
+        // $em->persist($paiement);
+        // $em->flush();
 
-        $newReservation = new Reservation();
+        // $newReservation = new Reservation();
         
         return $data;
     }

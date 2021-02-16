@@ -68,7 +68,6 @@ class ReservationRepository extends ServiceEntityRepository
         public function getOtherWaitingReservations($day, $property, $reservationId)
         {
             return $this->createQueryBuilder('r')
-            ->select('r.id')
             ->where('r.status = :val')
             ->setParameter('val', 'en attente')
             ->andWhere('r.dateStart <= :day')
