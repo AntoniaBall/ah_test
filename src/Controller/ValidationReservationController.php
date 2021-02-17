@@ -52,29 +52,33 @@ class ValidationReservationController extends AbstractController
             new \DateInterval('P1D'),
             $data->getDateEnd()->modify("+1 day")
         );
-        
+
         $statusUpdate = $bodyRequest["status"] === "acceptee" ? "rejetee" : "acceptee";
 
         // trouver toutes les réservations de ce bien entre les 2 dates
         $em = $this->getDoctrine()->getManager();
         
-        foreach($periodes as $period){
-            $otherResa = $this->getDoctrine()
-            ->getRepository(Reservation::class)
-            ->getOtherWaitingReservations($period, $data->getProperty()->getId(), $data->getId());
+        if ($bodyRequest["status"] === "acceptee"){
+            foreach($periodes as $period) {
+                $result = $this->getDoctrine()
+                ->getRepository(Reservation::class)
+                ->getOtherWaitingReservations($period, $data->getProperty()->getId(), $data->getId());
 
-            // $otherResa->setStatus($statusUpdate);
-
-            // $reservation = $this->getDoctrine()->getRepository(Reservation::class)->find($data->getId()); // array
-            // dump($otherResa[0]);
-            // $resa->setStatus($statusUpdate);
-            $reservations[] = $otherResa;
-            // $reservatiions[] = $reservation;
+                
+                // $reservation = $this->getDoctrine()->getRepository(Reservation::class)->find($data->getId()); // array
+                // dump($otherResa[0]);
+                // $resa->setStatus($statusUpdate);
+                $reservations[] = $result;
+                // $reservatiions[] = $reservation;
+            }
+            foreach ($reservations[0] as $reservation){
+                // dump($reservation->getId()); // 2
+                $reservation->setStatus("rejetee");
+            }
         }
+        // mettre la resa avec le statut envoyé par le propriétaire
         
-        foreach ($reservations[0] as $otherReservation){
-            $otherReservation->setStatus($statusUpdate);
-        }
+        $data->setStatus($bodyRequest["status"]);
         // dump($reservations[0]);
         // die();
 

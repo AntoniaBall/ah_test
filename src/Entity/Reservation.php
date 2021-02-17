@@ -124,7 +124,7 @@ class Reservation
     
     /**
      * @Groups({"reservation:read"})
-     * @Assert\Choice({"en attente", "payee", "rejetee"})
+     * @Assert\Choice({"en attente", "acceptee", "rejetee"})
      * @ORM\Column(type="string", length=20)
      */
     private $status;
