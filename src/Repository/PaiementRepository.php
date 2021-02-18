@@ -42,7 +42,7 @@ class PaiementRepository extends ServiceEntityRepository
     public function findPaiementByEvent($eventId)
     {
         return $this->createQueryBuilder('pa')
-            ->andWhere('pa.eventId = :val')
+            ->andWhere('pa.tokenStripe = :val')
             ->setParameter('val', $eventId)
             ->getQuery()
             ->getResult()

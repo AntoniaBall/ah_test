@@ -21,41 +21,44 @@ class PaiementController extends AbstractController
     public function index(Request $request) : Response
     {
         $event = json_decode($request->getContent(), true);
-
+        
+        
         if (!$event){
             throw new HttpException(400, "No JSON Body from Stripe");
         }
-
+        
         $repository = $this->getDoctrine()->getRepository(Paiement::class);
         
         // $paiement = $repository->findPaiementByEvent($event["object"]["id"]);
-        $paiement = $repository->findPaiementByEvent($event["data"]["object"]["id"]);
-
-        dump($event["data"]["object"]["id"]);
-        die();
+        $paiement = $repository->findPaiementByEvent($event["object"]["id"]);
         
-        $reservation = $paiement->getReservation();
+        if (!$paiement){
+            throw new HttpException(404, "No payment found");
+        }
+
+        $reservation = $paiement[0]->getReservation();
+
         switch ($event["object"]["status"]) {
             case 'succeeded':
                 $reservation->setStatus("acceptee");
                 $reservation->setPaid(true);
-                dump($paiement);
-                die("paiementsucceed");
+                $paiement[0]->setRetourStripe("succeeded");
+                $paiement[0]->setDateRetourStripe(new \DateTime('now'));
             break;
-            case 'payment_method.attached':
-                $reservation->setStatus("acceptee");
-                $reservation->setPaid(true);
-                die("paymentfailed");
+            case 'requires_payment_method':
+                $reservation->setStatus("rejetee");
+                $reservation->setPaid(false);
+                $paiement[0]->setRetourStripe("failed");
+                $paiement[0]->setDateRetourStripe(new \DateTime('now'));
             break;
             case 'failed':
                 echo "failed";
             default:
             echo 'Received unknown event type ' . $event["object"]["id"];
         }
-        die();
         
-        // http_response_code(200);
+        http_response_code(200);
 
-
+        return new Response("The paiement is well treated");
     }
 }
