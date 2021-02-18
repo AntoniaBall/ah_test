@@ -10,6 +10,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Repository\PaiementRepository;
 use App\Entity\Paiement;
 
+/**
+ * Manage the web hook
+ */
 class PaiementController extends AbstractController
 {
     /**

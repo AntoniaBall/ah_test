@@ -54,7 +54,7 @@ class Property
     private $title;
     
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write", "indisponibility:write","activities:write"})
+     * @Groups({"property:read", "reservation:read", "property:write", "typeproperty:read", "user:write", "picture:write", "indisponibility:write","activities:write"})
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Assert\Length(
@@ -65,7 +65,7 @@ class Property
     private $description;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write", "indisponibility:write","activities:write"})
+     * @Groups({"property:read", "reservation:read", "property:write", "typeproperty:read", "user:write", "picture:write", "indisponibility:write","activities:write"})
      * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
@@ -76,7 +76,7 @@ class Property
     private $surface;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write","activities:write"})
+     * @Groups({"property:read", "property:write", "reservation:read", "typeproperty:read", "picture:write", "indisponibility:write","activities:write"})
      * @ORM\Column(type="integer")
      * @Assert\Positive(message="this value must be positive")
      * @Assert\NotNull
@@ -85,7 +85,7 @@ class Property
     private $nbrRoom;
 
     /**
-    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write","activities:write"})
+    * @Groups({"property:read", "property:write", "reservation:read", "typeproperty:read", "picture:write", "indisponibility:write","activities:write"})
      * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="float")
      * @Assert\NotBlank
@@ -96,7 +96,7 @@ class Property
     private $rate;
 
     /**
-    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write", "activities:write"})
+    * @Groups({"property:read", "property:write", "reservation:read", "typeproperty:read", "picture:write", "indisponibility:write", "activities:write"})
      * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
      */

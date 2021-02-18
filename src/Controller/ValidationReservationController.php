@@ -32,70 +32,55 @@ class ValidationReservationController extends AbstractController
 
     public function __invoke(Reservation $data, Request $request) : Reservation
     {
-        // pour le proprio valider les reservations et ce qu'il s'en suit
-
         $bodyRequest = json_decode($request->getContent(), true);
 
         if (!$bodyRequest){
             throw new HttpException(400, "Please provide a valid JSON");
         }
 
-        // affectee la décision "validee" ou "rejetee"
         if (!in_array($bodyRequest["status"], ["acceptee", "rejetee"])){
             throw new HttpException(400, "Please provide a correct answer");
         }
-        
-        // $data->setStatus($bodyRequest["status"]);
-        
+
+        $userReservationsCount = $this->getDoctrine()
+        ->getRepository(Reservation::class)
+        ->getCountReservationsByUser($data->getUser());
+
+        if ($userReservationsCount[0][1] > 10){
+            throw new HttpException(400, "Vous avez plus de 2 reservations en attente");
+        }
+
+        // dump($data->getNumberTraveler());
+        // dump($data->getProperty()->getMaxTravelers());
+        // die();
         $periodes = new \DatePeriod(
             $data->getDateStart(),
             new \DateInterval('P1D'),
             $data->getDateEnd()->modify("+1 day")
         );
 
-        $statusUpdate = $bodyRequest["status"] === "acceptee" ? "rejetee" : "acceptee";
-
-        // trouver toutes les réservations de ce bien entre les 2 dates
         $em = $this->getDoctrine()->getManager();
-        
+
+        if($data->getNumberTraveler() > $data->getProperty()->getMaxTravelers()) {
+            throw new HttpException(400, "Le nombre de voyageurs est supérieur à la capacité du bien que vous voulez réserver");
+        }
+
         if ($bodyRequest["status"] === "acceptee"){
             foreach($periodes as $period) {
                 $result = $this->getDoctrine()
                 ->getRepository(Reservation::class)
                 ->getOtherWaitingReservations($period, $data->getProperty()->getId(), $data->getId());
-
-                
-                // $reservation = $this->getDoctrine()->getRepository(Reservation::class)->find($data->getId()); // array
-                // dump($otherResa[0]);
-                // $resa->setStatus($statusUpdate);
                 $reservations[] = $result;
-                // $reservatiions[] = $reservation;
             }
             foreach ($reservations[0] as $reservation){
-                // dump($reservation->getId()); // 2
                 $reservation->setStatus("rejetee");
             }
+
+            // envoyer le paiement
+            $this->paimentService->confirmPayment($data, $data->getStripeToken());
         }
-        // mettre la resa avec le statut envoyé par le propriétaire
-        
+
         $data->setStatus($bodyRequest["status"]);
-        // dump($reservations[0]);
-        // die();
-
-        // if($data->getNumberTraveler() > $data->getProperty()->getMaxTravelers()) {
-        //     throw new HttpException(400, "Le nombre de voyageurs est supérieur à la capacité du bien que vous voulez réserver");
-        // }
-        
-        // // vérifier que l'utilisateur n'a pas plus de 2 reservations en attente
-        // $userReservationsCount = $this->getDoctrine()
-        //         ->getRepository(Reservation::class)
-        //         ->getCountReservationsByUser($data->getUser());
-
-        // if ($userReservationsCount[0][1] > 10){
-        //     throw new HttpException(400, "Vous avez plus de 2 reservations en attente");
-            
-        // }
-
         // // PREPARER PAIEMENT
         // // dump($data->getStripeToken());
                               

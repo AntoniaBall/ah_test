@@ -2,22 +2,52 @@
 
 namespace App\Services;
 
+use App\Entity\Paiement;
+
 class PaymentService {
 
-    // create stripe webhook stripeHooks
+    private $clientSecret;
+
+    public function __construct($clientSecret)
+    {
+        $this->clientSecret = $clientSecret;
+    }
 
     // confirmPaymentIntent
-
-    // refundPaymentIntent
-    public function createCharge($montant)
+    public function confirmPayment($reservation, $paymentId)
     {
-        \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
+        \Stripe\Stripe::setApiKey($this->clientSecret);
 
-        // \Stripe\Charge::create(array(
-        //     "amount" => $data->getMontant() * 100,
-        //     "currency" => "eur",
-        //     "source" => "tok_visa",
-        //     "description" => "First test charge!"
-        // ));
+        // dump($this->clientSecret);
+        $stripe = new \Stripe\StripeClient($this->clientSecret);
+        $stripe->paymentIntents->confirm(
+            $paymentId,
+            ['payment_method' => 'pm_card_visa']
+        );
+
+        // enregistrer le paiement dans
+        $paiement = new Paiement();
+        $paiement->setTokenStripe($paymentId);
+        $paiement->setDatePaiement(new \DateTime('now'));
+        $paiement->setStatus("paiement en cours");
+        $paiement->setMontant($reservation->getMontant());
+
+        $reservation->addPaiement($paiement);
+
     }
+    
+    // refundPaymentIntent
+
+    //find event based on paymentId in the webhook
+    public function findPayment($paymentId)
+    {
+        $stripe = new \Stripe\StripeClient($this->clientSecret);
+
+        return $stripe->paymentIntents->retrieve(
+                        $paymentId, []
+            );
+    }
+
+    
+    
 }

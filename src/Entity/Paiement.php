@@ -28,6 +28,7 @@ class Paiement
      * @Groups({"paiement:read", "paiement:write"})
      * @Assert\NotNull
      * @ORM\Column(type="string", length=255)
+     * The paymentIntent Id
      */
     private $tokenStripe;
     
@@ -40,14 +41,12 @@ class Paiement
     
     /**
      * @Groups({"paiement:read", "paiement:write"})
-     * @Assert\NotNull
-     * @ORM\Column(type="boolean", length=20)
+     * @ORM\Column(type="string", length=20)
      */
     private $status;
     
     /**
      * @Groups({"paiement:read", "paiement:write"})
-     * @Assert\NotNull
      * @ORM\Column(type="string", length=255)
      */
     private $retourStripe;
@@ -70,14 +69,11 @@ class Paiement
      */
     private $montant;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $eventId;
-
     public function __construct()
     {
         $this->status= false;
+        $this->status="paiement en cours";
+        $this->retourStripe="en attente";
     }
     public function getId(): ?int
     {
@@ -164,18 +160,6 @@ class Paiement
     public function setMontant(int $montant): self
     {
         $this->montant = $montant;
-
-        return $this;
-    }
-
-    public function getEventId(): ?string
-    {
-        return $this->eventId;
-    }
-
-    public function setEventId(string $eventId): self
-    {
-        $this->eventId = $eventId;
 
         return $this;
     }

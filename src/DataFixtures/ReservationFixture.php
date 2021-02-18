@@ -13,7 +13,7 @@ class ReservationFixture extends Fixture implements DependentFixtureInterface
     {
         //1 reservation pour l'utilisateur locataire@yopmail.com dans les jours à venir
         $reservation = new Reservation();
-        $reservation->setDateStart(new \Datetime('now'))
+        $reservation->setDateStart(new \Datetime('tomorrow'))
         ->setDateEnd(new \Datetime('next monday'))
         ->setMontant(600)
         ->setPaid(1)
