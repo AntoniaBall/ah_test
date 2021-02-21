@@ -36,6 +36,8 @@ class PaiementController extends AbstractController
             throw new HttpException(404, "No payment found");
         }
 
+        $em = $this->getDoctrine()->getManager();
+
         $reservation = $paiement[0]->getReservation();
 
         switch ($event["object"]["status"]) {
@@ -44,19 +46,23 @@ class PaiementController extends AbstractController
                 $reservation->setPaid(true);
                 $paiement[0]->setRetourStripe("succeeded");
                 $paiement[0]->setDateRetourStripe(new \DateTime('now'));
+                $em->persist($reservation);
+                $em->persist($paiement[0]);
             break;
             case 'requires_payment_method':
                 $reservation->setStatus("rejetee");
                 $reservation->setPaid(false);
                 $paiement[0]->setRetourStripe("failed");
                 $paiement[0]->setDateRetourStripe(new \DateTime('now'));
+                $em->persist($reservation);
+                $em->persist($paiement[0]);
             break;
             case 'failed':
                 echo "failed";
             default:
             echo 'Received unknown event type ' . $event["object"]["id"];
         }
-        
+        $em->flush();
         http_response_code(200);
 
         return new Response("The paiement is well treated");

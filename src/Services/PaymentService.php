@@ -3,14 +3,17 @@
 namespace App\Services;
 
 use App\Entity\Paiement;
+use Doctrine\ORM\EntityManagerInterface;
 
 class PaymentService {
 
     private $clientSecret;
+    private $entityManager;
 
-    public function __construct($clientSecret)
+    public function __construct($clientSecret, EntityManagerInterface $entityManager)
     {
         $this->clientSecret = $clientSecret;
+        $this->entityManager = $entityManager;
     }
 
     // confirmPaymentIntent
@@ -18,7 +21,6 @@ class PaymentService {
     {
         \Stripe\Stripe::setApiKey($this->clientSecret);
 
-        // dump($this->clientSecret);
         $stripe = new \Stripe\StripeClient($this->clientSecret);
         $stripe->paymentIntents->confirm(
             $paymentId,
@@ -33,6 +35,9 @@ class PaymentService {
         $paiement->setMontant($reservation->getMontant());
 
         $reservation->addPaiement($paiement);
+
+        $this->entityManager->persist($paiement);
+        $this->entityManager->flush();
     }
     
     // refundPaymentIntent if proprio rejected the reservation demand and payment has been succeed

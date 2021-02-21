@@ -78,12 +78,14 @@ class ValidationReservationController extends AbstractController
 
             // envoyer le paiement
             $this->paimentService->confirmPayment($data, $data->getStripeToken());
+            $data->setStatus("acceptee");
         } else{
             // si reservation rejetee
             $this->paimentService->cancelPayment($data->getStripeToken());
-            $data->setStatus($bodyRequest["status"]);
+            $data->setStatus("rejetee");
         }
-
+        $em->persist($data);
+        $em->flush();
         return $data;
     }
 }
