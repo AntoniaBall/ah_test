@@ -19,13 +19,30 @@ use App\Controller\RegistrationController;
 * @ApiResource(normalizationContext={"groups"={"user:read"}},
 *     denormalizationContext={"groups"={"user:write"}},
 *     collectionOperations={
+*           "get"={
+*                   "security"="is_granted('ROLE_ADMIN')"
+*           },
 *           "register"={
 *                   "method"="POST",
 *                   "path"="/register",
 *                   "controller"=RegistrationController::class,
 *                   "read"=false
+*           },
+*     },
+*     itemOperations={
+*           "put"={
+*                   "security"="is_granted('ROLE_ADMIN') or object == user",
+*                   "security_message"= "You are not the owner of this profile"
+*           },
+*           "delete"={
+*                   "security"="is_granted('ROLE_ADMIN') or object == user",
+*                   "security_message"= "You are not the owner of this profile"
+*           },
+*           "get"={
+*                   "security"="is_granted('ROLE_ADMIN') or object == user",
+*                   "security_message"= "You are not the owner of this profile"
 *           }
-*     }
+*      }
 *)
 * 
 * @ORM\Entity(repositoryClass=UserRepository::class)
