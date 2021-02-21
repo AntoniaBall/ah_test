@@ -48,6 +48,7 @@ class PaiementController extends AbstractController
                 $paiement[0]->setDateRetourStripe(new \DateTime('now'));
                 $em->persist($reservation);
                 $em->persist($paiement[0]);
+                $em->flush();
             break;
             case 'requires_payment_method':
                 $reservation->setStatus("rejetee");
@@ -56,13 +57,13 @@ class PaiementController extends AbstractController
                 $paiement[0]->setDateRetourStripe(new \DateTime('now'));
                 $em->persist($reservation);
                 $em->persist($paiement[0]);
+                $em->flush();
             break;
             case 'failed':
                 echo "failed";
             default:
             echo 'Received unknown event type ' . $event["object"]["id"];
         }
-        $em->flush();
         http_response_code(200);
 
         return new Response("The paiement is well treated");

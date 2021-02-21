@@ -23,7 +23,8 @@ class ValidationReservationController extends AbstractController
     private $paimentService;
     private $params;
 
-    public function __construct(PaymentService $paiementService, ParameterBagInterface $params, Security $security)
+    public function __construct(PaymentService $paiementService, 
+            ParameterBagInterface $params, Security $security)
     {
         $this->paimentService = $paiementService;
         $this->params = $params;
@@ -33,7 +34,11 @@ class ValidationReservationController extends AbstractController
     public function __invoke(Reservation $data, Request $request) : Reservation
     {
         $bodyRequest = json_decode($request->getContent(), true);
-
+        $currentDisponibilities= $data->getProperty()->getDisponibilities();
+        // foreach ($currentDisponibilities as $currentDisponibility){
+        //     dump($currentDisponibility->getJourDispo());
+        // }
+        // die();   
         if (!$bodyRequest){
             throw new HttpException(400, "Please provide a valid JSON");
         }
@@ -79,6 +84,9 @@ class ValidationReservationController extends AbstractController
             // envoyer le paiement
             $this->paimentService->confirmPayment($data, $data->getStripeToken());
             $data->setStatus("acceptee");
+
+            // trouver et bloquer les dates
+          
         } else{
             // si reservation rejetee
             $this->paimentService->cancelPayment($data->getStripeToken());

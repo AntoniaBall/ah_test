@@ -35,14 +35,14 @@ class ReservationController extends AbstractController
         // CREER DEMANDE DE RESERVATION AVEC INFOS DE PAIEMENT
         $disponibilities = $data->getProperty()->getDisponibilities()->toArray();
 
-        // dump($disponibilities);
-        // die();
-
         $interval = date_diff($data->getDateEnd(), $data->getDateStart()); // 6 days
-
+        
         if (!$data->getStripeToken()) {
             throw new HttpException(400, "Aucun paiement initié pour cette réservation");
         }
+        // $data->setMontant($interval * $data->getProperty()->getRate());
+        // dump($data->getMontant());
+        // die();
 
         // récupérer tous les jours de reservations
         $periodes = new \DatePeriod(

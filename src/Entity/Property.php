@@ -175,7 +175,7 @@ class Property
     private $valeur;
 
     /**
-     * @Groups({"property:read", "property:write", "user:write", "disponibility:write"})
+     * @Groups({"property:read", "property:write", "user:write", "disponibility:write", "reservation:read"})
      * @ORM\OneToMany(targetEntity=Disponibility::class, mappedBy="property", cascade={"persist", "remove"})
      */
     private $disponibilities;
