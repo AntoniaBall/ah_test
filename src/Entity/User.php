@@ -60,7 +60,12 @@ class User implements UserInterface
     private $password;
     
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\Regex(
+     *      pattern="[0-9]",
+     *      match=true,
+     *      message= "invalid value"
+     * )
      * 
      * @Groups({"user:read", "user:write", "property:read"})
      */
@@ -208,12 +213,12 @@ class User implements UserInterface
     //     return $this;
     // }
 
-    public function getPhone(): ?int
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
 
-    public function setPhone(?int $phone): self
+    public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
         return $this;
