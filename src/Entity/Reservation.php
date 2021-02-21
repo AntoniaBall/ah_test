@@ -130,7 +130,7 @@ class Reservation
     private $status;
     
     /**
-     * @Groups({"reservation:read", "reservation:write"})
+     * @Groups({"reservation:write"})
      * @Assert\NotNull
      * @ORM\Column(type="string", length=255)
      */

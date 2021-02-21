@@ -78,43 +78,12 @@ class ValidationReservationController extends AbstractController
 
             // envoyer le paiement
             $this->paimentService->confirmPayment($data, $data->getStripeToken());
+        } else{
+            // si reservation rejetee
+            $this->paimentService->cancelPayment($data->getStripeToken());
+            $data->setStatus($bodyRequest["status"]);
         }
 
-        $data->setStatus($bodyRequest["status"]);
-        // // PREPARER PAIEMENT
-        // // dump($data->getStripeToken());
-                              
-        // // \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
-                              
-        // // // $event = \Stripe\Charge::create(array(
-        //                                                 // //     "amount" => $data->getMontant() * 1000,
-        //                                                 // //     "currency" => "eur",
-        //                                                 // //     "source" => "tok_visa",
-        //                                                 // //     "description" => "First test charge!"
-        //                                                 // // ));
-                                                        
-        //                                                 // // create a payment intent event
-                                                        
-        //                                                 // $event = \Stripe\PaymentIntent::create([
-        //                                                     //     "amount" => $data->getMontant() * 1000,
-        //                                                     //     'currency' => 'eur',
-        // //     'payment_method_types' => ['card'],
-        // //   ]);
-
-        // // enregister le paiement & créer le payment intent
-        // $paiement = new Paiement();
-        // $paiement->setReservation($data);
-        // $paiement->setDatePaiement(new \Datetime('now'));
-        // $paiement->setTokenStripe($data->getStripeToken());
-        // $paiement->setRetourStripe("en attente");
-        // $paiement->setEventId($data->getStripeToken());
-        // $paiement->setMontant($data->getMontant()*100);
-
-        // $em->persist($paiement);
-        // $em->flush();
-
-        // $newReservation = new Reservation();
-        
         return $data;
     }
 }

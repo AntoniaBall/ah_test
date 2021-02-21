@@ -102,19 +102,19 @@ class ReservationController extends AbstractController
         //     'payment_method_types' => ['card'],
         //   ]);
 
-        // enregister le paiement & créer le payment intent
-        $paiement = new Paiement();
-        $paiement->setReservation($data);
-        $paiement->setDatePaiement(new \Datetime('now'));
-        $paiement->setTokenStripe($data->getStripeToken());
-        $paiement->setRetourStripe("en attente");
-        $paiement->setEventId($data->getStripeToken());
-        $paiement->setMontant($data->getMontant()*100);
+        // // enregister le paiement & créer le payment intent
+        // $paiement = new Paiement();
+        // $paiement->setReservation($data);
+        // $paiement->setDatePaiement(new \Datetime('now'));
+        // $paiement->setTokenStripe($data->getStripeToken());
+        // $paiement->setRetourStripe("en attente");
+        // $paiement->setEventId($data->getStripeToken());
+        // $paiement->setMontant($data->getMontant()*100);
 
-        $em->persist($paiement);
-        $em->flush();
+        // $em->persist($paiement);
+        // $em->flush();
 
-        $newReservation = new Reservation();
+        // $newReservation = new Reservation();
         
         return $data;
     }
