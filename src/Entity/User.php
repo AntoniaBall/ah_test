@@ -79,11 +79,13 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", nullable=true)
      * @Assert\Regex(
-     *      pattern="[0-9]",
-     *      match=true,
-     *      message= "invalid value"
+     *      pattern="/^(\(0\))?[0-9]+$/",
+     *      message= "this value is invalid"
      * )
-     * 
+     * @Assert\Length(
+     *      min=10,
+     *      max=17
+     * )
      * @Groups({"user:read", "user:write", "property:read"})
      */
     private $phone;
