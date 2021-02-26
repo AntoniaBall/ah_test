@@ -2,8 +2,8 @@
 
 namespace App\EventSubscriber;
 
-use App\Entity\Property;
 use App\Entity\Reservation;
+use App\Entity\Property;
 use ApiPlatform\Core\EventListener\EventPriorities;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -12,16 +12,19 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 
 /**
-  * Cette classe est un écouteur d'évenements qui va écouter toutes les opérations post de l'application, 
-  * et executera la méthode public function setCurrentUser à chaque fois qu'un post opération est fait
+ * Cette classe est un écouteur d'évenements qui va écouter toues les opérations post de l'application, 
+ * et executera la méthode public function setCurrentUser à chaque fois qu'un post opération est fait
 */
-final class CurrentUserSubscriber implements EventSubscriberInterface
+final class ReservationSubscriber implements EventSubscriberInterface
 {
     /**
      * @var TokenStorageInterface
      */
     private $tokenStorage;
 
+    /**
+     * ReservationSubscriber constructor.
+     */
     public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
@@ -30,22 +33,22 @@ final class CurrentUserSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => [['setCurrentUser', EventPriorities::PRE_WRITE]],
+            KernelEvents::VIEW => [['addReservationAction', EventPriorities::PRE_WRITE]],
         ];
     }
 
-    public function setCurrentUser(ViewEvent $event)
+    public function addReservationAction(ViewEvent $event)
     {
     /**
-    * Pour débugger, faire un dump de tes variables ici
+    * récupérer le résultat du controlleur
     */
-    
-    $object = $event->getControllerResult();
-    // si l'objet est un bien ou une réservation setter le user au user connecté actuellement
-    if ($object instanceof Property){
+        $object = $event->getControllerResult();
+        
+        if ($object instanceof Reservation){
             $object->setUser($this->tokenStorage->getToken()->getUser());
             $event->setControllerResult($object);
         }
+        
+        return true;
     }
 }
-

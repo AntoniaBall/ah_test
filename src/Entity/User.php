@@ -16,7 +16,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Controller\RegistrationController;
 
 /**
-* @ApiResource(normalizationContext={"groups"={"user:read"}},
+* @ApiResource(
+*     normalizationContext={"groups"={"user:read"}},
 *     denormalizationContext={"groups"={"user:write"}},
 *     collectionOperations={
 *           "get"={
@@ -98,9 +99,6 @@ class User implements UserInterface
      */
     private $roles = [];
     
-    /*
-    * @ORM\Column(type="boolean")
-    */
     private $isVerified = false;
     
     /**

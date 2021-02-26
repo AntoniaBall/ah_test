@@ -14,15 +14,16 @@ use Symfony\Component\Workflow\Exception\LogicException;
 
 class PropertyController extends AbstractController
 {
-    /**
-     * Route("/api/envoi-message")
-     */
-    public function index(MessageBusInterface $bus)
-    {
-        // will cause the SmsNotificationHandler to be called
+    // /**
+    //  * Route("/api/envoi-message")
+    //  */
+    // public function index(MessageBusInterface $bus)
+    // {
+    //     // will cause the SmsNotificationHandler to be called
 
-        // // or use the shortcut
+    //     // // or use the shortcut
         
-        // ...
-    }
+    //     // ...
+   // }
+   
 }
