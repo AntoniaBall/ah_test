@@ -25,7 +25,7 @@ class AddressFixture extends Fixture
     {
         $generator = Faker\Factory::create();
 
-        for ($i=0; $i<20 ; $i++){
+        for ($i=0; $i<129 ; $i++){
                 $address= new Address();
                 $address->setNumber((int) $generator->numberBetween($min = 1, $max = 900))
                         ->setStreet($generator->streetName)
