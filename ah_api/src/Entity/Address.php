@@ -55,9 +55,9 @@ class Address
      * min = 5,
      * max = 5,
      * exactMessage = "Votre code postal doit être composé de {{limit}} caractères.")
-     * @Groups("adress:write")
+     * @Groups({"adress:read", "adress:write"})
      */
-    private $postal_code;
+    private $postalCode;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -110,13 +110,18 @@ class Address
         return $this->number;
     }
 
+    /**
+     * @Groups({"address:write","property:write"})
+     */
     public function setNumber(int $number): self
     {
         $this->number = $number;
 
         return $this;
     }
-
+    /**
+     * @Groups({"address:write","property:write"})
+     */
     public function getStreet(): ?string
     {
         return $this->street;
@@ -128,15 +133,17 @@ class Address
 
         return $this;
     }
-
+    /**
+     * @Groups({"address:write","property:write"})
+     */
     public function getPostalCode(): ?int
     {
-        return $this->postal_code;
+        return $this->postalCode;
     }
 
-    public function setPostalCode(int $postal_code): self
+    public function setPostalCode(int $postalCode): self
     {
-        $this->postal_code = $postal_code;
+        $this->postalCode = $postalCode;
 
         return $this;
     }
@@ -145,7 +152,9 @@ class Address
     {
         return $this->town;
     }
-
+    /**
+     * @Groups({"address:write","property:write"})
+     */
     public function setTown(string $town): self
     {
         $this->town = $town;
@@ -157,7 +166,9 @@ class Address
     {
         return $this->region;
     }
-
+    /**
+     * @Groups({"address:write","property:write"})
+     */
     public function setRegion(string $region): self
     {
         $this->region = $region;
@@ -169,7 +180,9 @@ class Address
     {
         return $this->country;
     }
-
+    /**
+     * @Groups({"address:write","property:write"})
+     */
     public function setCountry(string $country): self
     {
         $this->country = $country;

@@ -96,6 +96,7 @@ class Reservation
 
     public function __construct()
     {
+        $this->setUser($this->getUser());
         $this->comments = new ArrayCollection();
     }
 

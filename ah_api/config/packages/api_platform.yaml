@@ -2,7 +2,7 @@ api_platform:
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     patch_formats:
-        json: ['application/merge-patch+json']
+        json: ['application/json']
     swagger:
         versions: [3]
         api_keys:
@@ -11,3 +11,5 @@ api_platform:
                 type: header
     eager_loading:
         fetch_partial: true
+    messenger:
+        enabled: true

@@ -81,7 +81,9 @@ class Equipment
     {
         return $this->pool;
     }
-
+    /**
+     * @Groups({"equipment:write","property:write"})
+     */
     public function setPool(bool $pool): self
     {
         $this->pool = $pool;
@@ -93,7 +95,9 @@ class Equipment
     {
         return $this->baignoire;
     }
-
+    /**
+     * @Groups({"equipment:write","property:write"})
+     */
     public function setBaignoire(bool $baignoire): self
     {
         $this->baignoire = $baignoire;
@@ -101,12 +105,14 @@ class Equipment
         return $this;
     }
 
-    public function getJaccuzzi(): ?bool
+    public function getjaccuzzi(): ?bool
     {
         return $this->jaccuzzi;
     }
-
-    public function setJaccuzzi(bool $jaccuzzi): self
+    /**
+     * @Groups({"equipment:write","property:write"})
+     */
+    public function setjaccuzzi(bool $jaccuzzi): self
     {
         $this->jaccuzzi = $jaccuzzi;
 
@@ -117,7 +123,9 @@ class Equipment
     {
         return $this->climatiseur;
     }
-
+    /**
+     * @Groups({"equipment:write","property:write"})
+     */
     public function setClimatiseur(bool $climatiseur): self
     {
         $this->climatiseur = $climatiseur;
@@ -129,7 +137,9 @@ class Equipment
     {
         return $this->chauffage;
     }
-
+    /**
+     * @Groups({"equipment:write","property:write"})
+     */
     public function setChauffage(bool $chauffage): self
     {
         $this->chauffage = $chauffage;
@@ -141,14 +151,15 @@ class Equipment
     {
         return $this->wifi;
     }
-
+    /**
+     * @Groups({"equipment:write","property:write"})
+     */
     public function setWifi(bool $wifi): self
     {
         $this->wifi = $wifi;
 
         return $this;
     }
-
     /**
      * @return Collection|Property[]
      */

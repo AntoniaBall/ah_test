@@ -11,6 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @ApiResource(normalizationContext={"groups"={"user:read"}},
@@ -73,7 +74,6 @@ class User implements UserInterface
     */
     private $firstname;
 
-
     /*
     * @Groups({"user:read", "user:write", "property:read"})
     * @ORM\Column(type="string")
@@ -91,6 +91,8 @@ class User implements UserInterface
      * @Groups("user:read")
      */
     private $properties;
+
+    private UserPasswordEncoderInterface $encoder;
 
     public function __construct()
     {
@@ -164,10 +166,9 @@ class User implements UserInterface
         return (string) $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword($password): self
     {
         $this->password = $password;
-
         return $this;
     }
 
@@ -185,7 +186,7 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        // $this->password = null;
     }
 
     public function getEmail(): ?string
