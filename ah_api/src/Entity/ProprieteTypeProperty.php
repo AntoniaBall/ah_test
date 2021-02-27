@@ -20,21 +20,21 @@ class ProprieteTypeProperty
      * @ORM\Column(type="integer")
      */
     private $id;
-    
+
     /**
-     * @Groups("proprietetypeproperty:read")
+     * @Groups({"proprietetypeproperty:read","typeproperty:read"})
      * @ORM\ManyToOne(targetEntity=Propriete::class, inversedBy="proprieteTypeProperties")
      */
     private $propriete;
 
     /**
-     * @Groups("proprietetypeproperty:read")
+     * @Groups({"proprietetypeproperty:read"})
      * @ORM\ManyToOne(targetEntity=TypeProperty::class, inversedBy="proprieteTypeProperties")
      */
     private $type_property;
 
     /**
-     * @Groups("proprietetypeproperty:read")
+     * @Groups({"proprietetypeproperty:read","typeproperty:read"})
      * @ORM\ManyToOne(targetEntity=Valeur::class, inversedBy="proprieteTypeProperties")
      */
     private $valeur;

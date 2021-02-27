@@ -24,7 +24,7 @@ class Valeur
     private $id;
 
     /**
-     * @Groups({"valeur:read", "valeur:write"})
+     * @Groups({"valeur:read", "valeur:write", "proprietetypeproperty:read"})
      * @ORM\Column(type="string", length=100)
      */
     private $valeur;
@@ -108,6 +108,4 @@ class Valeur
 
         return $this;
     }
-
-
 }

@@ -13,12 +13,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
-* @ApiResource(normalizationContext={"groups"={"user:read"}},
-*     denormalizationContext={"groups"={"user:write"}})
-* 
-* @ORM\Entity(repositoryClass=UserRepository::class)
-* @UniqueEntity(fields={"email"}, message="There is already an account with this email")
-*/
+ * @ApiResource(normalizationContext={"groups"={"user:read"}},
+ *     denormalizationContext={"groups"={"user:write"}})
+ * 
+ * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ */
 class User implements UserInterface
 {
     /**
@@ -46,14 +46,14 @@ class User implements UserInterface
      * 
      */
     private $password;
-    
+
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      * 
      * @Groups({"user:read", "user:write", "property:read"})
      */
     private $phone;
-    
+
     /**
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="user", orphanRemoval=true)
      * 
@@ -61,25 +61,25 @@ class User implements UserInterface
      * @ORM\Column(type="json")
      */
     private $roles = [];
-    
+
     /*
     * @ORM\Column(type="boolean")
     */
     private $isVerified = false;
-    
+
     /*
     * @Groups({"user:read", "user:write", "property:read"})
     * @ORM\Column(type="string")
     */
     private $firstname;
-    
-    
+
+
     /*
     * @Groups({"user:read", "user:write", "property:read"})
     * @ORM\Column(type="string")
     */
     private $lastname;
-    
+
     /**
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="user", orphanRemoval=true)
      */
@@ -141,18 +141,18 @@ class User implements UserInterface
     {
         $this->roles = $roles;
 
-        return $this; 
+        return $this;
     }
-    
+
     public function getLastname(): ?string
     {
         return $this->lastname;
     }
-    
+
     public function setLastname(string $lastname): self
     {
         $this->lastname = $lastname;
-        
+
         return $this;
     }
 
@@ -187,7 +187,7 @@ class User implements UserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-    
+
     public function getEmail(): ?string
     {
         return $this->email;
@@ -305,7 +305,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function removeProperty(Property $property): self
+    public function removeProperty(Property $property)
     {
         if ($this->properties->removeElement($property)) {
             // set the owning side to null (unless already changed)
@@ -326,5 +326,4 @@ class User implements UserInterface
 
         return $this;
     }
-
 }

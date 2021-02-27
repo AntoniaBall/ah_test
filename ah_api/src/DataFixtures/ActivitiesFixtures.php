@@ -13,24 +13,27 @@ class ActivitiesFixtures extends Fixture implements DependentFixtureInterface
     {
         $equitation = new Activities();
         $equitation->setTitle('Equitation')
-                    ->setDescription('centre d\'equitation proche du logement')
-                    ->addPicture($this->getReference(PicturesFixtures::picture_activite));
-                    
+            ->setDescription('centre d\'equitation proche du logement')
+            ->addProperty($this->getReference(PropertyFixtures::bateaux))
+
+
+            ->addPicture($this->getReference(PicturesFixtures::picture_activite));
+
         $manager->persist($equitation);
 
         $natation = new Activities();
         $natation->setTitle('natation')
-                    ->setDescription('centre d\'equitation proche du logement')
-                    ->addPicture($this->getReference(PicturesFixtures::picture_activite));
-                    
+            ->setDescription('centre d\'equitation proche du logement')
+            ->addPicture($this->getReference(PicturesFixtures::picture_activite));
+
         $manager->persist($natation);
 
-        for ($i=0; $i <10 ; $i++) { 
-        	$Activities = (new Activities);
-        	$Activities-> setDescription("Lorem ipsum dolor sit amet");
-        	$Activities-> setTitle("$i Activity");
-        	
-        	$manager->persist($Activities);
+        for ($i = 0; $i < 10; $i++) {
+            $Activities = (new Activities);
+            $Activities->setDescription("Lorem ipsum dolor sit amet");
+            $Activities->setTitle("$i Activity");
+
+            $manager->persist($Activities);
         }
 
         $manager->flush();
@@ -39,6 +42,7 @@ class ActivitiesFixtures extends Fixture implements DependentFixtureInterface
     {
         return array(
             PicturesFixtures::class,
+            PropertyFixtures::class
         );
     }
 }

@@ -10,6 +10,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 /**
  * @ApiResource(normalizationContext={"groups"={"indisponibility:read"}},
  *     denormalizationContext={"groups"={"indisponibility:write"}})
@@ -25,7 +26,7 @@ class Indisponibility
     private $id;
 
     /**
-     * @Groups({"indisponibility:read", "indisponibility:write"})
+     * @Groups({"indisponibility:read", "indisponibility:write", "property:read"})
      * @Assert\Type(
      *     type="datetime",
      *     message="The value {{ value }} is not a valid {{ type }}."
@@ -36,7 +37,7 @@ class Indisponibility
     private $date_start;
 
     /**
-     * @Groups({"indisponibility:read", "indisponibility:write"})
+     * @Groups({"indisponibility:read", "indisponibility:write", "property:read"})
      * @Assert\Type(
      *     type="datetime",
      *     message="The value {{ value }} is not a valid {{ type }}."
@@ -84,7 +85,7 @@ class Indisponibility
 
     /**
      * Get the value of property
-     */ 
+     */
     public function getProperty()
     {
         return $this->property;
@@ -94,7 +95,7 @@ class Indisponibility
      * Set the value of property
      *
      * @return  self
-     */ 
+     */
     public function setProperty($property)
     {
         $this->property = $property;

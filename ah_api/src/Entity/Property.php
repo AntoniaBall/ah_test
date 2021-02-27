@@ -9,11 +9,16 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert; // Symfony's built-in constraints
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 
 /**
  * @ApiResource(normalizationContext={"groups"={"property:read"}},
  *     denormalizationContext={"groups"={"property:write"}})
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
+ * @ApiFilter(SearchFilter::class, properties={"id": "exact", "typeProperty": "exact", "title": "exact", "description": "exact", "equipment":"exact", "user":"exact", "indisponibilities":"exact", "address.town":"exact", "activities":"exact", "indisponibilities.date_start":"exact"})
+ * [ApiFilter(DateFilter::class, properties: ['indisponibilities'])]
  */
 class Property
 {
@@ -34,7 +39,7 @@ class Property
      * )
      */
     private $title;
-    
+
     /**
      * @Groups({"property:read", "property:write", "typeproperty:read"})
      * @ORM\Column(type="string", length=255)
@@ -81,21 +86,21 @@ class Property
 
     /**
      * @Groups({"property:read", "property:write", "typeproperty:read"})
-    * @Assert\Positive(message="this value must be positive")
+     * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
      * @Assert\Positive
      */
     private $max_travelers;
 
-      /**
-       * @Groups({"property:read", "property:write", "typeproperty:read"})
+    /**
+     * @Groups({"property:read", "property:write", "typeproperty:read"})
      * @Assert\NotNull
      * @ORM\Column(type="boolean")
      * @Assert\NotBlank
      */
     private $access_handicap;
-    
+
     /**
      * @Groups({"property:read", "property:write", "typeproperty:read"})
      * @Assert\NotNull
@@ -103,7 +108,7 @@ class Property
      * @Assert\NotBlank
      */
     private $water;
-    
+
     /**
      * @Groups({"property:read", "property:write", "typeproperty:read"})
      * @Assert\NotNull
@@ -126,7 +131,7 @@ class Property
      * @Assert\NotBlank
      */
     private $tax;
-    
+
     /**
      * @Groups({"property:write"})
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="property", orphanRemoval=true)
@@ -258,7 +263,7 @@ class Property
 
         return $this;
     }
-    
+
     public function getSurface(): ?int
     {
         return $this->surface;
@@ -427,20 +432,13 @@ class Property
     {
         if (!$this->indisponibilities->contains($indisponibility)) {
             $this->indisponibilities[] = $indisponibility;
-            $indisponibility->addProperty($this);
+            $indisponibility->setProperty($this);
         }
 
         return $this;
     }
 
-    public function removeIndisponibility(Indisponibility $indisponibility): self
-    {
-        if ($this->indisponibilities->removeElement($indisponibility)) {
-            $indisponibility->removeProperty($this);
-        }
 
-        return $this;
-    }
 
     /**
      * @return Collection|Pictures[]

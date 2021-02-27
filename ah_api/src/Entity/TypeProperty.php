@@ -31,7 +31,7 @@ class TypeProperty
     private $title;
 
     /**
-     * @Groups({"typeproperty:read", "typeproperty:write"})
+     * @Groups({"typeproperty:read", "typeproperty:write", "property:read"})
      * @ORM\Column(type="string", length=255)
      */
     private $description;
@@ -91,7 +91,7 @@ class TypeProperty
     {
         return $this->proprieteTypeProperties;
     }
-    
+
     public function addProprieteTypeProperty(ProprieteTypeProperty $proprieteTypeProperty): self
     {
         if (!$this->proprieteTypeProperties->contains($proprieteTypeProperty)) {
@@ -113,7 +113,7 @@ class TypeProperty
 
         return $this;
     }
-    
+
     /**
      * @return Collection|ProprieteTypeProperty[]
      */
@@ -143,5 +143,4 @@ class TypeProperty
 
         return $this;
     }
-
 }
