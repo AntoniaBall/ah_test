@@ -43,4 +43,7 @@ services:
 
     App\DataPersister\BienPersister:
         decorates: 'api_platform.doctrine.orm.data_persister'
-        
+    
+    App\Services\PaymentService:
+        arguments:
+            $clientSecret: '%stripe_secret_key%'
