@@ -16,7 +16,7 @@ use App\Controller\PropertyController;
 
 /**
  * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"property:read"}},
+ *     "normalization_context"={"groups"={"property:read"}, "enable_max_depth"=true},
  *     "denormalization_context"={"groups"={"property:write"}}
  * },
  * collectionOperations={
@@ -141,7 +141,6 @@ class Property
     private $tax;
     
     /**
-     * @Groups({"property:read", "user:write"})
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="property", orphanRemoval=true)
      */
     private $reservations;
@@ -195,7 +194,7 @@ class Property
     private $activities;
 
     /**
-     * @Groups({"property:read", "admin:write","user:write", "indisponibility:write"})
+     * @Groups({"property:read", "admin:write","user:write"})
      * @Assert\Type(
      *      type="string",
      *      message="This value must be a string"

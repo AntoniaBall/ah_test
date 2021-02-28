@@ -9,7 +9,6 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
-realDump.sql
 
 ###> lexik/jwt-authentication-bundle ###
 config/jwt/*.pem
