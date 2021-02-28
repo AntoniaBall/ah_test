@@ -104,7 +104,7 @@ class SecurityController extends AbstractController
             ->setFrom('votre@adresse.fr')
             ->setTo($user->getEmail())
             ->setBody(
-                "<p>Bonjour,</p><p>Une demande de réinitialisation de mot de passe a été effectuée pour le site Nouvelle-Techno.fr. Veuillez cliquer sur le lien suivant : " . $url .'</p>',
+                "<p>Bonjour,</p><p>Une demande de réinitialisation de mot de passe a été effectuée pour le site Atypikhouse.fr. Veuillez cliquer sur le lien suivant : " . $url .'</p>',
                 'text/html'
                 )
             ;

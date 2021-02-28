@@ -2,18 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\ValeurRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
-use Symfony\Component\Serializer\Annotation\Groups;
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use function Symfony\Component\String\u;
+use App\Repository\ValeurBoolRepository;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource(normaizationContext={"groups"={"valeur:list"}},
+ *@ApiResource(normaizationContext={"groups"={"valeurBool:list"}},
     collectionoperations={
         "get",
         "post"={
@@ -22,7 +16,7 @@ use function Symfony\Component\String\u;
         },
     itemOperations={
         "get"={
-             "normalizations_context"={"groups"={"valeur:list", "read:full:valeur"}},
+             "normalizations_context"={"groups"={"valeurBool:list", "read:full:valeurBool"}},
             },
           "put"={
              "security"="is_granted('EDIT_VALEUR', object) and object.Author == user"
@@ -31,9 +25,10 @@ use function Symfony\Component\String\u;
              "security"="is_granted('EDIT_VALEUR', object) and object.Author == user"
             },
         })
- * @ORM\Entity(repositoryClass=ValeurRepository::class)
+
+ * @ORM\Entity(repositoryClass=ValeurBoolRepository::class)
  */
-class Valeur
+class ValeurBool
 {
     /**
      * @ORM\Id
@@ -43,32 +38,30 @@ class Valeur
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     
+     * @ORM\Column(type="boolean")
      */
-    private $valeur;
+    private $Valeur;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Propriete::class)
+     
+     * @ORM\ManyToOne(targetEntity=Propriete::class, inversedBy="valeurBools")
      */
     private $name;
-
-  
-
-
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getValeur(): ?int
+    public function getValeur(): ?bool
     {
-        return $this->valeur;
+        return $this->Valeur;
     }
 
-    public function setValeur(int $valeur): self
+    public function setValeur(bool $Valeur): self
     {
-        $this->valeur = $valeur;
+        $this->Valeur = $Valeur;
 
         return $this;
     }
@@ -84,8 +77,4 @@ class Valeur
 
         return $this;
     }
-
-
-    
-
 }

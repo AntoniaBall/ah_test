@@ -36,7 +36,7 @@ class User implements UserInterface
      * @Assert\Email(
      * message = "The email'{{ value }}' is not a valid email.")
      * 
-     * @Groups({"user:read", "user:write", "property:read"})
+     * @Groups({"user:read", "user:write", "property:read","comments:list"})
      */
     private $email;
 

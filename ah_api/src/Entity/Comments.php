@@ -13,25 +13,36 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use function Symfony\Component\String\u;
 use App\Controller\CommentController;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
 *
 * @ApiResource(
-*     attributes={"security"="is_granted('IS_AUTHENTICATED_FULLY')"},
-*     order={​​​​​​​"PublishedAt"="DESC"}​​​​​​​,
-*     collectionOperations={
-*          "get"={​​​​​​​"normalization_context"={​​​​​​​"groups"="comments:list"}​​​​​​​},
-*          "post" = { "security_post_denormalize" = "is_granted('COMMENT_CREATE', object)" },
-*          "controller"=CommentController::class
-*     },
-*     itemOperations={
-*          "get" = { "security" = "is_granted('COMMENT_READ', object)" },
-*          "put" = { "security" = "is_granted('COMMENT_EDIT', object) and (object.owner == user and previous_object.owner == user)" },
-*          "delete" = { "security" = "is_granted('COMMENT_DELETE', object) and (object.owner == user and previous_object.owner == user)" }
-*     },
+*     attributes={
+    "order"={"PublishedAt":"DESC"},
+      },
+      paginationitemsPerPage=10,
+ 
+    normalizationContext={"groups"={"comments:list"}},
+    collectionoperations={
+        "get", 
+        "post"={
+            "security"="is_granted('IS_AUTHENTICATED_FULLY')",
+        }},
+    itemOperations={
+    "get"={
+        "normalizations_context"={"groups"={"comments:list", "read:full:comment"}},
+    },
+    "put"={
+        "security"="is_granted('EDIT_COMMENTS', object) and object.Auteur == user"
+    },
+    "delete"={
+        "security"="is_granted('EDIT_COMMENTS', object)"
+    },
+    }
 * )
 *
-* @ApiFilter(SearchFilter::class, properties={"Activities": "exact"})
+* @ApiFilter(SearchFilter::class, properties={"Activities": "exact", "Auteur" ="exact"})
 * @ORM\Entity(repositoryClass= CommentsRepository::class)
 */
 class Comments
@@ -48,7 +59,7 @@ class Comments
      *
      * @Groups({"comments:list"})
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\NotBlank
+    
      * @Assert\Length(
      * max = 250,
      * maxMessage = "La longueur du commentaire doit être inférieure à {{ limit }} caractères"
@@ -79,28 +90,27 @@ class Comments
     private $activities;
 
     /**
-     * 
+     * @Groups({"comments:list"})
      * @ORM\ManyToOne(targetEntity=Reservation::class, inversedBy="comments")
      *
-     * @Groups({"comments:list"})
      */
     private $reservation;
 
    
     
     /**
+     * @Groups({"comments:list"})
      * @ORM\Column(type="datetime")
      *
-     * @Groups({"comments:list"})
      */
     private $PublishedAt;
 
     /**
-     * @Groups({"comments:list"})
-     * @ORM\ManyToOne(targetEntity=user::class)
+     * @Groups({"comments:list","user:read"})
+     * @ORM\ManyToOne(targetEntity=User::class)
      * @ORM\JoinColumn(nullable=false)
      */
-    private $user;
+    public $Auteur;
 
     public function __construct()
     {
@@ -206,15 +216,33 @@ class Comments
         return $this;
     }
 
-    public function getUser(): ?user
+    public function getAuteur(): ?User
     {
-        return $this->user;
+        return $this->Auteur;
     }
 
-    public function setUser(?user $user): self
+    public function setAuteur(?User $Auteur): self
     {
-        $this->user = $user;
+        $this->Auteur = $Auteur;
 
         return $this;
     }
+
+    /**
+   * @Assert\Callback
+   */
+  public function isContentValid(ExecutionContextInterface $context)
+  {
+    $forbiddenWords = array('échec', 'abandon');
+ 
+    // On vérifie que le contenu ne contient pas l'un des mots
+    if (preg_match('#'.implode('|', $forbiddenWords).'#', $this->getCommentContent())) {
+      // La règle est violée, on définit l'erreur
+      $context
+        ->buildViolation('Contenu invalide car il contient un mot interdit.') // message
+        ->atPath('Comment_Content')                                                   // attribut de l'objet qui est violé
+        ->addViolation() // ceci déclenche l'erreur, ne l'oubliez pas
+      ;
+    }
+  }
 }
