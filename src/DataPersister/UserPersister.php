@@ -2,30 +2,34 @@
 
 namespace App\DataPersister;
 
-use App\Entity\User;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Mailer\MailerInterface;
 
 final class UserPersister implements DataPersisterInterface
 {
     private $mailer;
-    private $userPasswordEncoder;
     private $entityManager;
+    private $userPasswordEncoder;
 
-    public function __construct(\Swift_Mailer $mailer,UserPasswordEncoderInterface $userPasswordEncoder, EntityManagerInterface $entityManager)
+    public function __construct(\Swift_Mailer $mailer,
+    EntityManagerInterface $entityManager, UserPasswordEncoderInterface $userPasswordEncoder)
     {
-        $this->entityManager = $entityManager;
         $this->mailer = $mailer;
+        $this->entityManager = $entityManager;
         $this->userPasswordEncoder = $userPasswordEncoder;
     }
 
-    public function supports($data, array $context = []): bool
+    public function supports($data): bool
     {
         return $data instanceof User;
     }
-
-    public function persist($data, array $context = [])
+    /**
+     * @param User $data
+     */
+    public function persist($data)
     {
         if ($data->getPassword()) {
             $data->setPassword(
@@ -33,39 +37,13 @@ final class UserPersister implements DataPersisterInterface
             );
             $data->eraseCredentials();
         }
-
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }
 
-    public function remove($data, array $context = [])
+    public function remove($data)
     {
         $this->entityManager->remove($data);
         $this->entityManager->flush();
     }
-
-    /**
-     * @param User $data
-     */
-    private function encodePassword(User $data)
-    {
-        
-        // $message=(new \Swift_Message('post property'))
-        // ->setFrom('admin@yopmail.com')
-        // ->setTo('antonia.balluais@gmail.com')
-        // ->setBody('Bonjour '.$property->getUser()->getEmail().'Votre bien est en cours d\'etude par notre equipe. Nous vous informerons bientot des que nous avons une reponse');
-
-        // $this->mailer->send($message);
-    }
-
-    // private function sendResponseAdmissionEmail(Property $property)
-    // {
-    //     $message=(new \Swift_Message('response to your property add commission'))
-    //     ->setFrom('admin@yopmail.com')
-    //     ->setTo('antonia.balluais@gmail.com')
-    //     ->setBody('Bonjour '.$property->getUser()->getEmail().' your property has been '.$property->getStatus().'by Atypik\'House');
-
-    //     $this->mailer->send($message);
-
-    // }
 }

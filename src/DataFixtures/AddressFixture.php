@@ -11,6 +11,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 class AddressFixture extends Fixture 
 {
     public const adresse_bien = 'adresse_bien';
+    public const adresse_bien1 = 'adresse_bien1';
     public const adr_cabane_eau = 'adr_cabane_eau';
     public const adr_bulle= 'adr_bulle';
     public const adr_roulotte= 'adr_roulotte';
@@ -46,7 +47,7 @@ class AddressFixture extends Fixture
                 ->setCountry($generator->country);
         $manager->persist($address);
 
-        $this->addReference(self::adresse_bien,$address);
+        $this->addReference(self::adresse_bien1,$address);
 
         $addressEau= new Address();
         $addressEau->setNumber((int) $generator->numberBetween($min = 1, $max = 900))

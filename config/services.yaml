@@ -41,8 +41,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
 
-    # App\DataPersister\BienPersister:
-    #     decorates: 'api_platform.doctrine.orm.data_persister'
-        
-    App\DataPersister\UserPersister:
+    App\DataPersister\BienPersister:
         decorates: 'api_platform.doctrine.orm.data_persister'
+        
