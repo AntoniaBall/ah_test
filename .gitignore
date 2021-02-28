@@ -9,7 +9,6 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
-realDump.sql
 
 ###> lexik/jwt-authentication-bundle ###
 config/jwt/*.pem
@@ -17,8 +16,16 @@ config/jwt/*.pem
 
 #assets
 public/images/*
-
 doctrine.sh
-
 keys.txt
+keys1.txt
+api.sql
+api.sqm
+atypiki.mwb
+graph.svg
+jwt.sh
+gitignore.rej
+
+dump.sql
+dump1.sql
 keys1.txt

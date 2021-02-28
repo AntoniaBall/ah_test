@@ -3,7 +3,7 @@
 namespace App\Services;
 
 class DateService {
-    
+
     public function displayDates($dateStart, $dateEnd)
     {
         $response = [];

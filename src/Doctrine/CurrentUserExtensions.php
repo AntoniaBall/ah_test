@@ -30,7 +30,7 @@ final class CurrentUserExtensions implements QueryCollectionExtensionInterface, 
     {
         $this->getItem($queryBuilder, $resourceClass);
     }
-    
+
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
     {
         if (Reservation::class !== $resourceClass || $this->security->isGranted('ROLE_ADMIN') || 

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,10 +13,36 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Controller\RegistrationController;
 
 /**
 * @ApiResource(normalizationContext={"groups"={"user:read"}},
-*     denormalizationContext={"groups"={"user:write"}}
+*     denormalizationContext={"groups"={"user:write"}},
+*     collectionOperations={
+*           "get"={
+*                   "security"="is_granted('ROLE_ADMIN')"
+*           },
+*           "register"={
+*                   "method"="POST",
+*                   "path"="/register",
+*                   "controller"=RegistrationController::class,
+*                   "read"=false
+*           },
+*     },
+*     itemOperations={
+*           "put"={
+*                   "security"="is_granted('ROLE_ADMIN') or object == user",
+*                   "security_message"= "You are not the owner of this profile"
+*           },
+*           "delete"={
+*                   "security"="is_granted('ROLE_ADMIN') or object == user",
+*                   "security_message"= "You are not the owner of this profile"
+*           },
+*           "get"={
+*                   "security"="is_granted('ROLE_ADMIN') or object == user",
+*                   "security_message"= "You are not the owner of this profile"
+*           }
+*      }
 *)
 * 
 * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -27,7 +54,6 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * 
      * @Groups("user:read")
      * 
      */
@@ -41,17 +67,25 @@ class User implements UserInterface
      * @Groups({"user:read", "user:write", "property:read"})
      */
     private $email;
-
+    
     /**
      * @ORM\Column(type="string", length=255)
      * @var string The hashed password
+     * @Groups({"user:write"})
      * 
      */
     private $password;
     
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     * 
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\Regex(
+     *      pattern="/^(\(0\))?[0-9]+$/",
+     *      message= "this value is invalid"
+     * )
+     * @Assert\Length(
+     *      min=10,
+     *      max=17
+     * )
      * @Groups({"user:read", "user:write", "property:read"})
      */
     private $phone;
@@ -59,7 +93,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="user", orphanRemoval=true)
      * 
-     * 
+     * @Groups({"user:write"})
      * @ORM\Column(type="json")
      */
     private $roles = [];
@@ -69,17 +103,17 @@ class User implements UserInterface
     */
     private $isVerified = false;
     
-    /*
-    * @Groups({"user:read", "user:write", "property:read"})
-    * @ORM\Column(type="string")
-    */
-    private $firstname;
+    /**
+     * @ORM\Column(type="string", length=50)
+     * @Groups({"user:read", "user:write", "property:read"})
+     */
+    private $firstName;    
 
-    /*
-    * @Groups({"user:read", "user:write", "property:read"})
-    * @ORM\Column(type="string")
-    */
-    private $lastname;
+     /**
+     * @ORM\Column(type="string", length=50)
+     * @Groups({"user:read", "user:write", "property:read"})
+     */
+    private $lastName;  
     
     /**
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="user", orphanRemoval=true)
@@ -107,16 +141,6 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
-
-    public function setFirstname(string $firstname): self
-    {
-        $this->firstname = $firstname;
-        return $this;
-    }
 
     /**
      * A visual identifier that represents this user.
@@ -147,18 +171,6 @@ class User implements UserInterface
         return $this; 
     }
     
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-    
-    public function setLastname(string $lastname): self
-    {
-        $this->lastname = $lastname;
-        
-        return $this;
-    }
-
     /**
      * @see UserInterface
      */
@@ -220,12 +232,12 @@ class User implements UserInterface
     //     return $this;
     // }
 
-    public function getPhone(): ?int
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
 
-    public function setPhone(?int $phone): self
+    public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
         return $this;
@@ -329,4 +341,44 @@ class User implements UserInterface
         return $this;
     }
 
+
+    /**
+     * Get the value of lastName
+     */ 
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * Set the value of lastName
+     *
+     * @return  self
+     */ 
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of firstName
+     */ 
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * Set the value of firstName
+     *
+     * @return  self
+     */ 
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
 }

@@ -36,49 +36,15 @@ class ReservationRepository extends ServiceEntityRepository
     }
     */
 
-    public function findAcceptedReservations($day, $property)
+    /*
+    public function findOneBySomeField($value): ?Reservation
     {
         return $this->createQueryBuilder('r')
-            ->select('r.id')
-            ->where('r.status = :val')
-            ->setParameter('val', 'acceptee')
-            ->andWhere('r.dateStart <= :day')
-            ->andWhere('r.dateEnd >= :day')
-            ->andWhere('r.property >= :property')
-            ->setParameter('day', $day)
-            ->setParameter('property', $property)
+            ->andWhere('r.exampleField = :val')
+            ->setParameter('val', $value)
             ->getQuery()
-            ->getResult()
-            ;
-    }
-        
-        public function getCountReservationsByUser($user)
-        {
-            return $this->createQueryBuilder('r')
-            ->select('count(r.id)')
-            ->where('r.user = :user')
-            ->andWhere('r.status= :status')
-            ->setParameter('status', 'en attente')
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getResult()
+            ->getOneOrNullResult()
         ;
-        }
-
-        public function getOtherWaitingReservations($day, $property, $reservationId)
-        {
-            return $this->createQueryBuilder('r')
-            ->where('r.status = :val')
-            ->setParameter('val', 'en attente')
-            ->andWhere('r.dateStart <= :day')
-            ->andWhere('r.dateEnd >= :day')
-            ->andWhere('r.property = :property')
-            ->andWhere('r.id != :reservationId')
-            ->setParameter('day', $day)
-            ->setParameter('reservationId', $reservationId)
-            ->setParameter('property', $property)
-            ->getQuery()
-            ->getResult()
-            ;
-        }
-}   
+    }
+    */
+}

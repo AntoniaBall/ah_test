@@ -11,7 +11,6 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 class AddressFixture extends Fixture 
 {
     public const adresse_bien = 'adresse_bien';
-    public const adresse_bien1 = 'adresse_bien1';
     public const adr_cabane_eau = 'adr_cabane_eau';
     public const adr_bulle= 'adr_bulle';
     public const adr_roulotte= 'adr_roulotte';
@@ -25,7 +24,7 @@ class AddressFixture extends Fixture
     {
         $generator = Faker\Factory::create();
 
-        for ($i=0; $i<129 ; $i++){
+        for ($i=0; $i<20 ; $i++){
                 $address= new Address();
                 $address->setNumber((int) $generator->numberBetween($min = 1, $max = 900))
                         ->setStreet($generator->streetName)
@@ -45,9 +44,9 @@ class AddressFixture extends Fixture
                 ->setTown($generator->city)
                 ->setRegion($generator->state)
                 ->setCountry($generator->country);
-        $manager->persist($address1);
+        $manager->persist($address);
 
-        $this->addReference(self::adresse_bien1,$address1);
+        $this->addReference(self::adresse_bien,$address);
 
         $addressEau= new Address();
         $addressEau->setNumber((int) $generator->numberBetween($min = 1, $max = 900))
