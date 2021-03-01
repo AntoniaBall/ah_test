@@ -7,7 +7,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class TypePropertyFixtures extends Fixture implements DependentFixtureInterface
+class TypePropertyFixtures extends Fixture
 {
     public const cabane_arbre = 'cabanes-arbres';
     public const CABANE_EAU_REF = 'cabanes-eau';
@@ -23,8 +23,8 @@ class TypePropertyFixtures extends Fixture implements DependentFixtureInterface
     {
         $cabaneA = new TypeProperty();
         $cabaneA->setTitle('cabane dans les arbres')
-                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder")
-                ->addProperty($this->getReference(PropertyFixtures::CABANES));
+                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder");
+                // ->addProperty($this->getReference(PropertyFixtures::CABANES));
 
         $this->addReference(self::cabane_arbre, $cabaneA);
 
@@ -32,8 +32,8 @@ class TypePropertyFixtures extends Fixture implements DependentFixtureInterface
 
         $cabanesEau = new TypeProperty();
         $cabanesEau->setTitle('cabane sur l\'eau')
-                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder")
-                ->addProperty($this->getReference(PropertyFixtures::CABANES_EAU));
+                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder");
+                // ->addProperty($this->getReference(PropertyFixtures::CABANES_EAU));
         
         $this->addReference(self::CABANE_EAU_REF, $cabanesEau);
 
@@ -41,8 +41,8 @@ class TypePropertyFixtures extends Fixture implements DependentFixtureInterface
 
         $bulle = new TypeProperty();
         $bulle->setTitle('bulle')
-                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder")
-                ->addProperty($this->getReference(PropertyFixtures::bulles));
+                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder");
+                // ->addProperty($this->getReference(PropertyFixtures::bulles));
 
         $this->addReference(self::BULLE_REF, $bulle);
 
@@ -50,8 +50,8 @@ class TypePropertyFixtures extends Fixture implements DependentFixtureInterface
 
         $yourte = new TypeProperty();
         $yourte->setTitle('yourte')
-                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder")
-                ->addProperty($this->getReference(PropertyFixtures::yourtes));
+                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder");
+                // ->addProperty($this->getReference(PropertyFixtures::yourtes));
 
         $this->addReference(self::YOURTE_REF, $yourte);
 
@@ -59,49 +59,42 @@ class TypePropertyFixtures extends Fixture implements DependentFixtureInterface
 
         $tipis = new TypeProperty();
         $tipis->setTitle('tipi')
-                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder")
-                ->addProperty($this->getReference(PropertyFixtures::tipis));
+                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder");
+                // ->addProperty($this->getReference(PropertyFixtures::tipis));
 
         $this->addReference(self::TIPI_REF, $tipis);
 
         $chalets = new TypeProperty();
         $chalets->setTitle('chalets')
-                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder")
-                ->addProperty($this->getReference(PropertyFixtures::chalets));
+                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder");
+                // ->addProperty($this->getReference(PropertyFixtures::chalets));
 
         $this->addReference(self::CHALET_REF, $chalets);
         $manager->persist($chalets);
 
         $bateaux = new TypeProperty();
         $bateaux->setTitle('bateaux')
-                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder")
-                ->addProperty($this->getReference(PropertyFixtures::bateaux));
+                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder");
+                // ->addProperty($this->getReference(PropertyFixtures::bateaux));
 
         $this->addReference(self::BATEAU_REF, $bateaux);
         $manager->persist($bateaux);
 
         $inclassables = new TypeProperty();
         $inclassables->setTitle('Igloo dans le sud de la france')
-                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder")
-                ->addProperty($this->getReference(PropertyFixtures::inclassables));
+                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder");
+                // ->addProperty($this->getReference(PropertyFixtures::inclassables));
 
         $this->addReference(self::INCLASSABLE_REF, $inclassables);
         $manager->persist($inclassables);
 
         $roulottes = new TypeProperty();
         $roulottes->setTitle('Igloo dans le sud de la france')
-                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder")
-                ->addProperty($this->getReference(PropertyFixtures::roulottes));
+                ->setDescription("Muffin sesame snaps caramels icing powder cotton candy lemon drops cake. Lemon drops topping tart cheesecake cake wafer tiramisu powder");
+                // ->addProperty($this->getReference(PropertyFixtures::roulottes));
 
         $this->addReference(self::ROULOTTE_REF, $inclassables);
         $manager->persist($roulottes);
         $manager->flush();
-    }
-
-    public function getDependencies()
-    {
-        return array(
-            UserFixtures::class,
-        );
     }
 }

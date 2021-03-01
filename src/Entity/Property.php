@@ -16,16 +16,16 @@ use App\Controller\PropertyController;
 
 /**
  * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"property:read"}},
+ *     "normalization_context"={"groups"={"property:read", "enable_max_depth"=true}},
  *     "denormalization_context"={"groups"={"property:write"}}
  * },
  * collectionOperations={
- *    "post"={"security"="is_granted('ROLE_PROPRIO')"},
- *    "get"
+ *    "get",
+ *    "post"={"security"="is_granted('ROLE_PROPRIO')"}
  * },
  * itemOperations={
  *    "get",
- *    "put"={"security"="is_granted('ROLE_PROPRIO') or object.owner == user"},
+ *    "put"={"security"="is_granted('ROLE_PROPRIO') and object.owner == user"},
  *    "patch"={"security"="is_granted('ROLE_ADMIN')", "denormalization_context"={"groups"={"admin:write"}}},
  *    "delete"={"security"="is_granted('ROLE_PROPRIO') or object.owner == user"},
  * }
@@ -42,7 +42,7 @@ class Property
     private $id;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write", "indisponibility:write", "activities:write"})
+     * @Groups({"property:read", "property:write", "reservation:read", "typeproperty:read", "user:write", "picture:write", "disponibility:write", "activities:write"})
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank
      * @Assert\Length(
@@ -54,7 +54,7 @@ class Property
     private $title;
     
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write", "indisponibility:write","activities:write"})
+     * @Groups({"property:read", "reservation:read", "property:write", "typeproperty:read", "user:write", "picture:write", "disponibility:write","activities:write"})
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Assert\Length(
@@ -65,7 +65,7 @@ class Property
     private $description;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "user:write", "picture:write", "indisponibility:write","activities:write"})
+     * @Groups({"property:read", "reservation:read", "property:write", "typeproperty:read", "user:write", "picture:write", "disponibility:write","activities:write"})
      * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
@@ -76,7 +76,7 @@ class Property
     private $surface;
 
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write","activities:write"})
+     * @Groups({"property:read", "property:write", "reservation:read", "typeproperty:read", "picture:write", "disponibility:write","activities:write"})
      * @ORM\Column(type="integer")
      * @Assert\Positive(message="this value must be positive")
      * @Assert\NotNull
@@ -85,7 +85,7 @@ class Property
     private $nbrRoom;
 
     /**
-    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write","activities:write"})
+    * @Groups({"property:read", "property:write", "reservation:read", "typeproperty:read", "picture:write", "disponibility:write","activities:write"})
      * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="float")
      * @Assert\NotBlank
@@ -96,20 +96,20 @@ class Property
     private $rate;
 
     /**
-    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write", "activities:write"})
+    * @Groups({"property:read", "property:write", "reservation:read", "typeproperty:read", "picture:write", "disponibility:write", "activities:write"})
      * @Assert\Positive(message="this value must be positive")
      * @ORM\Column(type="integer")
      */
     private $maxTravelers;
 
     /**
-    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write", "activities:write"})
+    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "disponibility:write", "activities:write"})
      * @ORM\Column(type="boolean")
      */
     private $accessHandicap;
     
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write", "activities:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "disponibility:write", "activities:write"})
      * @Assert\NotNull
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank
@@ -117,7 +117,7 @@ class Property
     private $water;
     
     /**
-    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write", "activities:write"})
+    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "disponibility:write", "activities:write"})
      * @Assert\NotNull
      * @ORM\Column(type="boolean")
      * @Assert\NotBlank
@@ -133,7 +133,7 @@ class Property
     private $typeProperty;
 
     /**
-    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "indisponibility:write", "activities:write"})
+    * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "disponibility:write", "activities:write"})
     * @Assert\Positive(message="this value should be positive")
      * @ORM\Column(type="float")
      * @Assert\NotBlank
@@ -141,13 +141,12 @@ class Property
     private $tax;
     
     /**
-     * @Groups({"property:read", "user:write"})
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="property", orphanRemoval=true)
      */
     private $reservations;
 
     /**
-     * @Groups({"property:read", "property:write", "user:write"})
+     * @Groups({"property:read", "property:write", "user:write", "reservation:read"})
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="properties", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
@@ -175,10 +174,10 @@ class Property
     private $valeur;
 
     /**
-     * @Groups({"property:read", "property:write", "user:write", "indisponibility:write"})
-     * @ORM\OneToMany(targetEntity=Indisponibility::class, mappedBy="property", cascade={"persist", "remove"})
+     * @Groups({"property:read", "property:write", "user:write", "disponibility:write", "reservation:read"})
+     * @ORM\OneToMany(targetEntity=Disponibility::class, mappedBy="property", cascade={"persist", "remove"})
      */
-    private $indisponibilities;
+    private $disponibilities;
 
     /**
      * @var Pictures|null
@@ -195,11 +194,13 @@ class Property
     private $activities;
 
     /**
-     * @Groups({"property:read", "admin:write","user:write", "indisponibility:write"})
+     * @Groups({"property:read", "admin:write","user:write", "disponibility:write"})
      * @Assert\Type(
      *      type="string",
      *      message="This value must be a string"
      * )
+     * 
+     * @ApiProperty(security="is_granted('ROLE_PROPRIO')")
      * @ORM\Column(type="string")
      */
     private $status;
@@ -208,12 +209,12 @@ class Property
     {
         $this->status="draft";
         $this->reservations = new ArrayCollection();
-        $this->indisponibilities = new ArrayCollection();
+        $this->disponibilities = new ArrayCollection();
         $this->pictures = new ArrayCollection();
         $this->activities = new ArrayCollection();
     }
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -435,26 +436,26 @@ class Property
     }
 
     /**
-     * @return Collection|Indisponibility[]
+     * @return Collection|Disponibility[]
      */
-    public function getIndisponibilities(): Collection
+    public function getDisponibilities(): Collection
     {
-        return $this->indisponibilities;
+        return $this->disponibilities;
     }
 
-    public function addIndisponibility(Indisponibility $indisponibility): self
+    public function addDisponibility(Disponibility $disponibility): self
     {
-        if (!$this->indisponibilities->contains($indisponibility)) {
-            $this->indisponibilities[] = $indisponibility;
-            $indisponibility->setProperty($this);
+        if (!$this->disponibilities->contains($disponibility)) {
+            $this->disponibilities[] = $disponibility;
+            $disponibility->setProperty($this);
         }
 
         return $this;
     }
 
-     public function removeIndisponibility(Indisponibility $indisponibility): self
+     public function removeDisponibility(Disponibility $disponibility): self
      {
-        if ($this->indisponibilities->removeElement($indisponibility)) {
+        if ($this->disponibilities->removeElement($disponibility)) {
             return $this;
         }
 

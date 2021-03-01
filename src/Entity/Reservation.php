@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Controller\ReservationController;
+use App\Controller\ValidationReservationController;
 use App\Repository\ReservationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,10 +11,35 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Type;
+use ApiPlatform\Core\Serializer\Filter\GroupFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
 
 /**
  * @ApiResource(normalizationContext={"groups"={"reservation:read"}},
- *     denormalizationContext={"groups"={"reservation:write"}})
+ *     denormalizationContext={"groups"={"reservation:write"}},
+ * collectionOperations={
+ *    "get",
+ *    "post"={
+ *          "security"="is_granted('ROLE_USER')",
+ *          "controller"=ReservationController::class,
+ *          "security_message"="Only users can add reservation"
+ *      }
+ * },
+ * itemOperations={
+ *     "get"={
+ *          "security"="object.getUser() == user or object.getProperty().getUser() == user",
+ *          "security_message"="Only the owner of the proprio of the bien can see this"
+ *     },
+ *     "put"={"security"="is_granted('ROLE_PROPRIO')", "denormalization_context"={"groups"={"admin:write"}}},
+ *     "patch"={
+ *          "security"="is_granted('ROLE_PROPRIO')",
+ *          "path"="/reservations/{id}/status",
+ *          "controller"=ValidationReservationController::class,
+ *          "security_message"="Only proprio can validate or reject a reservation"
+ *      }
+ * }
+ * )
  * @ORM\Entity(repositoryClass=ReservationRepository::class)
  */
 class Reservation
@@ -26,78 +53,101 @@ class Reservation
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\NotBlank
-     * @Assert\Date
-     * @var string A "Y-m-d" formatted value
+     * @Assert\GreaterThan("today")
+     * @Assert\Type("\DateTimeInterface")
      * @Groups({"reservation:read", "reservation:write"})
      */
-    private $dateDebut;
+    private $dateStart;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\NotBlank
+     * @Assert\GreaterThan("today")
+     * @Assert\Type("\DateTimeInterface")
      * @Groups({"reservation:read", "reservation:write"})
      */
     private $dateEnd;
 
     /**
      * @ORM\Column(type="float")
-     * @Assert\NotBlank
-     * @Assert\Date
+     * @Assert\Positive
      * @Groups({"reservation:read", "reservation:write"})
      */
     private $montant;
-
+    
     /**
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
      * @Groups({"reservation:read", "reservation:write"})
      */
-    private $number_traveler;
-
+    private $numberTraveler;
+    
     /**
+     * @var User
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reservations")
+     * @Assert\NotNull
      * @ORM\JoinColumn(nullable=false)
-     * @Groups("reservation:read")
+     * @Groups({"reservation:read", "reservation:write"})
      */
     private $user;
-
+    
     /**
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="reservations")
      * @ORM\JoinColumn(nullable=false)
-     * @Assert\NotBlank
-     * @Groups("reservation:read")
+     * @Assert\NotNull
+     * @Groups({"reservation:read", "reservation:write", "property:read"})
      */
     private $property;
-
+    
     /**
      * @ORM\Column(type="boolean")
      * @Groups({"reservation:read", "reservation:write"})
      */
     private $paid;
-
+    
     /**
      * @ORM\Column(type="json")
      * @Groups({"reservation:read", "reservation:write"})
      */
     private $proprietes = [];
-
+    
     /**
      * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="reservation")
      * @Groups("reservation:read")
      */
     private $comments;
-
+    
     /**
      * @ORM\Column(type="json")
      * @Groups({"reservation:read", "reservation:write"})
-    */
+     */
     private $historical = [];
-
+    
+    /**
+     * @Groups({"reservation:read"})
+     * @Assert\Choice({"en attente", "acceptee", "rejetee"})
+     * @ORM\Column(type="string", length=20)
+     */
+    private $status;
+    
+    /**
+     * @Groups({"reservation:write"})
+     * @Assert\NotNull
+     * @ORM\Column(type="string", length=255)
+     */
+    private $stripeToken;
+    
+    /**
+     * @Groups({"reservation:read", "reservation:write", "paiement:write"})
+     * @ORM\OneToMany(targetEntity=Paiement::class, mappedBy="reservation", orphanRemoval=true, cascade={"persist"})
+     */
+    private $paiements;
+    
     public function __construct()
     {
-        $this->setUser($this->getUser());
+        $this->status="en attente";
+        $this->paid = false;
         $this->comments = new ArrayCollection();
+        $this->paiements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -105,14 +155,14 @@ class Reservation
         return $this->id;
     }
 
-    public function getDateDebut(): ?\DateTimeInterface
+    public function getdateStart(): ?\DateTimeInterface
     {
-        return $this->dateDebut;
+        return $this->dateStart;
     }
 
-    public function setDateDebut(\DateTimeInterface $dateDebut): self
+    public function setdateStart(\DateTimeInterface $dateStart): self
     {
-        $this->dateDebut = $dateDebut;
+        $this->dateStart = $dateStart;
 
         return $this;
     }
@@ -143,12 +193,12 @@ class Reservation
 
     public function getNumberTraveler(): ?int
     {
-        return $this->number_traveler;
+        return $this->numberTraveler;
     }
 
-    public function setNumberTraveler(int $number_traveler): self
+    public function setNumberTraveler(int $numberTraveler): self
     {
-        $this->number_traveler = $number_traveler;
+        $this->numberTraveler = $numberTraveler;
 
         return $this;
     }
@@ -251,6 +301,60 @@ class Reservation
     public function setReservation(?User $reservation): self
     {
         $this->reservation = $reservation;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getStripeToken(): ?string
+    {
+        return $this->stripeToken;
+    }
+
+    public function setStripeToken(string $stripeToken): self
+    {
+        $this->stripeToken = $stripeToken;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Paiement[]
+     */
+    public function getPaiements(): Collection
+    {
+        return $this->paiements;
+    }
+
+    public function addPaiement(Paiement $paiement): self
+    {
+        if (!$this->paiements->contains($paiement)) {
+            $this->paiements[] = $paiement;
+            $paiement->setReservation($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaiement(Paiement $paiement): self
+    {
+        if ($this->paiements->removeElement($paiement)) {
+            // set the owning side to null (unless already changed)
+            if ($paiement->getReservation() === $this) {
+                $paiement->setReservation(null);
+            }
+        }
 
         return $this;
     }

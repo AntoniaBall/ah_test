@@ -61,8 +61,7 @@ class Pictures
      * @ORM\Column(type="integer")
      */
     private $id;
-
-
+    
     /**
      * @ApiProperty(iri="http://schema.org/contentUrl")
      * @Groups({"picture:read", "picture:write", "property:write"})
@@ -70,7 +69,6 @@ class Pictures
      */
     private $url;
 
-    
     /**
      * @Groups({"picture:read", "picture:write", "property:write"})
      * @ORM\Column(type="integer")

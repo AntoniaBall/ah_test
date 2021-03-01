@@ -25,7 +25,7 @@ class AddressFixture extends Fixture
     {
         $generator = Faker\Factory::create();
 
-        for ($i=0; $i<20 ; $i++){
+        for ($i=0; $i<129 ; $i++){
                 $address= new Address();
                 $address->setNumber((int) $generator->numberBetween($min = 1, $max = 900))
                         ->setStreet($generator->streetName)
@@ -45,9 +45,9 @@ class AddressFixture extends Fixture
                 ->setTown($generator->city)
                 ->setRegion($generator->state)
                 ->setCountry($generator->country);
-        $manager->persist($address);
+        $manager->persist($address1);
 
-        $this->addReference(self::adresse_bien1,$address);
+        $this->addReference(self::adresse_bien1,$address1);
 
         $addressEau= new Address();
         $addressEau->setNumber((int) $generator->numberBetween($min = 1, $max = 900))
