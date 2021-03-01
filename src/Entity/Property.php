@@ -42,7 +42,7 @@ class Property
     private $id;
 
     /**
-     * @Groups({"property:read", "property:write", "reservation:read", "typeproperty:read", "user:write", "picture:write", "disponibility:write", "activities:write"})
+     * @Groups({"property:read", "property:write", "reservation:read", "typeproperty:read", "user:write", "picture:write", "indisponibility:write", "activities:write"})
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank
      * @Assert\Length(
