@@ -27,9 +27,9 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  * },
  * itemOperations={
  *    "get"={"security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY') or is_granted('IS_AUTHENTICATED_FULLY')"},
- *    "put"={"security"="is_granted('ROLE_PROPRIO') and object.owner == user"},
+ *    "put"={"security"="object.getUser() == user"},
  *    "patch"={"security"="is_granted('ROLE_ADMIN')", "denormalization_context"={"groups"={"admin:write"}}},
- *    "delete"={"security"="is_granted('ROLE_PROPRIO') or object.owner == user"},
+ *    "delete"={"security"="object.getUser() == user or is_granted('ROLE_ADMIN')"},
  * }
  * )
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
@@ -162,7 +162,7 @@ class Property
      * @Assert\Valid
      */
     private $equipment;
-
+    
     /**
      * @Groups({"property:read", "property:write", "user:write", "address:write"})
      * 

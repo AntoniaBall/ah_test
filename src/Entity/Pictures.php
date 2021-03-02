@@ -46,7 +46,10 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  *         "get"
  *     },
  *     itemOperations={
- *         "get"
+ *         "get",
+ *         "delete"={
+ *              "security"="is_granted('ROLE_ADMIN') or is_granted('ROLE_PROPRIO')"
+ *          }
  *     }
  * )
  * @Vich\Uploadable()
@@ -64,31 +67,28 @@ class Pictures
 
     /**
      * @ApiProperty(iri="http://schema.org/contentUrl")
-     * @Groups({"picture:read", "picture:write", "property:read"})
      * @ORM\Column(type="string", length=255)
      */
     private $url;
 
     /**
-     * @Groups({"picture:read", "picture:write", "property:read"})
      * @ORM\Column(type="integer")
      */
     private $maxSize;
     
     /**
-     * @Groups({"picture:read", "picture:write", "property:read"})
      * @ORM\Column(type="array")
      */
     private $status;
-    
+
     /**
-     * @Groups("picture:read")
+     * @Groups({"picture:read"})
      * @ORM\ManyToOne(targetEntity=Comments::class, inversedBy="pictures")
      */
     private $comments;
     
     /**
-     * @Groups("picture:read")
+     * @Groups({"picture:read"})
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="pictures")
      */
     private $property;
