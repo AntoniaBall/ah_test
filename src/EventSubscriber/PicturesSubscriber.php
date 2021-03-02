@@ -31,8 +31,7 @@ final class PicturesSubscriber implements EventSubscriberInterface
     {
         $controllerResult = $event->getControllerResult();
         $request = $event->getRequest();
-        
-        
+
         if ($controllerResult instanceof Response || !$request->attributes->getBoolean('_api_respond', true)) {
             return;
         }
@@ -40,20 +39,18 @@ final class PicturesSubscriber implements EventSubscriberInterface
         if (!($attributes = RequestAttributesExtractor::extractAttributes($request)) || !\is_a($attributes['resource_class'], Pictures::class, true)) {
             return;
         }
-        
+
         $pictures = $controllerResult;
         
         if (!is_iterable($pictures)) {
             $pictures = [$pictures];
         }
 
-
         foreach ($pictures as $picture) {
             if (!$picture instanceof Pictures) {
                 continue;
             }
-            $picture->setUrl($controllerResult->file->getPathName());
+            $picture->setUrl($this->storage->resolveUri($picture, 'file'));
         }
-
     }
 }

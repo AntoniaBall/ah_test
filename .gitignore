@@ -29,3 +29,7 @@ gitignore.rej
 dump.sql
 dump1.sql
 keys1.txt
+
+ex.json
+
+models/

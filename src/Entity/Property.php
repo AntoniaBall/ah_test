@@ -13,6 +13,8 @@ use App\Validator\Constraints\MinimalProperties;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Controller\PropertyController;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ApiResource(attributes={
@@ -24,13 +26,15 @@ use App\Controller\PropertyController;
  *    "post"={"security"="is_granted('ROLE_PROPRIO')"}
  * },
  * itemOperations={
- *    "get"={"security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY')"},
- *    "put"={"security"="is_granted('ROLE_PROPRIO') and object.owner == user"},
+ *    "get"={"security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY') or is_granted('IS_AUTHENTICATED_FULLY')"},
+ *    "put"={"security"="object.getUser() == user"},
  *    "patch"={"security"="is_granted('ROLE_ADMIN')", "denormalization_context"={"groups"={"admin:write"}}},
- *    "delete"={"security"="is_granted('ROLE_PROPRIO') or object.owner == user"},
+ *    "delete"={"security"="object.getUser() == user or is_granted('ROLE_ADMIN')"},
  * }
  * )
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
+ * @ApiFilter(SearchFilter::class, properties={"id": "exact", "typeProperty": "exact", "title": "exact", "description": "exact", "equipment":"exact", "user":"exact", "disponibilities":"exact", "address.town":"exact", "activities":"exact", "disponibilities":"exact", "user": "exact"})
+ * [ApiFilter(DateFilter::class, properties: ['disponibilities'])]
  */
 class Property
 {
@@ -158,7 +162,7 @@ class Property
      * @Assert\Valid
      */
     private $equipment;
-
+    
     /**
      * @Groups({"property:read", "property:write", "user:write", "address:write"})
      * 

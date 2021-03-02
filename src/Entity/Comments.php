@@ -87,8 +87,7 @@ class Comments
 
         return $this;
     }
-
-
+    
     /**
      * @return Collection|Pictures[]
      */

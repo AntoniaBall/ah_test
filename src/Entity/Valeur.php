@@ -47,9 +47,7 @@ class Valeur
     {
         $this->proprieteTypeProperties = new ArrayCollection();
     }
-
-
-
+    
     public function getId(): ?int
     {
         return $this->id;
