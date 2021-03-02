@@ -17,7 +17,7 @@ use function Symfony\Component\String\u;
     collectionoperations={
         "get",
         "post"={
-            "security"="is_granted('IS_AUTHENCTICATED_FULLY')",
+            "security"="is_granted('EDIT_VALEUR', object)",
             }
         },
     itemOperations={
@@ -25,10 +25,10 @@ use function Symfony\Component\String\u;
              "normalizations_context"={"groups"={"valeur:list", "read:full:valeur"}},
             },
           "put"={
-             "security"="is_granted('EDIT_VALEUR', object) and object.Author == user"
+             "security"="is_granted('EDIT_VALEUR', object) and object.author == user"
             },
           "delete"={
-             "security"="is_granted('EDIT_VALEUR', object) and object.Author == user"
+             "security"="is_granted('EDIT_VALEUR', object) and object.author == user"
             },
         })
  * @ORM\Entity(repositoryClass=ValeurRepository::class)
@@ -52,9 +52,15 @@ class Valeur
      */
     private $name;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=property::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $property_id;
+
+   
   
-
-
+    
 
     public function getId(): ?int
     {
@@ -85,7 +91,18 @@ class Valeur
         return $this;
     }
 
+    public function getPropertyId(): ?property
+    {
+        return $this->property_id;
+    }
 
-    
+    public function setPropertyId(?property $property_id): self
+    {
+        $this->property_id = $property_id;
+
+        return $this;
+    }
+
+ 
 
 }

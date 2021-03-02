@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     collectionoperations={
         "get",
         "post"={
-            "security"="is_granted('IS_AUTHENCTICATED_FULLY')",
+            "security"="is_granted('EDIT_PROPERTY', object)",
             }
         },
     itemOperations={
@@ -48,18 +48,17 @@ class Propriete
      */
     private $nom;
 
-    /**
-     * @Groups("propriete:list")
-     * @ORM\ManyToOne(targetEntity=TypeValue::class, inversedBy="propriete")
-     */
-    private $typeValue;
-
    
     /**
      * @Groups("propriete:list")
      * @ORM\ManyToOne(targetEntity=typeproperty::class, inversedBy="proprietes")
      */
     private $typeProperty;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $type ;
 
     
 
@@ -87,18 +86,7 @@ class Propriete
         return $this;
     }
 
-    public function getTypeValue(): ?TypeValue
-    {
-        return $this->typeValue;
-    }
-
-    public function setTypeValue(?TypeValue $typeValue): self
-    {
-        $this->typeValue = $typeValue;
-
-        return $this;
-    }
-
+  
 
     public function getTypeProperty(): ?typeproperty
     {
@@ -108,6 +96,18 @@ class Propriete
     public function setTypeProperty(?typeproperty $typeProperty): self
     {
         $this->typeProperty = $typeProperty;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(array $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

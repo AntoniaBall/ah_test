@@ -11,8 +11,26 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
- * @ApiResource(normalizationContext={"groups"={"typeproperty:read"}},
- *     denormalizationContext={"groups"={"typeproperty:write"}})
+ * @ApiResource(
+    normaizationContext={"groups"={"typeProperty:list"}},
+    collectionoperations={
+        "get",
+        "post"={
+            "security"="is_granted('IS_AUTHENCTICATED_FULLY')",
+            }
+        },
+    itemOperations={
+        "get"={
+            "normalizations_context"={"groups"={"typeProperty:list", "read:full:typeProperty"}},
+            },
+    "put"={
+        "security"="is_granted('EDIT_TYPE', object)"
+    },
+    "delete"={
+        "security"="is_granted('EDIT_TYPE', object)"
+    },
+        }
+ )
  * @ORM\Entity(repositoryClass=TypePropertyRepository::class)
  */
 class TypeProperty

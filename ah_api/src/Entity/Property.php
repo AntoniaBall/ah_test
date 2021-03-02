@@ -152,11 +152,7 @@ class Property
      */
     private $address;
 
-    /**
-     * @Groups({"property:read", "property:write"})
-     * @ORM\OneToOne(targetEntity=Valeur::class, mappedBy="property", cascade={"persist", "remove"})
-     */
-    private $valeur;
+
 
     /**
      * @Groups({"property:read", "property:write"})
@@ -186,12 +182,15 @@ class Property
      */
     private $status = [];
 
+   
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
         $this->indisponibilities = new ArrayCollection();
         $this->pictures = new ArrayCollection();
         $this->activities = new ArrayCollection();
+        $this->valuerstrings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -398,22 +397,6 @@ class Property
     }
 
 
-    public function getValeur(): ?Valeur
-    {
-        return $this->valeur;
-    }
-
-    public function setValeur(Valeur $valeur): self
-    {
-        $this->valeur = $valeur;
-
-        // set the owning side of the relation if necessary
-        if ($valeur->getProperty() !== $this) {
-            $valeur->setProperty($this);
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|Indisponibility[]
@@ -510,4 +493,6 @@ class Property
 
         return $this;
     }
+
+   
 }

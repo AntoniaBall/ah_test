@@ -9,6 +9,9 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use App\Entity\Comments;
+use App\Entity\ValuerString;
+use App\Entity\Valeur;
+use App\Entity\ValeurBool;
 
   /**
     * Cette classe est un écouteur d'évenements qui va écouter toues les opérations post de l'application, 
@@ -48,9 +51,6 @@ final class CurrentUserSubscriber implements EventSubscriberInterface
         $object->setAuteur($this->tokenStorage->getToken()->getUser());
         $event->setControllerResult($object);
         }
-        if ($object instanceof Valuer) {        
-        $object->setAuthor($this->tokenStorage->getToken()->getUser());
-        $event->setControllerResult($object);
-        }
+        
     }
 }

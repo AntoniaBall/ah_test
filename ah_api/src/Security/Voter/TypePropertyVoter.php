@@ -3,14 +3,14 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\ValeurBool;
+use App\Entity\TypeProperty;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 
-class ValeurBoolVoter extends Voter
+class TypePropertyVoter extends Voter
 {
     private $security = null;
 
@@ -21,15 +21,15 @@ class ValeurBoolVoter extends Voter
 
     protected function supports($attribute, $subject): bool
     {
-        $supportsAttribute = in_array($attribute, ['EDIT_VALEUR']);
-        $supportsSubject = $subject instanceof ValeurBool;
+        $supportsAttribute = in_array($attribute, ['EDIT_TYPE']);
+        $supportsSubject = $subject instanceof TypeProperty;
 
         return $supportsAttribute && $supportsSubject;
     }
 
     /**
      * @param string $attribute
-     * @param ValeurBool $subject
+     * @param TypeProperty $subject
      * @param TokenInterface $token
      * @return bool
      */
@@ -38,8 +38,8 @@ class ValeurBoolVoter extends Voter
         /** ... check if the user is anonymous ... **/
 
         switch ($attribute) {
-            case 'EDIT_VALEUR':
-                if ( $this->security->isGranted(Role::ROLE_PROPRIO) ) { return true; }  
+            case 'EDIT_TYPE':
+                if ( $this->security->isGranted(Role::ROLE_ADMIN) ) { return true; }  
                 break;
            
         }

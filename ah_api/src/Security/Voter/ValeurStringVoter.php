@@ -39,7 +39,7 @@ class ValeurStringVoter extends Voter
 
         switch ($attribute) {
             case 'EDIT_VALEUR':
-                if ( $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) { return true; }  
+                if ( $this->security->isGranted(Role::ROLE_PROPRIO) ) { return true; }  
                 break;
            
         }
