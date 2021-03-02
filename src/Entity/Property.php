@@ -24,7 +24,7 @@ use App\Controller\PropertyController;
  *    "post"={"security"="is_granted('ROLE_PROPRIO')"}
  * },
  * itemOperations={
- *    "get",
+ *    "get"={"security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY')"},
  *    "put"={"security"="is_granted('ROLE_PROPRIO') and object.owner == user"},
  *    "patch"={"security"="is_granted('ROLE_ADMIN')", "denormalization_context"={"groups"={"admin:write"}}},
  *    "delete"={"security"="is_granted('ROLE_PROPRIO') or object.owner == user"},

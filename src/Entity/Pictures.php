@@ -61,22 +61,22 @@ class Pictures
      * @ORM\Column(type="integer")
      */
     private $id;
-    
+
     /**
      * @ApiProperty(iri="http://schema.org/contentUrl")
-     * @Groups({"picture:read", "picture:write", "property:write"})
+     * @Groups({"picture:read", "picture:write", "property:read"})
      * @ORM\Column(type="string", length=255)
      */
     private $url;
 
     /**
-     * @Groups({"picture:read", "picture:write", "property:write"})
+     * @Groups({"picture:read", "picture:write", "property:read"})
      * @ORM\Column(type="integer")
      */
     private $maxSize;
     
     /**
-     * @Groups({"picture:read", "picture:write", "property:write"})
+     * @Groups({"picture:read", "picture:write", "property:read"})
      * @ORM\Column(type="array")
      */
     private $status;

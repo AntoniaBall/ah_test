@@ -43,10 +43,9 @@ final class CurrentUserSubscriber implements EventSubscriberInterface
     * Pour débugger, faire un dump de tes variables ici
     */
         $object = $event->getControllerResult();
-
         if ($object instanceof Property){
-            $object->setUser($this->tokenStorage->getToken()->getUser());
-            $event->setControllerResult($object);
+            // $object->setUser($this->tokenStorage->getToken()->getUser());
+            // $event->setControllerResult($object);
         }
     }
 }

@@ -54,11 +54,11 @@ class Activities
      * @Groups({"activities:read", "activities:write", "property:write"})
      */
     private $title;
-
+    
     /**
      * 
      * @ORM\ManyToMany(targetEntity=Property::class, inversedBy="activities")
-     * @Groups("activities:read")
+     * @Groups({"activities:read", "activity:write"})
      */
     private $property;
 
