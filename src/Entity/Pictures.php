@@ -66,6 +66,8 @@ class Pictures
     private $id;
 
     /**
+     * @Groups({"picture:read"})
+     * 
      * @ApiProperty(iri="http://schema.org/contentUrl")
      * @ORM\Column(type="string", length=255)
      */
@@ -82,19 +84,16 @@ class Pictures
     private $status;
 
     /**
-     * @Groups({"picture:read"})
      * @ORM\ManyToOne(targetEntity=Comments::class, inversedBy="pictures")
      */
     private $comments;
     
     /**
-     * @Groups({"picture:read"})
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="pictures")
      */
     private $property;
     
     /**
-     * @Groups("picture:read")
      * @ORM\ManyToOne(targetEntity=Activities::class, inversedBy="pictures")
      */
     private $activities;
@@ -108,7 +107,6 @@ class Pictures
     public $file;
     
     /**
-     * @Groups("picture:read")
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $filePath;
