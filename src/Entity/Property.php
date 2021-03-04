@@ -16,6 +16,7 @@ use App\Controller\PropertyController;
 use App\Controller\ValidationPropertyController;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 /**
  * @ApiResource(attributes={
@@ -41,6 +42,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  * }
  * )
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
+ * @ApiFilter(BooleanFilter::class, properties={"isPublished"})
  * @ApiFilter(SearchFilter::class, properties={"id": "exact", "typeProperty": "exact", "title": "exact", "description": "exact", "equipment":"exact", "user":"exact", "disponibilities":"exact", "address.town":"exact", "activities":"exact", "disponibilities":"exact", "user": "exact"})
  * [ApiFilter(DateFilter::class, properties: ['disponibilities'])]
  */
@@ -217,6 +219,12 @@ class Property
      */
     private $status;
 
+    /**
+     * 
+     * @ORM\Column(type="boolean")
+     */
+    private $isPublished;
+
     public function __construct()
     {
         $this->status="draft";
@@ -224,6 +232,7 @@ class Property
         $this->disponibilities = new ArrayCollection();
         $this->pictures = new ArrayCollection();
         $this->activities = new ArrayCollection();
+        $this->isPublished = false;
     }
 
     public function getId(): ?int
@@ -539,6 +548,18 @@ class Property
     public function setStatus(string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getIsPublished(): ?bool
+    {
+        return $this->isPublished;
+    }
+
+    public function setIsPublished(bool $isPublished): self
+    {
+        $this->isPublished = $isPublished;
 
         return $this;
     }

@@ -47,7 +47,7 @@ final class BienPersister implements ContextAwareDataPersisterInterface
     {
         $message=(new \Swift_Message('post property'))
         ->setFrom('admin@yopmail.com')
-        ->setTo('antonia.balluais@gmail.com')
+        ->setTo('ranivoson.antonia@gmail.com')
         ->setBody('Bonjour '.$property->getUser()->getEmail().'Votre bien est en cours d\'etude par notre equipe. Nous vous informerons bientot des que nous avons une reponse');
 
         $this->mailer->send($message);
