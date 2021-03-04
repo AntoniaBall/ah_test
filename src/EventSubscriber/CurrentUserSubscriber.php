@@ -2,13 +2,13 @@
 
 namespace App\EventSubscriber;
 
-use App\Entity\Property;
 use ApiPlatform\Core\EventListener\EventPriorities;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
+use App\Entity\Comments;
 
   /**
     * Cette classe est un écouteur d'évenements qui va écouter toues les opérations post de l'application, 
@@ -42,11 +42,15 @@ final class CurrentUserSubscriber implements EventSubscriberInterface
     /**
     * Pour débugger, faire un dump de tes variables ici
     */
+    
         $object = $event->getControllerResult();
-
-        if ($object instanceof Property){
-            $object->setUser($this->tokenStorage->getToken()->getUser());
-            $event->setControllerResult($object);
+        if ($object instanceof Comments) {        
+        $object->setAuteur($this->tokenStorage->getToken()->getUser());
+        $event->setControllerResult($object);
+        }
+        if ($object instanceof Valeur) {        
+        $object->setAuthor($this->tokenStorage->getToken()->getUser());
+        $event->setControllerResult($object);
         }
     }
 }

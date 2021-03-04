@@ -215,6 +215,7 @@
             "config/packages/sensio_framework_extra.yaml"
         ]
     },
+<<<<<<< HEAD:symfony.lock
     "stripe/stripe-php": {
         "version": "v7.75.0"
     },
@@ -224,6 +225,11 @@
     "symfony/amqp-messenger": {
         "version": "v5.1.11"
     },
+=======
+    "swiftmailer/swiftmailer": {
+        "version": "v6.2.5"
+    },
+>>>>>>> prop_dynamique:ah_api/symfony.lock
     "symfony/apache-pack": {
         "version": "1.0",
         "recipe": {
@@ -489,6 +495,20 @@
             "config/packages/dev/swiftmailer.yaml",
             "config/packages/swiftmailer.yaml",
             "config/packages/test/swiftmailer.yaml"
+        ]
+    },
+    "symfony/swiftmailer-bundle": {
+        "version": "2.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.5",
+            "ref": "ae4d22af30bbd484506bc1817c5a3ef72c855b93"
+        },
+        "files": [
+            "./config/packages/dev/swiftmailer.yaml",
+            "./config/packages/swiftmailer.yaml",
+            "./config/packages/test/swiftmailer.yaml"
         ]
     },
     "symfony/translation-contracts": {

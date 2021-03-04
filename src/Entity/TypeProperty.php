@@ -48,11 +48,17 @@ class TypeProperty
      */
     private $proprieteTypeProperties;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Propriete::class, mappedBy="typeProperty")
+     */
+    private $proprietes;
+
 
     public function __construct()
     {
         $this->properties = new ArrayCollection();
         $this->proprieteTypeProperties = new ArrayCollection();
+        $this->proprietes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -138,6 +144,36 @@ class TypeProperty
             // set the owning side to null (unless already changed)
             if ($property->getTypeProperty() === $this) {
                 $property->setTypeProperty(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Propriete[]
+     */
+    public function getProprietes(): Collection
+    {
+        return $this->proprietes;
+    }
+
+    public function addPropriete(Propriete $propriete): self
+    {
+        if (!$this->proprietes->contains($propriete)) {
+            $this->proprietes[] = $propriete;
+            $propriete->setTypeProperty($this);
+        }
+
+        return $this;
+    }
+
+    public function removePropriete(Propriete $propriete): self
+    {
+        if ($this->proprietes->removeElement($propriete)) {
+            // set the owning side to null (unless already changed)
+            if ($propriete->getTypeProperty() === $this) {
+                $propriete->setTypeProperty(null);
             }
         }
 

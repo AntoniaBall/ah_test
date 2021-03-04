@@ -15,7 +15,11 @@ return [
     SymfonyCasts\Bundle\VerifyEmail\SymfonyCastsVerifyEmailBundle::class => ['all' => true],
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
     Liip\TestFixturesBundle\LiipTestFixturesBundle::class => ['dev' => true, 'test' => true],
+<<<<<<< HEAD:config/bundles.php
     Vich\UploaderBundle\VichUploaderBundle::class => ['all' => true],
     Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class => ['all' => true],
     Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
+=======
+    Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class => ['all' => true],
+>>>>>>> prop_dynamique:ah_api/config/bundles.php
 ];
