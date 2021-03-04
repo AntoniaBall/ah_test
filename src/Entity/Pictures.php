@@ -66,7 +66,7 @@ class Pictures
     private $id;
 
     /**
-     * @Groups({"picture:read"})
+     * @Groups({"picture:read", "picture:write"})
      * 
      * @ApiProperty(iri="http://schema.org/contentUrl")
      * @ORM\Column(type="string", length=255)
@@ -92,7 +92,7 @@ class Pictures
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="pictures")
      */
     private $property;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity=Activities::class, inversedBy="pictures")
      */
@@ -132,7 +132,7 @@ class Pictures
         return $this->url;
     }
 
-    public function setUrl(string $url): self
+    public function setUrl(string $url = null): self
     {
         $this->url = $url;
 

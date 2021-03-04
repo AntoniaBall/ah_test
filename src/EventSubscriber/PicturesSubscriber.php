@@ -45,12 +45,14 @@ final class PicturesSubscriber implements EventSubscriberInterface
         if (!is_iterable($pictures)) {
             $pictures = [$pictures];
         }
-
+        
         foreach ($pictures as $picture) {
             if (!$picture instanceof Pictures) {
                 continue;
             }
+
             $picture->setUrl($this->storage->resolveUri($picture, 'file'));
+            // var_dump($picture->getUrl());
         }
     }
 }

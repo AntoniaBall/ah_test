@@ -13,6 +13,7 @@ use App\Validator\Constraints\MinimalProperties;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Controller\PropertyController;
+use App\Controller\ValidationPropertyController;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
@@ -30,6 +31,13 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *    "put"={"security"="object.getUser() == user"},
  *    "patch"={"security"="is_granted('ROLE_ADMIN')", "denormalization_context"={"groups"={"admin:write"}}},
  *    "delete"={"security"="object.getUser() == user or is_granted('ROLE_ADMIN')"},
+ *    "patch"={
+ *          "security"="is_granted('ROLE_ADMIN')",
+ *          "denormalization_context"={"groups"={"admin:write"}},
+ *          "path"="/properties/{id}/status",
+ *          "controller"=ValidationPropertyController::class,
+ *          "security_message"="Only admin can validate a property"
+ *     }
  * }
  * )
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
@@ -198,7 +206,7 @@ class Property
     private $activities;
 
     /**
-     * @Groups({"property:read", "admin:write","user:write", "disponibility:write"})
+     * @Groups({"property:read", "admin:write", "user:write", "disponibility:write"})
      * @Assert\Type(
      *      type="string",
      *      message="This value must be a string"
