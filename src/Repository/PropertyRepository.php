@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Property;
+use App\Entity\Disponibility;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -47,4 +48,15 @@ class PropertyRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findPropertiesBySearch($dateStart, $dateEnd): ?Property
+    {
+        return $this->createQueryBuilder('p')
+            ->innerJoin(Disponibility::class, 'd')
+            ->andWhere('p.exampleField = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }
