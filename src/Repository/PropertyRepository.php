@@ -6,6 +6,7 @@ use App\Entity\Property;
 use App\Entity\Disponibility;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * @method Property|null find($id, $lockMode = null, $lockVersion = null)
@@ -49,14 +50,16 @@ class PropertyRepository extends ServiceEntityRepository
     }
     */
 
-    public function findPropertiesBySearch($dateStart, $dateEnd): ?Property
+    public function findPropertiesBySearch($dateStart, $dateEnd)
     {
+
         return $this->createQueryBuilder('p')
-            ->innerJoin(Disponibility::class, 'd')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+            ->innerJoin(Disponibility::class, 'd',Join::WITH,'p.id = d.property')
+            ->andWhere('d.jourDispo >= :dateStart AND d.jourDispo <=:dateEnd')
+            ->setParameter('dateStart', $dateStart)
+            ->setParameter(':dateEnd', $dateEnd)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
 }
