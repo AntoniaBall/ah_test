@@ -11,7 +11,7 @@ class DateService {
         $dates = new \DatePeriod(
             $dateStart,
             new \DateInterval('P1D'),
-            $dateEnd,
+            $dateEnd->modify('+1 day'),
         );
 
         foreach($dates as $date){
@@ -20,5 +20,10 @@ class DateService {
         }
 
         return $response;
+    }
+
+    public function propertyIsDisponibleBetweenDates($property, $dateStart, $dateEnd){
+        $periodes = $this->displayDates($dateStart, $dateEnd);
+        return $periodes;
     }
 }

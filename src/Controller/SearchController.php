@@ -7,14 +7,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Property;
+use App\Services\DateService;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SearchController extends AbstractController
 {
+
     /**
      * @Route("api/properties/search", name="search")
      */
-    public function searchProperties(Request $request): Response
+    public function searchProperties(Request $request, DateService $dateService): Response
     {
         $dateStart = (null === $request->query->get("dateStart") 
                     || "" === $request->query->get("dateEnd")) 
@@ -28,39 +30,31 @@ class SearchController extends AbstractController
                         // || new \DateTime($request->query->get("dateStart")) > new \DateTime($request->query->get("dateEnd"))
                         ? new \DateTime($request->query->get("dateStart")) : new \DateTime($request->query->get("dateEnd"));
         
-        $ville = $request->query->get("ville");
+        $town = $request->query->get("town");
+        $maxTraveler = $request->query->get("maxTraveler");
 
-        if (!isset($ville) || $ville === ""){
+        if (!isset($town) || $town === ""){
             throw new HttpException(400, "Veuillez renseigner au moins une ville");
         }
 
         // dump($dateEnd->diff($dateStart));
-        // dump($dateEnd);
-
-        $period = new \DatePeriod(
-            $dateStart,
-            new \DateInterval('P1D'),
-            $dateEnd->modify('+1 day')
-        );
-
-        foreach($period as $singleDate){
-           dump($singleDate->format('Y-m-d'));
-        }
-
         // dump($period);
+
         // récupérer tous les biens entre 2 dates
         // var_dump($request->query);
 
-        $currentDisponibilities = $this->getDoctrine()
-                                    ->getRepository(Property::class)
-                                    ->findPropertiesBySearch($dateStart, $dateEnd);
-    
-        var_dump(count($currentDisponibilities));
+        $properties = $this->getDoctrine()
+                        ->getRepository(Property::class)
+                        ->findPropertiesBySearch($dateStart, $dateEnd, $maxTraveler, $town);
 
-        foreach($currentDisponibilities as $currentDisponibily){
-            dump($currentDisponibily->getId());
-        }
+        var_dump(count($properties));
         die();
+
+        foreach($properties as $property){
+            dump($property->getId());
+            $dateService->propertyIsDisponibleBetweenDates($property, $dateStart, $dateEnd);
+        }
+
     }
 }
 

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Property;
 use App\Entity\Disponibility;
+use App\Entity\Address;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr\Join;
@@ -50,16 +51,26 @@ class PropertyRepository extends ServiceEntityRepository
     }
     */
 
-    public function findPropertiesBySearch($dateStart, $dateEnd)
-    {
+    public function findPropertiesBySearch($dateStart, $dateEnd, $maxTraveler = null, $town = null){
+        $qb = $this->createQueryBuilder('p')
+                    ->innerJoin(Disponibility::class, 'd',Join::WITH,'p.id = d.property')
+                    ->andWhere('d.jourDispo >= :dateStart AND d.jourDispo <=:dateEnd')
+                    ->setParameter('dateStart', $dateStart)
+                    ->setParameter(':dateEnd', $dateEnd);
+                    
+            if ($maxTraveler !== null){
+                $qb->andWhere('p.maxTravelers <= :maxTraveler');
+                $qb->setParameter('maxTraveler', $maxTraveler);
+            }
 
-        return $this->createQueryBuilder('p')
-            ->innerJoin(Disponibility::class, 'd',Join::WITH,'p.id = d.property')
-            ->andWhere('d.jourDispo >= :dateStart AND d.jourDispo <=:dateEnd')
-            ->setParameter('dateStart', $dateStart)
-            ->setParameter(':dateEnd', $dateEnd)
-            ->getQuery()
-            ->getResult()
-        ;
+            if ($town !== null){
+                $qb->innerJoin(Address::class, 'a',Join::WITH,'a.id = p.address')
+                    ->andWhere('a.town = :town')
+                   ->setParameter('town', $town);
+            }
+
+            $query = $qb->getQuery();
+
+            return $query->getResult();
     }
 }
