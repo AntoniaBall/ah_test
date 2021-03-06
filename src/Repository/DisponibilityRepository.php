@@ -19,22 +19,18 @@ class DisponibilityRepository extends ServiceEntityRepository
         parent::__construct($registry, Disponibility::class);
     }
 
-    // /**
-    //  * @return Disponibility[] Returns an array of Disponibility objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
+    /**
+    * @return Disponibility[] Returns an array of Disponibility objects
+    */
+    public function findDisponibilitiesByProperty($propertyId){
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.property = :val')
+            ->setParameter('val', $propertyId)
+            ->orderBy('d.id', 'DESC')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Disponibility
@@ -47,4 +43,17 @@ class DisponibilityRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+    * @return Disponibility[] Returns an array of Disponibility objects
+    */
+    public function findDisponibilitiesBetweenDates($dateStart, $dateEnd){
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.property = :val')
+            ->setParameter('val', $propertyId)
+            ->orderBy('d.id', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
