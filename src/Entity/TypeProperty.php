@@ -29,13 +29,14 @@ class TypeProperty
      * @ORM\Column(type="string", length=50)
      */
     private $title;
-
+    
     /**
+     * @Groups({"typeproperty:read", "typeproperty:write", "property:read"})
      * @Groups({"typeproperty:read", "typeproperty:write"})
      * @ORM\Column(type="string", length=255)
      */
     private $description;
-
+    
     /**
      * @Groups("typeproperty:read")
      * @ORM\OneToMany(targetEntity=Property::class, mappedBy="typeProperty", orphanRemoval=true)
@@ -43,7 +44,6 @@ class TypeProperty
     private $properties;
 
     /**
-     * @Groups("typeproperty:read")
      * @ORM\OneToMany(targetEntity=ProprieteTypeProperty::class, mappedBy="type_property")
      */
     private $proprieteTypeProperties;

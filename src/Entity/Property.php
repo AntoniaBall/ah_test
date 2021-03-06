@@ -132,7 +132,6 @@ class Property
     * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "disponibility:write", "activities:write"})
      * @Assert\NotNull
      * @ORM\Column(type="boolean")
-     * @Assert\NotBlank
      * @MinimalProperties
      */
     private $electricity;

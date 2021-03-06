@@ -31,7 +31,7 @@ class Disponibility
     private $property;
     
     /**
-     * @Groups({"disponibility:read", "disponibility:write", "property:write"})
+     * @Groups({"disponibility:read", "disponibility:write", "property:write", "property:read"})
      * @Assert\Type(
      *     type="datetime",
      *     message="The value {{ value }} is not a valid {{ type }}."
