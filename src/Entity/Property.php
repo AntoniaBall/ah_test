@@ -52,7 +52,7 @@ class Property
      * @ORM\Column(type="integer")
      */
     private $id;
-
+    
     /**
      * @Groups({"property:read", "property:write", "reservation:read", "typeproperty:read", "user:write", "picture:write", "indisponibility:write", "activities:write"})
      * @ORM\Column(type="string", length=100)
