@@ -37,7 +37,7 @@ class Activities
      * maxMessage = "La longeur de votre activité doit être inférieure à {{ limit }} caractères"
      * 
      * )
-     * @Groups({"activities:read", "activities:write", "property:write"})
+     * @Groups({"activities:read", "activities:write", "property:write", "property:read"})
      */
     private $description;
 
@@ -51,7 +51,7 @@ class Activities
      * minMessage = "Le titre de votre activité doit être supérieure à {{ limit }} caractères",
      * maxMessage = "Le titre de votre activité doit être inférieure à {{ limit }} caractères"
      * )
-     * @Groups({"activities:read", "activities:write", "property:write"})
+     * @Groups({"activities:read", "activities:write", "property:write", "property:read"})
      */
     private $title;
     
@@ -72,7 +72,7 @@ class Activities
     /**
      * 
      * @ORM\OneToMany(targetEntity=Pictures::class, mappedBy="activities")
-     * @Groups({"activities:read", "picture:write"})
+     * @Groups({"activities:read", "picture:write", "property:read"})
      */
     private $pictures;
 

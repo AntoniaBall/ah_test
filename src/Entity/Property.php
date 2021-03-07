@@ -16,9 +16,10 @@ use App\Controller\PropertyController;
 use App\Controller\ValidationPropertyController;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 
 /**
- * @ApiResource(attributes={
+ * @ApiResource(attributApiPropertyes={
  *     "normalization_context"={"groups"={"property:read", "enable_max_depth"=true}},
  *     "denormalization_context"={"groups"={"property:write"}}
  * },
@@ -41,7 +42,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  * }
  * )
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
- * @ApiFilter(SearchFilter::class, properties={"id": "exact", "typeProperty": "exact", "title": "exact", "description": "exact", "equipment":"exact", "user":"exact", "disponibilities":"exact", "address.town":"exact", "activities":"exact", "disponibilities":"exact", "user": "exact"})
+ * @ApiFilter(SearchFilter::class, properties={"id": "exact", "typeProperty": "exact", "title": "exact", "description": "exact", "equipment":"exact", "user":"exact", "disponibilities":"exact", "address.town":"exact", "activities":"exact", "disponibilities":"exact", "user": "exact", "maxTravelers": "exact"})
+ * @ApiFilter(RangeFilter::class, properties={"maxTravelers"})
  * [ApiFilter(DateFilter::class, properties: ['disponibilities'])]
  */
 class Property
@@ -116,12 +118,12 @@ class Property
 
     /**
     * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "disponibility:write", "activities:write"})
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean")persist
      */
     private $accessHandicap;
     
     /**
-     * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "disponibility:write", "activities:write"})
+     * @Groups({"property:read", "propepersistrty:write", "typeproperty:read", "picture:write", "disponibility:write", "activities:write"})
      * @Assert\NotNull
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank
