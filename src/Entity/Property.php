@@ -19,7 +19,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 
 /**
- * @ApiResource(attributApiPropertyes={
+ * @ApiResource(attributes={
  *     "normalization_context"={"groups"={"property:read", "enable_max_depth"=true}},
  *     "denormalization_context"={"groups"={"property:write"}}
  * },
@@ -30,7 +30,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
  * itemOperations={
  *    "get"={"security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY') or is_granted('IS_AUTHENTICATED_FULLY')"},
  *    "put"={"security"="object.getUser() == user"},
- *    "patch"={"security"="is_granted('ROLE_ADMIN')", "denormalization_context"={"groups"={"admin:write"}}},
+ *    "patch"={"security"="is_granted('ROLE_ADMIN')", "denormalizationf058a0d7cd87e1584a2f6a4facef7ce02c3f4fabf058a0d7cd87e1584a2f6a4facef7ce02c3f4fab_context"={"groups"={"admin:write"}}},
  *    "delete"={"security"="object.getUser() == user or is_granted('ROLE_ADMIN')"},
  *    "patch"={
  *          "security"="is_granted('ROLE_ADMIN')",
@@ -118,12 +118,12 @@ class Property
 
     /**
     * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "disponibility:write", "activities:write"})
-     * @ORM\Column(type="boolean")persist
+     * @ORM\Column(type="boolean")
      */
     private $accessHandicap;
     
     /**
-     * @Groups({"property:read", "propepersistrty:write", "typeproperty:read", "picture:write", "disponibility:write", "activities:write"})
+     * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "disponibility:write", "activities:write"})
      * @Assert\NotNull
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank
