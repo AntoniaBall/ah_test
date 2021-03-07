@@ -22,11 +22,11 @@ class DisponibilityRepository extends ServiceEntityRepository
     /**
     * @return Disponibility[] Returns an array of Disponibility objects
     */
-    public function findDisponibilitiesByProperty($propertyId){
+    public function getPropertyDisponibilitiesByDay($property){
         return $this->createQueryBuilder('d')
+            ->select('d.jourDispo')
             ->andWhere('d.property = :val')
-            ->setParameter('val', $propertyId)
-            ->orderBy('d.id', 'DESC')
+            ->setParameter('val', $property)
             ->getQuery()
             ->getResult()
         ;
