@@ -64,6 +64,7 @@ class Property
      * maxMessage = "La longueur du titre doit être inférieure à {{ limit }} caractères"
      * )
      * @Assert\NotNull
+     * @Groups({"valeurBool:list"})
      */
     private $title;
     
@@ -180,11 +181,7 @@ class Property
      */
     private $address;
 
-    /**
-     * @Groups({"property:read", "property:write", "user:write"})
-     * @ORM\OneToOne(targetEntity=Valeur::class, mappedBy="property", cascade={"persist", "remove"})
-     */
-    private $valeur;
+    
 
     /**
      * @Groups({"property:read", "property:write", "user:write", "disponibility:write", "reservation:read"})
@@ -430,23 +427,6 @@ class Property
         return $this;
     }
 
-
-    public function getValeur(): ?Valeur
-    {
-        return $this->valeur;
-    }
-
-    public function setValeur(Valeur $valeur): self
-    {
-        $this->valeur = $valeur;
-
-        // set the owning side of the relation if necessary
-        if ($valeur->getProperty() !== $this) {
-            $valeur->setProperty($this);
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|Disponibility[]

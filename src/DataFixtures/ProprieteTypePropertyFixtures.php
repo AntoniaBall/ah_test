@@ -14,9 +14,8 @@ class ProprieteTypePropertyFixtures extends Fixture implements DependentFixtureI
     public function load(ObjectManager $manager)
     {
         $proprieteTypePr = new ProprieteTypeProperty();
-        $proprieteTypePr->setPropriete($this->getReference(ProprietesFixtures::profondeur))
-                        ->setTypeProperty($this->getReference(TypePropertyFixtures::cabane_arbre));
-                        // ->setValeur(50);
+        $proprieteTypePr->setTypeProperty($this->getReference(TypePropertyFixtures::cabane_arbre));
+        
         $this->addReference(self::propriete_cabane, $proprieteTypePr);
 
         $manager->persist($proprieteTypePr);

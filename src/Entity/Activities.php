@@ -42,7 +42,7 @@ class Activities
     private $description;
 
     /**
-     * 
+     * @Groups({"read:fully:comment"})
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank
      * @Assert\Length(
@@ -56,7 +56,6 @@ class Activities
     private $title;
     
     /**
-     * 
      * @ORM\ManyToMany(targetEntity=Property::class, inversedBy="activities")
      * @Groups({"activities:read", "activity:write"})
      */
@@ -116,7 +115,7 @@ class Activities
      */
     public function getProperty(): Collection
     {
-        return $this->Property;
+        return $this->property;
     }
 
     public function addProperty(Property $property): self

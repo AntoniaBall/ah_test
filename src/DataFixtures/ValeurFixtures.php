@@ -13,8 +13,7 @@ class ValeurFixtures extends Fixture implements DependentFixtureInterface
     {
         $valeur= new Valeur();
         $valeur->setValeur(5)
-        ->setProperty($this->getReference(PropertyFixtures::CABANES))
-        ->addProprieteTypeProperty($this->getReference(ProprieteTypePropertyFixtures::propriete_cabane));
+                ->setPropertyId($this->getReference(PropertyFixtures::CABANES));
         
         $manager->persist($valeur);
 

@@ -64,7 +64,7 @@ class User implements UserInterface
      * @Assert\Email(
      * message = "The email'{{ value }}' is not a valid email.")
      * 
-     * @Groups({"user:read", "user:write", "property:read"})
+     * @Groups({"user:read", "user:write", "property:read","comments:list"})
      */
     private $email;
     
@@ -105,7 +105,7 @@ class User implements UserInterface
     
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({"user:read", "user:write", "property:read"})
+     * @Groups({"user:read", "user:write", "property:read", "read:comment"})
      */
     private $firstName;    
 
@@ -128,6 +128,17 @@ class User implements UserInterface
     private $properties;
 
     private UserPasswordEncoderInterface $encoder;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $activation_token;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $rest_token;
+
 
     public function __construct()
     {
@@ -361,6 +372,18 @@ class User implements UserInterface
 
         return $this;
     }
+    
+    public function getActivationToken(): ?string
+    {
+        return $this->activation_token;
+    }
+
+    public function setActivationToken(?string $activation_token): self
+    {
+        $this->activation_token = $activation_token;
+
+        return $this;
+    }
 
     /**
      * Get the value of firstName
@@ -381,4 +404,17 @@ class User implements UserInterface
 
         return $this;
     }
+    public function getRestToken(): ?string
+    {
+        return $this->rest_token;
+    }
+
+    public function setRestToken(?string $rest_token): self
+    {
+        $this->rest_token = $rest_token;
+
+        return $this;
+    }
+
+    
 }

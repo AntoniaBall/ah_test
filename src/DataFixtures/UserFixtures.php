@@ -27,7 +27,7 @@ class UserFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
 		$generator = Faker\Factory::create("fr_FR");
-
+		
 		$userAdmin = new User();
 		$userAdmin
 			->setEmail("admin@yopmail.com")

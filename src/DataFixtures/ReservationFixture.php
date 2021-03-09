@@ -9,6 +9,8 @@ use Doctrine\Persistence\ObjectManager;
 
 class ReservationFixture extends Fixture implements DependentFixtureInterface
 {
+    public const Reservation_1 = "Reservation_1";
+
     public function load(ObjectManager $manager)
     {
         //1 reservation pour l'utilisateur locataire@yopmail.com dans les jours à venir
@@ -48,15 +50,14 @@ class ReservationFixture extends Fixture implements DependentFixtureInterface
 
         $manager->persist($reservation);
         $manager->persist($reservation1);
-        $manager->persist($reservation2);
-
+        $this->addReference(self::Reservation_1,$reservation);
         $manager->flush();
     }
     public function getDependencies()
     {
         return array(
             UserFixtures::class,
-            PropertyFixtures::class,
+            PropertyFixtures::class
         );
     }
 }

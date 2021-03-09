@@ -30,6 +30,12 @@ dump.sql
 dump1.sql
 keys1.txt
 
+
+###> symfony/phpunit-bridge ###
+.phpunit
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
 ex.json
 
 models/

@@ -11,6 +11,7 @@ class ActivitiesFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
+
         $equitation = new Activities();
         $equitation->setTitle('Equitation')
                     ->setDescription('centre d\'equitation proche du logement')
@@ -31,8 +32,9 @@ class ActivitiesFixtures extends Fixture implements DependentFixtureInterface
         	$Activities-> setTitle("$i Activity");
         	
         	$manager->persist($Activities);
-        }
 
+        }
+        $this->addReference("activities" , $natation);
         $manager->flush();
     }
     public function getDependencies()

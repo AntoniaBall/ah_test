@@ -11,8 +11,26 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource(normalizationContext={"groups"={"propriete:read"}},
- *     denormalizationContext={"groups"={"propriete:write"}})
+ * @ApiResource(
+ *   normaizationContext={"groups"={"propriete:list"}},
+ *  collectionoperations={
+ *       "get",
+ *       "post"={
+ *           "security"="is_granted('IS_AUTHENCTICATED_FULLY')",
+ *           }
+ *       },
+ *   itemOperations={
+ *       "get"={
+ *           "normalizations_context"={"groups"={"propriete:list", "read:full:propriete"}},
+ *           },
+ *   "put"={
+ *       "security"="is_granted('EDIT_PROPERTY', object)"
+ *   },
+ *   "delete"={
+ *       "security"="is_granted('EDIT_PROPERTY', object)"
+ *   },
+ *       }
+ *)
  * @ORM\Entity(repositoryClass=ProprieteRepository::class)
  */
 class Propriete
@@ -25,39 +43,31 @@ class Propriete
     private $id;
 
     /**
-     * @Groups({"propriete:read", "propriete:write"})
+     * @Groups({"propriete:list"})
      * @ORM\Column(type="string", length=100)
      */
     private $nom;
 
+   
     /**
-     * @Groups({"propriete:read", "propriete:write"})
-     * @ORM\Column(type="boolean")
-     * 
+     * @Groups("propriete:list")
+     * @ORM\ManyToOne(targetEntity=typeproperty::class, inversedBy="proprietes")
      */
-    private $is_required;
+    private $typeProperty;
 
     /**
-     * @Groups({"propriete:read", "propriete:write"})
-     * @ORM\Column(type="string", length=20, nullable=true)
+     * @Groups({"propriete:list"})
+     * @ORM\Column(type="string")
      */
-    private $type;
+    private $type ;
 
-    /**
-     * @Groups("propriete:read")
-     * @ORM\OneToMany(targetEntity=ProprieteTypeProperty::class, mappedBy="propriete")
-     */
-    private $proprieteTypeProperties;
-
-    /**
-     * @Groups("propriete:read")
-     * @ORM\ManyToOne(targetEntity=TypeValue::class, inversedBy="Propriete")
-     */
-    private $typeValue;
+    
 
     public function __construct()
     {
         $this->proprieteTypeProperties = new ArrayCollection();
+        $this->valeurBools = new ArrayCollection();
+        $this->valuerStrings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -77,18 +87,19 @@ class Propriete
         return $this;
     }
 
-    public function getIsRequired(): ?bool
+  
+
+    public function getTypeProperty(): ?typeproperty
     {
-        return $this->is_required;
+        return $this->typeProperty;
     }
 
-    public function setIsRequired(bool $is_required): self
+    public function setTypeProperty(?typeproperty $typeProperty): self
     {
-        $this->is_required = $is_required;
+        $this->typeProperty = $typeProperty;
 
         return $this;
     }
-
 
     public function getType(): ?string
     {
@@ -102,45 +113,4 @@ class Propriete
         return $this;
     }
 
-    /**
-     * @return Collection|ProprieteTypeProperty[]
-     */
-    public function getProprieteTypeProperties(): Collection
-    {
-        return $this->proprieteTypeProperties;
-    }
-
-    public function addProprieteTypeProperty(ProprieteTypeProperty $proprieteTypeProperty): self
-    {
-        if (!$this->proprieteTypeProperties->contains($proprieteTypeProperty)) {
-            $this->proprieteTypeProperties[] = $proprieteTypeProperty;
-            $proprieteTypeProperty->setPropriete($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProprieteTypeProperty(ProprieteTypeProperty $proprieteTypeProperty): self
-    {
-        if ($this->proprieteTypeProperties->removeElement($proprieteTypeProperty)) {
-            // set the owning side to null (unless already changed)
-            if ($proprieteTypeProperty->getPropriete() === $this) {
-                $proprieteTypeProperty->setPropriete(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getTypeValue(): ?TypeValue
-    {
-        return $this->typeValue;
-    }
-
-    public function setTypeValue(?TypeValue $typeValue): self
-    {
-        $this->typeValue = $typeValue;
-
-        return $this;
-    }
 }

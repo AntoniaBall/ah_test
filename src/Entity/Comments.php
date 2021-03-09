@@ -9,17 +9,46 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use function Symfony\Component\String\u;
+use App\Controller\CommentController;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * @ApiResource(
- * normalizationContext={"groups"={"comments:read"}},
- * denormalizationContext={"groups"={"comments:write"}}
- * )
- * @ORM\Entity(repositoryClass=CommentsRepository::class)
- */
+*
+* @ApiResource(
+*     attributes={
+*    "order"={"PublishedAt":"DESC"},
+*      },
+*      paginationitemsPerPage=10,
+ 
+*    normalizationContext={"groups"={"comments:list"}},
+*    collectionoperations={
+*        "get", 
+*        "post"={
+*            "security"="is_granted('IS_AUTHENTICATED_FULLY')",
+*        }},
+*   itemOperations={
+*    "get"={
+*        "normalizations_context"={"groups"={"comments:list", "read:full:comment"}},
+*    },
+*    "put"={
+*        "security"="is_granted('EDIT_COMMENTS', object) and object.Auteur == user"
+*    },
+*    "delete"={
+*        "security"="is_granted('EDIT_COMMENTS', object)"
+*    },
+*    }
+* )
+*
+* @ApiFilter(SearchFilter::class, properties={"Activities": "exact", "Auteur" ="exact"})
+* @ORM\Entity(repositoryClass= CommentsRepository::class)
+*/
 class Comments
 {
     /**
+     * @Groups({"comments:list"})
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -27,9 +56,10 @@ class Comments
     private $id;
 
     /**
-     * @Groups({"comments:read", "comments:write"})
+     *
+     * @Groups({"comments:list"})
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\NotBlank
+    
      * @Assert\Length(
      * max = 250,
      * maxMessage = "La longueur du commentaire doit être inférieure à {{ limit }} caractères"
@@ -39,32 +69,48 @@ class Comments
     private $comment_content;
 
     /**
-     * 
+     *
+     * @Groups({"comments:list"})
      * @ORM\OneToMany(targetEntity=Pictures::class, mappedBy="comments")
-     * @Groups("comments:read")
      */
     private $pictures;
 
     /**
      * 
      * @ORM\Column(type="array")
-     * @Groups({"comments:read", "comments:write"})
+     *
      */
     private $forbidden_words = [];
 
     /**
-     * 
+     *
+     * @Groups({"comments:list"})
      * @ORM\ManyToOne(targetEntity=Activities::class, inversedBy="comments")
-     * @Groups("comments:read")
      */
     private $activities;
 
     /**
-     * 
+     * @Groups({"comments:list"})
      * @ORM\ManyToOne(targetEntity=Reservation::class, inversedBy="comments")
-     * @Groups("comments:read")
+     *
      */
     private $reservation;
+
+   
+    
+    /**
+     * @Groups({"comments:list"})
+     * @ORM\Column(type="datetime")
+     *
+     */
+    private $PublishedAt;
+
+    /**
+     * @Groups({"comments:list","user:read"})
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    public $Auteur;
 
     public function __construct()
     {
@@ -154,4 +200,48 @@ class Comments
 
         return $this;
     }
+
+  
+ 
+    public function getPublishedAt(): ?\DateTimeInterface
+    {
+        return $this->PublishedAt;
+    }
+
+    public function setPublishedAt(\DateTimeInterface $PublishedAt): self
+    {
+        $this->PublishedAt = $PublishedAt;
+
+        return $this;
+    }
+
+    public function getAuteur(): ?User
+    {
+        return $this->Auteur;
+    }
+
+    public function setAuteur(?User $Auteur): self
+    {
+        $this->Auteur = $Auteur;
+
+        return $this;
+    }
+
+    /**
+   * @Assert\Callback
+   */
+  public function isContentValid(ExecutionContextInterface $context)
+  {
+    $forbiddenWords = array('échec', 'abandon');
+ 
+    // On vérifie que le contenu ne contient pas l'un des mots
+    if (preg_match('#'.implode('|', $forbiddenWords).'#', $this->getCommentContent())) {
+      // La règle est violée, on définit l'erreur
+      $context
+        ->buildViolation('Contenu invalide car il contient un mot interdit.') // message
+        ->atPath('Comment_Content')                                                   // attribut de l'objet qui est violé
+        ->addViolation() // ceci déclenche l'erreur, ne l'oubliez pas
+      ;
+    }
+  }
 }
