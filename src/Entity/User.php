@@ -369,6 +369,8 @@ class User implements UserInterface
     public function setLastName($lastName)
     {
         $this->lastName = $lastName;
+
+        return $this;
     }
     
     public function getActivationToken(): ?string

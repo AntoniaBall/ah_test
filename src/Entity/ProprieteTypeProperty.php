@@ -21,8 +21,6 @@ class ProprieteTypeProperty
      */
     private $id;
     
-
-
     /**
      * @Groups("proprietetypeproperty:read")
      * @ORM\ManyToOne(targetEntity=TypeProperty::class, inversedBy="proprieteTypeProperties")

@@ -12,24 +12,26 @@ class CommentsFixture extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         for ($i=0; $i <10 ; $i++) { 
-        $Comments = new Comments();
-        $Comments->setPublishedAt(new \Datetime('next monday'))
-        ->setCommentContent("totototot")
-        ->setForbiddenWords(["aaa","aaaazz","aefxcc"])
-        ->setUser($this->getReference(UserFixtures::LOC_USER_REFERENCE))
-        ->setActivities($this->getReference("activities"))
-        ->setReservation($this->getReference("Reservation_1"));
-        $manager->persist($Comments);
-        $manager->persist($Comments);
+            $Comments = new Comments();
+            $Comments->setPublishedAt(new \Datetime('next monday'))
+                ->setCommentContent("totototot")
+                ->setForbiddenWords(["aaa","aaaazz","aefxcc"])
+                ->setAuteur($this->getReference(UserFixtures::LOC_USER_REFERENCE))
+                ->setActivities($this->getReference("activities"))
+                ->setReservation($this->getReference(ReservationFixture::Reservation_1));
+            $manager->persist($Comments);
+            $manager->persist($Comments);
         }
         $manager->flush();
+
     }
     public function getDependencies()
     {
         return array(
             UserFixtures::class,
             ActivitiesFixtures::class,
-            
+            ReservationFixture::class
+
         );
     }
 }
