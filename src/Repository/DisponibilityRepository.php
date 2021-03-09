@@ -19,17 +19,27 @@ class DisponibilityRepository extends ServiceEntityRepository
         parent::__construct($registry, Disponibility::class);
     }
 
-    /**
-    * @return Disponibility[] Returns an array of Disponibility objects
-    */
+
     public function getPropertyDisponibilitiesByDay($property){
-        return $this->createQueryBuilder('d')
-            ->select('d.jourDispo')
-            ->andWhere('d.property = :val')
-            ->setParameter('val', $property)
-            ->getQuery()
-            ->getResult()
+
+        $qb = $this->createQueryBuilder('d')
+        ->select('d.jourDispo')
+        ->andWhere('d.property = :val')
+        ->setParameter('val', $property)
+        ->getQuery()
+        ->getResult()
         ;
+
+        $response = [];
+
+        $response["property"] = $property;
+        foreach ($qb as $rowDispo){
+            $jours []= $rowDispo["jourDispo"]->format('Y-m-d');
+        }
+        
+        $response["data"] = $jours;
+
+        return $response;
     }
 
     /*
@@ -48,12 +58,35 @@ class DisponibilityRepository extends ServiceEntityRepository
     * @return Disponibility[] Returns an array of Disponibility objects
     */
     public function findDisponibilitiesBetweenDates($dateStart, $dateEnd){
-        return $this->createQueryBuilder('d')
+        $qb = $this->createQueryBuilder('d')
             ->andWhere('d.property = :val')
             ->setParameter('val', $propertyId)
             ->orderBy('d.id', 'DESC')
             ->getQuery()
             ->getResult()
+        ;
+
+        dump($qb);
+
+        return $qb;
+    }
+
+    /**
+    * @return Disponibility[] Returns an array of Disponibility objects
+    */
+    public function findDisponibilitiesByJourDispo($property, $jourDispo){
+
+        $qb = $this->createQueryBuilder('d')
+        ->andWhere('d.jourDispo = :val')
+            ->setParameter('val', $jourDispo)
+            ->andWhere('d.property = :val')
+            ->setParameter('val', $property)
+            ->getQuery()
+            ->getResult();
+
+        dump($qb);
+
+        return $qb;
         ;
     }
 }

@@ -17,8 +17,12 @@ class SearchController extends AbstractController
     /**
      * @Route("api/properties/search", name="search")
      */
-    public function searchProperties(Request $request, DateService $dateService): Response
+    public function searchProperties(Request $request, DateService $dateService)
     {
+
+        $response = [];
+        $toRemove = [];
+
         $dateStart = (null === $request->query->get("dateStart") 
                     || "" === $request->query->get("dateEnd")) 
                     ? new \DateTime('now') : new \DateTime($request->query->get("dateStart"));
@@ -37,38 +41,33 @@ class SearchController extends AbstractController
         if (!isset($town) || $town === ""){
             throw new HttpException(400, "Veuillez renseigner au moins une ville");
         }
+
         $properties = $this->getDoctrine()
                         ->getRepository(Property::class)
                         ->findPropertiesBySearch($dateStart, $dateEnd, $maxTraveler, $town);
         
         $dates = $dateService->displayDates($dateStart, $dateEnd);
 
-        // var_dump($dates);
-
         foreach($properties as $property){
-            // property 1
+            // retourne tous les jours dispos par biens
             $jourDispos = $this->getDoctrine()
                     ->getRepository(Disponibility::class)
-                    ->getPropertyDisponibilitiesByDay($property->getId()); // array
-            
-                    $dispos = $property->getDisponibilities();
-                    
-                    dump(getType($property->getDisponibilities()));
-                    foreach ($dispos as $dispo){
-                        dump($dispo->getJourDispo());
-                    }
-            die();
-        }
+                    ->getPropertyDisponibilitiesByDay($property->getId());
 
-        // foreach($properties as $property){
-        //     // verifier quel bien est dispo durant la durée définie entre les 2 dates
-        //     dump($property->getId());
-        //     $isDisonibleByDay = $this->getDoctrine()
-        //             ->getRepository(Disponibility::class)
-        //             ->findDispoByDay($property->getId(), $jourDispo);
-        // }
-        die();
-        
+            $dispos = $property->getDisponibilities();
+
+            $response["property"] = $property->getId();
+            $response["dates"] = $jourDispos;
+
+            foreach ($dates as $date){
+                // dump($date);
+                // dump(in_array("2021-04-01",$jourDispos));
+
+            }
+            // dump($response["dates"]);
+        }
+        // die();
+        return new Response (["data" => $response]);
     }
 }
 
