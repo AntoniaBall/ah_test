@@ -48,12 +48,7 @@ class ReservationFixture extends Fixture implements DependentFixtureInterface
 
         $manager->persist($reservation);
         $manager->persist($reservation1);
-<<<<<<< HEAD:src/DataFixtures/ReservationFixture.php
-        $manager->persist($reservation2);
-
-=======
         $this->addReference("Reservation_1", $reservation);
->>>>>>> prop_dynamique:ah_api/src/DataFixtures/ReservationFixture.php
         $manager->flush();
     }
     public function getDependencies()

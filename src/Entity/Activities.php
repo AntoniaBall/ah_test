@@ -115,7 +115,7 @@ class Activities
      */
     public function getProperty(): Collection
     {
-        return $this->Property;
+        return $this->property;
     }
 
     public function addProperty(Property $property): self

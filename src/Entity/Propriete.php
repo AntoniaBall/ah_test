@@ -12,25 +12,25 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
-    normaizationContext={"groups"={"propriete:list"}},
-    collectionoperations={
-        "get",
-        "post"={
-            "security"="is_granted('IS_AUTHENCTICATED_FULLY')",
-            }
-        },
-    itemOperations={
-        "get"={
-            "normalizations_context"={"groups"={"propriete:list", "read:full:propriete"}},
-            },
-    "put"={
-        "security"="is_granted('EDIT_PROPERTY', object)"
-    },
-    "delete"={
-        "security"="is_granted('EDIT_PROPERTY', object)"
-    },
-        }
- )
+ *   normaizationContext={"groups"={"propriete:list"}},
+ *  collectionoperations={
+ *       "get",
+ *       "post"={
+ *           "security"="is_granted('IS_AUTHENCTICATED_FULLY')",
+ *           }
+ *       },
+ *   itemOperations={
+ *       "get"={
+ *           "normalizations_context"={"groups"={"propriete:list", "read:full:propriete"}},
+ *           },
+ *   "put"={
+ *       "security"="is_granted('EDIT_PROPERTY', object)"
+ *   },
+ *   "delete"={
+ *       "security"="is_granted('EDIT_PROPERTY', object)"
+ *   },
+ *       }
+ *)
  * @ORM\Entity(repositoryClass=ProprieteRepository::class)
  */
 class Propriete
@@ -48,18 +48,18 @@ class Propriete
      */
     private $nom;
 
-    /**
-     * @Groups("propriete:list")
-     * @ORM\ManyToOne(targetEntity=TypeValue::class, inversedBy="propriete")
-     */
-    private $typeValue;
-
    
     /**
      * @Groups("propriete:list")
      * @ORM\ManyToOne(targetEntity=typeproperty::class, inversedBy="proprietes")
      */
     private $typeProperty;
+
+    /**
+     * @Groups({"propriete:list"})
+     * @ORM\Column(type="string")
+     */
+    private $type ;
 
     
 
@@ -87,18 +87,7 @@ class Propriete
         return $this;
     }
 
-    public function getTypeValue(): ?TypeValue
-    {
-        return $this->typeValue;
-    }
-
-    public function setTypeValue(?TypeValue $typeValue): self
-    {
-        $this->typeValue = $typeValue;
-
-        return $this;
-    }
-
+  
 
     public function getTypeProperty(): ?typeproperty
     {
@@ -108,6 +97,18 @@ class Propriete
     public function setTypeProperty(?typeproperty $typeProperty): self
     {
         $this->typeProperty = $typeProperty;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }
