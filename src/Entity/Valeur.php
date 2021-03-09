@@ -58,10 +58,13 @@ class Valeur
      */
     private $property_id;
 
-   
-  
-    
+    private $proprieteTypeProperties;
 
+    public function __construct()
+    {
+        $this->proprieteTypeProperties = new ArrayCollection();
+    }
+    
     public function getId(): ?int
     {
         return $this->id;

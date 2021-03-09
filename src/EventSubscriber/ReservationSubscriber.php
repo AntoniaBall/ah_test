@@ -49,7 +49,6 @@ final class ReservationSubscriber implements EventSubscriberInterface
             $object->setUser($this->tokenStorage->getToken()->getUser());
             $event->setControllerResult($object);
         }
-        
         return true;
     }
 }

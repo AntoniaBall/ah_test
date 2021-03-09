@@ -32,7 +32,7 @@ class Address
      * )
      * 
      * @Assert\Positive
-     * @Groups({"adress:read", "adress:write"})
+     * @Groups({"adress:read", "adress:write", "property:read"})
      */
     private $number;
 
@@ -40,7 +40,7 @@ class Address
      * 
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
-     * @Groups({"adress:read", "adress:write"})
+     * @Groups({"adress:read", "adress:write", "property:read"})
      * 
      */
     private $street;
@@ -55,7 +55,7 @@ class Address
      * min = 5,
      * max = 5,
      * exactMessage = "Votre code postal doit être composé de {{limit}} caractères.")
-     * @Groups({"adress:read", "adress:write"})
+     * @Groups({"adress:read", "adress:write", "property:read"})
      */
     private $postalCode;
 
@@ -68,7 +68,7 @@ class Address
      * minMessage = "La ville doit être supérieure à {{ limit }} caractères",
      * maxMessage = "La ville doit être inférieure à {{ limit }} caractères"
      * )
-     * @Groups({"adress:read", "adress:write"})
+     * @Groups({"adress:read", "adress:write", "property:read"})
      */
     private $town;
 
@@ -79,7 +79,7 @@ class Address
      * max = 80,
      * maxMessage = "La longueur du champ doit être inférieure à {{ limit }} caractères"
      * )
-     * @Groups({"adress:read", "adress:write"})
+     * @Groups({"adress:read", "adress:write", "property:read"})
      */
     private $region;
 
@@ -91,7 +91,7 @@ class Address
      * maxMessage = "La longueur du champ doit être inférieure à {{ limit }} caractères"
      * )
      * @Assert\Country
-     * @Groups({"adress:read", "adress:write"})
+     * @Groups({"adress:read", "adress:write", "property:read"})
      */
     private $country;
 

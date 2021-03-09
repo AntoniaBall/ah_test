@@ -25,38 +25,38 @@ class Equipment
     private $id;
 
     /**
-     * @Groups({"equipment:read", "equipment:write"})
+     * @Groups({"equipment:read", "equipment:write", "property:read"})
      * @ORM\Column(type="boolean")
      * 
      */
     private $pool;
 
     /**
-     * @Groups({"equipment:read", "equipment:write"})
+     * @Groups({"equipment:read", "equipment:write", "property:read"})
      * @ORM\Column(type="boolean")
      */
     private $baignoire;
 
     /**
-     * @Groups({"equipment:read", "equipment:write"})
+     * @Groups({"equipment:read", "equipment:write","property:read"})
      * @ORM\Column(type="boolean")
      */
     private $jaccuzzi;
 
     /**
-     * @Groups({"equipment:read", "equipment:write"})
+     * @Groups({"equipment:read", "equipment:write","property:read"})
      * @ORM\Column(type="boolean")
      */
     private $climatiseur;
 
     /**
-     * @Groups({"equipment:read", "equipment:write"})
+     * @Groups({"equipment:read", "equipment:write","property:read"})
      * @ORM\Column(type="boolean")
      */
     private $chauffage;
 
     /**
-     * @Groups({"equipment:read", "equipment:write"})
+     * @Groups({"equipment:read", "equipment:write","property:read"})
      * @ORM\Column(type="boolean")
      */
     private $wifi;

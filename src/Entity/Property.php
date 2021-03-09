@@ -13,6 +13,10 @@ use App\Validator\Constraints\MinimalProperties;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Controller\PropertyController;
+use App\Controller\ValidationPropertyController;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 
 /**
  * @ApiResource(attributes={
@@ -24,13 +28,23 @@ use App\Controller\PropertyController;
  *    "post"={"security"="is_granted('ROLE_PROPRIO')"}
  * },
  * itemOperations={
- *    "get",
- *    "put"={"security"="is_granted('ROLE_PROPRIO') and object.owner == user"},
- *    "patch"={"security"="is_granted('ROLE_ADMIN')", "denormalization_context"={"groups"={"admin:write"}}},
- *    "delete"={"security"="is_granted('ROLE_PROPRIO') or object.owner == user"},
+ *    "get"={"security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY') or is_granted('IS_AUTHENTICATED_FULLY')"},
+ *    "put"={"security"="object.getUser() == user"},
+ *    "patch"={"security"="is_granted('ROLE_ADMIN')", "denormalizationf058a0d7cd87e1584a2f6a4facef7ce02c3f4fabf058a0d7cd87e1584a2f6a4facef7ce02c3f4fab_context"={"groups"={"admin:write"}}},
+ *    "delete"={"security"="object.getUser() == user or is_granted('ROLE_ADMIN')"},
+ *    "patch"={
+ *          "security"="is_granted('ROLE_ADMIN')",
+ *          "denormalization_context"={"groups"={"admin:write"}},
+ *          "path"="/properties/{id}/status",
+ *          "controller"=ValidationPropertyController::class,
+ *          "security_message"="Only admin can validate a property"
+ *     }
  * }
  * )
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
+ * @ApiFilter(SearchFilter::class, properties={"id": "exact", "typeProperty": "exact", "title": "exact", "description": "exact", "equipment":"exact", "user":"exact", "disponibilities":"exact", "address.town":"exact", "activities":"exact", "disponibilities":"exact", "user": "exact", "maxTravelers": "exact"})
+ * @ApiFilter(RangeFilter::class, properties={"maxTravelers"})
+ * [ApiFilter(DateFilter::class, properties: ['disponibilities'])]
  */
 class Property
 {
@@ -121,7 +135,6 @@ class Property
     * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "disponibility:write", "activities:write"})
      * @Assert\NotNull
      * @ORM\Column(type="boolean")
-     * @Assert\NotBlank
      * @MinimalProperties
      */
     private $electricity;
@@ -159,7 +172,7 @@ class Property
      * @Assert\Valid
      */
     private $equipment;
-
+    
     /**
      * @Groups({"property:read", "property:write", "user:write", "address:write"})
      * 
@@ -191,7 +204,7 @@ class Property
     private $activities;
 
     /**
-     * @Groups({"property:read", "admin:write","user:write", "disponibility:write"})
+     * @Groups({"property:read", "admin:write", "user:write", "disponibility:write"})
      * @Assert\Type(
      *      type="string",
      *      message="This value must be a string"
