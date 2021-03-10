@@ -12,18 +12,25 @@ use App\Services\DateService;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use ApiPlatform\Core\Api\IriConverterInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class SearchController extends AbstractController
 {
     /**
-     * 
-     * @Route("api/properties/search", name="search")
+     * @param SerializerInterface $serializer
+     * @Route("api/properties/search",
+     *      name="search",
+     *      defaults={
+     *          "_api_resource_class"=Property::class,
+     *          "_api_collection_operation_name"="searchProperties"}     
+     * )
+     *     
      */
-    public function searchProperties(Request $request, DateService $dateService, IriConverterInterface $iriConverter,
-    NormalizerInterface $objectNormalizer)
+    public function __invoke(Request $request,DateService $dateService, IriConverterInterface $iriConverter,
+    NormalizerInterface $objectNormalizer, SerializerInterface $serializer)
     {
         $response = [];
-
+        
         $dateStart = (null === $request->query->get("dateStart") 
                     || "" === $request->query->get("dateEnd")) 
                     ? new \DateTime('now') : new \DateTime($request->query->get("dateStart"));
@@ -49,6 +56,7 @@ class SearchController extends AbstractController
         $dates = $dateService->displayDates($dateStart, $dateEnd);
 
         foreach($properties as $property){
+            
             $jourDispos = $this->getDoctrine()
                     ->getRepository(Disponibility::class)
                     ->getJourDisposBetweenDatesByProperty($property->getId(), $dateStart, $dateEnd);
@@ -57,7 +65,8 @@ class SearchController extends AbstractController
                 $response[] = $objectNormalizer->normalize($property, 'jsonld');
             }
         }
-        return $this->json($response);
+
+        return $response;
     }
 }
 
