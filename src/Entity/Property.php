@@ -215,6 +215,12 @@ class Property
      */
     private $status;
 
+    /**
+     * @Groups("property:read")
+     * @ORM\OneToMany(targetEntity=Propriete::class, mappedBy="typeProperty")
+     */
+    private $proprietes;
+
     public function __construct()
     {
         $this->status="draft";
@@ -520,6 +526,36 @@ class Property
     public function setStatus(string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+     /**
+     * @return Collection|Propriete[]
+     */
+    public function getProprietes(): Collection
+    {
+        return $this->proprietes;
+    }
+
+    public function addPropriete(Propriete $propriete): self
+    {
+        if (!$this->proprietes->contains($propriete)) {
+            $this->proprietes[] = $propriete;
+            $propriete->setTypeProperty($this);
+        }
+
+        return $this;
+    }
+
+    public function removePropriete(Propriete $propriete): self
+    {
+        if ($this->proprietes->removeElement($propriete)) {
+            // set the owning side to null (unless already changed)
+            if ($propriete->getTypeProperty() === $this) {
+                $propriete->setTypeProperty(null);
+            }
+        }
 
         return $this;
     }
