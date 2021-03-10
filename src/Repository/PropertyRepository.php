@@ -68,7 +68,7 @@ class PropertyRepository extends ServiceEntityRepository
                     ->andWhere('a.town = :town')
                    ->setParameter('town', $town);
             }
-
+            
             $query = $qb->getQuery();
 
             return $query->getResult();

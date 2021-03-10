@@ -48,25 +48,24 @@ class SearchController extends AbstractController
         $dates = $dateService->displayDates($dateStart, $dateEnd);
 
         foreach($properties as $property){
+
+            dump($property->getId());
             // retourne tous les jours dispos par biens
             $jourDispos = $this->getDoctrine()
                     ->getRepository(Disponibility::class)
-                    ->getPropertyDisponibilitiesByDay($property->getId());
+                    ->getJourDisposBetweenDatesByProperty($property->getId(), $dateStart, $dateEnd);
 
-            $dispos = $property->getDisponibilities();
-
-            $response["property"] = $property->getId();
-            $response["dates"] = $jourDispos;
-
-            foreach ($dates as $date){
-                // dump($date);
-                // dump(in_array("2021-04-01",$jourDispos));
-
+            if (array_diff($dates,$jourDispos["data"]) === []){
+                dump("property ok");
+            } else {
+                dump("property ko");
             }
-            // dump($response["dates"]);
+            $dispos = $property->getDisponibilities();
         }
-        // die();
-        return $properties;
+        die();
+        return $this->json([
+            'data' => $properties
+        ]);
     }
 }
 

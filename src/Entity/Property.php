@@ -13,6 +13,7 @@ use App\Validator\Constraints\MinimalProperties;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Controller\PropertyController;
+use App\Controller\SearchController;
 use App\Controller\ValidationPropertyController;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;

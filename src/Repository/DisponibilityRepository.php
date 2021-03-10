@@ -19,13 +19,14 @@ class DisponibilityRepository extends ServiceEntityRepository
         parent::__construct($registry, Disponibility::class);
     }
 
-
-    public function getPropertyDisponibilitiesByDay($property){
-
+    public function getJourDisposBetweenDatesByProperty($property, $dateStart, $dateEnd){
         $qb = $this->createQueryBuilder('d')
         ->select('d.jourDispo')
         ->andWhere('d.property = :val')
         ->setParameter('val', $property)
+        ->andWhere('d.jourDispo >= :dateStart and d.jourDispo<= :dateEnd')
+        ->setParameter('dateStart', $dateStart)
+        ->setParameter('dateEnd', $dateEnd)
         ->getQuery()
         ->getResult()
         ;
