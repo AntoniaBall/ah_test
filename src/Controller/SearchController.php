@@ -13,13 +13,12 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SearchController extends AbstractController
 {
-
     /**
+     * 
      * @Route("api/properties/search", name="search")
      */
     public function searchProperties(Request $request, DateService $dateService)
     {
-
         $response = [];
         $toRemove = [];
 
@@ -67,7 +66,7 @@ class SearchController extends AbstractController
             // dump($response["dates"]);
         }
         // die();
-        return new Response (["data" => $response]);
+        return $properties;
     }
 }
 

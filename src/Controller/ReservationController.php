@@ -22,7 +22,7 @@ class ReservationController extends AbstractController
     private $security;
     private $paimentService;
     private $params;
-
+    
     public function __construct(PaymentService $paiementService, ParameterBagInterface $params, Security $security)
     {
         $this->paimentService = $paiementService;

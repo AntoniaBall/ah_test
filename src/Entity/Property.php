@@ -189,7 +189,7 @@ class Property
      * @ORM\OneToMany(targetEntity=Disponibility::class, mappedBy="property", cascade={"persist", "remove"})
      */
     private $disponibilities;
-
+    
     /**
      * @var Pictures|null
      * @Groups({"property:read", "property:write", "user:write", "picture:write"})
