@@ -25,7 +25,12 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  * },
  * collectionOperations={
  *    "get",
- *    "post"={"security"="is_granted('ROLE_PROPRIO')"}
+ *    "post"={"security"="is_granted('ROLE_PROPRIO')"},
+ *    "search"={
+ *          "method"="GET",
+ *          "controller"=SearchController::class,
+ *          "path"="properties/search"
+ *      }
  * },
  * itemOperations={
  *    "get"={"security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY') or is_granted('IS_AUTHENTICATED_FULLY')"},

@@ -10,6 +10,8 @@ use App\Entity\Property;
 use App\Entity\Disponibility;
 use App\Services\DateService;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use ApiPlatform\Core\Api\IriConverterInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class SearchController extends AbstractController
 {
@@ -17,10 +19,10 @@ class SearchController extends AbstractController
      * 
      * @Route("api/properties/search", name="search")
      */
-    public function searchProperties(Request $request, DateService $dateService)
+    public function searchProperties(Request $request, DateService $dateService, IriConverterInterface $iriConverter,
+    NormalizerInterface $objectNormalizer)
     {
         $response = [];
-        $toRemove = [];
 
         $dateStart = (null === $request->query->get("dateStart") 
                     || "" === $request->query->get("dateEnd")) 
@@ -31,7 +33,6 @@ class SearchController extends AbstractController
         }
 
         $dateEnd = null === $request->query->get("dateEnd") || "" === $request->query->get("dateEnd")
-                        // || new \DateTime($request->query->get("dateStart")) > new \DateTime($request->query->get("dateEnd"))
                         ? new \DateTime($request->query->get("dateStart")) : new \DateTime($request->query->get("dateEnd"));
         
         $town = $request->query->get("town");
@@ -48,24 +49,15 @@ class SearchController extends AbstractController
         $dates = $dateService->displayDates($dateStart, $dateEnd);
 
         foreach($properties as $property){
-
-            dump($property->getId());
-            // retourne tous les jours dispos par biens
             $jourDispos = $this->getDoctrine()
                     ->getRepository(Disponibility::class)
                     ->getJourDisposBetweenDatesByProperty($property->getId(), $dateStart, $dateEnd);
 
             if (array_diff($dates,$jourDispos["data"]) === []){
-                dump("property ok");
-            } else {
-                dump("property ko");
+                $response[] = $objectNormalizer->normalize($property, 'jsonld');
             }
-            $dispos = $property->getDisponibilities();
         }
-        die();
-        return $this->json([
-            'data' => $properties
-        ]);
+        return $this->json($response);
     }
 }
 
