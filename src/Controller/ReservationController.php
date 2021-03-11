@@ -22,7 +22,7 @@ class ReservationController extends AbstractController
     private $security;
     private $paimentService;
     private $params;
-
+    
     public function __construct(PaymentService $paiementService, ParameterBagInterface $params, Security $security)
     {
         $this->paimentService = $paiementService;
@@ -53,7 +53,7 @@ class ReservationController extends AbstractController
         
         // trouver toutes les réservations de ce bien
         $em = $this->getDoctrine()->getManager();
-        
+
         foreach($periodes as $period){
             $isDisponible = $this->getDoctrine()
                                 ->getRepository(Reservation::class)
@@ -65,7 +65,8 @@ class ReservationController extends AbstractController
         }
         
         if($data->getNumberTraveler() > $data->getProperty()->getMaxTravelers()) {
-            throw new HttpException(400, "Le nombre de voyageurs est supérieur à la capacité du bien que vous voulez réserver");
+            throw new HttpException(400, "Le nombre de voyageurs est supérieur 
+            à la capacité du bien que vous voulez réserver");
         }
         
         // vérifier que l'utilisateur n'a pas plus de 2 reservations en attente

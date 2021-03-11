@@ -19,22 +19,29 @@ class DisponibilityRepository extends ServiceEntityRepository
         parent::__construct($registry, Disponibility::class);
     }
 
-    // /**
-    //  * @return Disponibility[] Returns an array of Disponibility objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+    public function getJourDisposBetweenDatesByProperty($property, $dateStart, $dateEnd){
+        $qb = $this->createQueryBuilder('d')
+        ->select('d.jourDispo')
+        ->andWhere('d.property = :val')
+        ->setParameter('val', $property)
+        ->andWhere('d.jourDispo >= :dateStart and d.jourDispo<= :dateEnd')
+        ->setParameter('dateStart', $dateStart)
+        ->setParameter('dateEnd', $dateEnd)
+        ->getQuery()
+        ->getResult()
         ;
+
+        $response = [];
+
+        $response["property"] = $property;
+        foreach ($qb as $rowDispo){
+            $jours []= $rowDispo["jourDispo"]->format('Y-m-d');
+        }
+        
+        $response["data"] = $jours;
+
+        return $response;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Disponibility
@@ -47,4 +54,40 @@ class DisponibilityRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+    * @return Disponibility[] Returns an array of Disponibility objects
+    */
+    public function findDisponibilitiesBetweenDates($dateStart, $dateEnd){
+        $qb = $this->createQueryBuilder('d')
+            ->andWhere('d.property = :val')
+            ->setParameter('val', $propertyId)
+            ->orderBy('d.id', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        dump($qb);
+
+        return $qb;
+    }
+
+    /**
+    * @return Disponibility[] Returns an array of Disponibility objects
+    */
+    public function findDisponibilitiesByJourDispo($property, $jourDispo){
+
+        $qb = $this->createQueryBuilder('d')
+        ->andWhere('d.jourDispo = :val')
+            ->setParameter('val', $jourDispo)
+            ->andWhere('d.property = :val')
+            ->setParameter('val', $property)
+            ->getQuery()
+            ->getResult();
+
+        dump($qb);
+
+        return $qb;
+        ;
+    }
 }
