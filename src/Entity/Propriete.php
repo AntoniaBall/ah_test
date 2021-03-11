@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
+ *  attributes={"fetchEager": true},
  *   normaizationContext={"groups"={"propriete:list"}},
  *  collectionoperations={
  *       "get",
@@ -43,7 +44,7 @@ class Propriete
     private $id;
 
     /**
-     * @Groups({"propriete:list"})
+     * @Groups({"propriete:list", "typeproperty:read","property:read",  "typeproperty:write"})
      * @ORM\Column(type="string", length=100)
      */
     private $nom;
@@ -56,10 +57,17 @@ class Propriete
     private $typeProperty;
 
     /**
-     * @Groups({"propriete:list"})
+     * @Groups({"propriete:list", "typeproperty:read","property:read",  "typeproperty:write" })
      * @ORM\Column(type="string")
      */
     private $type ;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Property::class, mappedBy="proprieties")
+     */
+    private $properties;
+
+  
 
     
 
@@ -68,6 +76,8 @@ class Propriete
         $this->proprieteTypeProperties = new ArrayCollection();
         $this->valeurBools = new ArrayCollection();
         $this->valuerStrings = new ArrayCollection();
+        $this->typeProperty = new ArrayCollection();
+        $this->properties = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,5 +122,34 @@ class Propriete
 
         return $this;
     }
+
+    /**
+     * @return Collection|Property[]
+     */
+    public function getProperties(): Collection
+    {
+        return $this->properties;
+    }
+
+    public function addProperty(Property $property): self
+    {
+        if (!$this->properties->contains($property)) {
+            $this->properties[] = $property;
+            $property->addPropriety($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProperty(Property $property): self
+    {
+        if ($this->properties->removeElement($property)) {
+            $property->removePropriety($this);
+        }
+
+        return $this;
+    }
+
+  
 
 }

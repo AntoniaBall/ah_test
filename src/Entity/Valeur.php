@@ -41,24 +41,30 @@ class Valeur
      * @ORM\Column(type="integer")
      */
     private $id;
+    
 
     /**
+     * @Groups({"valeur:list", "propriete:list", "typeproperty:read","property:read","property:write"})
      * @ORM\Column(type="integer")
      */
     private $valeur;
 
     /**
+     * @Groups({"valeur:list", "propriete:list", "typeproperty:read","property:read","property:write"})
      * @ORM\ManyToOne(targetEntity=Propriete::class)
      */
     private $name;
 
+   
     /**
-     * @ORM\ManyToOne(targetEntity=property::class)
+     * @Groups({"valeur:list", "typeproperty:read", "property:write"})
+     * @ORM\ManyToOne(targetEntity=property::class, inversedBy="valeur_int")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $property_id;
+    private $property;
 
-    private $proprieteTypeProperties;
+
+   
 
     public function __construct()
     {
@@ -94,14 +100,15 @@ class Valeur
         return $this;
     }
 
-    public function getPropertyId(): ?property
+   
+    public function getProperty(): ?property
     {
-        return $this->property_id;
+        return $this->property;
     }
 
-    public function setPropertyId(?property $property_id): self
+    public function setProperty(?property $property): self
     {
-        $this->property_id = $property_id;
+        $this->property = $property;
 
         return $this;
     }

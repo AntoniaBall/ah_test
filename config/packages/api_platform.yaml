@@ -9,7 +9,7 @@ api_platform:
             apiKey:
                 name: Authorization
                 type: header
-    eager_loading:
-        fetch_partial: true
+    eager_loading :
+        force_eager : false
     messenger:
         enabled: true

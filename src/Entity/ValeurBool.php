@@ -6,6 +6,15 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ValeurBoolRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use function Symfony\Component\String\u;
+
+
 /**
  *@ApiResource(normaizationContext={"groups"={"valeurBool:list"}},
  *   collectionoperations={
@@ -36,24 +45,25 @@ class ValeurBool
      * @ORM\Column(type="integer")
      */
     private $id;
-
+    
     /**
-     
+     * @Groups({"valeurBool:list", "propriete:list", "typeproperty:read", "property:read","property:write"})
      * @ORM\Column(type="boolean")
      */
     private $Valeur;
 
     /**
-     
+     * @Groups({"valeurBool:list", "typeproperty:read", "property:read"})
      * @ORM\ManyToOne(targetEntity=Propriete::class)
      */
     private $name;
-
+    
     /**
-     * @ORM\ManyToOne(targetEntity=property::class)
+     * @Groups({"valeurBool:list", "typeproperty:read", "property:read"})
+     * @ORM\ManyToOne(targetEntity=property::class, inversedBy="valeur_bool")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $property_id;
+    private $property;
   
 
 
@@ -87,14 +97,15 @@ class ValeurBool
     }
 
     
-    public function getPropertyId(): ?property
+
+    public function getProperty(): ?property
     {
-        return $this->property_id;
+        return $this->property;
     }
 
-    public function setPropertyId(?property $property_id): self
+    public function setProperty(?property $property): self
     {
-        $this->property_id = $property_id;
+        $this->property = $property;
 
         return $this;
     }

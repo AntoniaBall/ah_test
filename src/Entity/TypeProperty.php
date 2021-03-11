@@ -38,7 +38,7 @@ class TypeProperty
     private $description;
     
     /**
-     * @Groups("typeproperty:read")
+     * @Groups("typeproperty:read",  "typeproperty:write")
      * @ORM\OneToMany(targetEntity=Property::class, mappedBy="typeProperty", orphanRemoval=true)
      */
     private $properties;
@@ -49,7 +49,7 @@ class TypeProperty
     private $proprieteTypeProperties;
 
     /**
-     * @Groups("typeproperty:read")
+     * @Groups({"typeproperty:read", "property:read"})
      * @ORM\OneToMany(targetEntity=Propriete::class, mappedBy="typeProperty")
      */
     private $proprietes;

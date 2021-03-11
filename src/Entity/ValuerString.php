@@ -6,6 +6,13 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ValuerStringRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use function Symfony\Component\String\u;
+
 /**
  * @ApiResource(normaizationContext={"groups"={"valeurString:list"}},
  *   collectionoperations={
@@ -38,20 +45,23 @@ class ValuerString
     private $id;
 
     /**
+     * @Groups({"valeurString:list", "propriete:list", "typeproperty:read", "property:read","property:write"})
      * @ORM\Column(type="string", length=255)
      */
     private $valeur;
 
     /**
+     * @Groups({"valeurString:list", "typeproperty:read", "property:read"})
      * @ORM\ManyToOne(targetEntity=Propriete::class)
      */
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity=property::class)
+     * @Groups({"valeurString:list", "typeproperty:read", "property:read"})
+     * @ORM\ManyToOne(targetEntity=property::class, inversedBy="valeur_string")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $property_id;
+    private $property;
 
  
 
@@ -86,14 +96,16 @@ class ValuerString
         return $this;
     }
 
-    public function getPropertyId(): ?property
+   
+
+    public function getProperty(): ?property
     {
-        return $this->property_id;
+        return $this->property;
     }
 
-    public function setPropertyId(?property $property_id): self
+    public function setProperty(?property $property): self
     {
-        $this->property_id = $property_id;
+        $this->property = $property;
 
         return $this;
     }
