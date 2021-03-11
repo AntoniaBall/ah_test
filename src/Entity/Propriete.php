@@ -96,9 +96,7 @@ class Propriete
 
         return $this;
     }
-
-  
-
+    
     public function getTypeProperty(): ?typeproperty
     {
         return $this->typeProperty;
