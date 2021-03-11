@@ -39,7 +39,7 @@ final class CurrentUserExtensions implements QueryCollectionExtensionInterface, 
         }
 
         $rootAlias = $queryBuilder->getRootAliases()[0];
-
+        
         // si l'utilisateur est un locataire voir les réservations uniquement faites par lui
         if ($this->security->isGranted('ROLE_USER')){
             $queryBuilder->andWhere(sprintf('%s.user = :current_user', $rootAlias));
@@ -58,9 +58,11 @@ final class CurrentUserExtensions implements QueryCollectionExtensionInterface, 
             
             // dump($queryBuilder->getQuery());
         }
+        
     }
     private function getItem(QueryBuilder $queryBuilder, string $resourceClass): void
     {
+        
         // if ($this->security->isGranted('ROLE_PROPRIO')){
         // $rootAlias = $queryBuilder->getRootAliases()[0];
         // if ($this->security->isGranted('ROLE_USER')){
