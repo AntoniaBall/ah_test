@@ -215,33 +215,6 @@ class Property
      */
     private $status;
 
-  
-    /**
-     * @Groups("property:read",  "typeproperty:read")
-     * @ORM\ManyToMany(targetEntity=Propriete::class, inversedBy="properties")
-     */
-    private $proprieties;
-
-    /**
-     * @Groups("property:read", "property:write", "user:write", "propriete:list","typeproperty:read","valeur:list")
-     * @ORM\OneToMany(targetEntity=Valeur::class, mappedBy="property")
-     */
-    private $valeur_int;
-
-    /**
-     * @Groups("property:read", "property:write", "user:write", "propriete:list", "typeproperty:read")
-     * @ORM\OneToMany(targetEntity=ValeurBool::class, mappedBy="property")
-     */
-    private $valeur_bool;
-
-    /**
-     * @Groups("property:read", "property:write", "user:write", "propriete:list", "typeproperty:read")
-     * @ORM\OneToMany(targetEntity=ValuerString::class, mappedBy="property")
-     */
-    private $valeur_string;
-
-  
-    
 
     public function __construct()
     {
@@ -250,11 +223,6 @@ class Property
         $this->disponibilities = new ArrayCollection();
         $this->pictures = new ArrayCollection();
         $this->activities = new ArrayCollection();
-        $this->proprietes = new ArrayCollection();
-        $this->proprieties = new ArrayCollection();
-        $this->valeur_int = new ArrayCollection();
-        $this->valeur_bool = new ArrayCollection();
-        $this->valeur_string = new ArrayCollection();
         $this->valeurs = new ArrayCollection();
     }
 
@@ -554,104 +522,7 @@ class Property
     public function setStatus(string $status): self
     {
         $this->status = $status;
-
+        
         return $this;
     }
-
-    
-
-    
-    /**
-     * @return Collection|propriete[]
-     */
-    public function getProprieties(): Collection
-    {
-        return $this->proprieties;
-    }
-
-    public function addPropriety(propriete $propriety): self
-    {
-        if (!$this->proprieties->contains($propriety)) {
-            $this->proprieties[] = $propriety;
-        }
-
-        return $this;
-    }
-
-    public function removePropriety(propriete $propriety): self
-    {
-        $this->proprieties->removeElement($propriety);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Valeur[]
-     */
-    public function getValeurInt(): Collection
-    {
-        return $this->valeur_int;
-    }
-
-    public function addValeurInt(Valeur $valeurInt): self
-    {
-        if (!$this->valeur_int->contains($valeurInt)) {
-            $this->valeur_int[] = $valeurInt;
-            $valeurInt->setProperty($this);
-        }
-
-        return $this;
-    }
-
-    public function removeValeurInt(Valeur $valeurInt): self
-    {
-        if ($this->valeur_int->removeElement($valeurInt)) {
-            // set the owning side to null (unless already changed)
-            if ($valeurInt->getProperty() === $this) {
-                $valeurInt->setProperty(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Valeurbool[]
-     */
-    public function getValeurBool(): Collection
-    {
-        return $this->valeur_bool;
-    }
-
-    /**
-     * @return Collection|Valuerstring[]
-     */
-    public function getValeurString(): Collection
-    {
-        return $this->valeur_string;
-    }
-
-    public function addValeurString(Valuerstring $valeurString): self
-    {
-        if (!$this->valeur_string->contains($valeurString)) {
-            $this->valeur_string[] = $valeurString;
-            $valeurString->setProperty($this);
-        }
-
-        return $this;
-    }
-
-    public function removeValeurString(Valuerstring $valeurString): self
-    {
-        if ($this->valeur_string->removeElement($valeurString)) {
-            // set the owning side to null (unless already changed)
-            if ($valeurString->getProperty() === $this) {
-                $valeurString->setProperty(null);
-            }
-        }
-
-        return $this;
-    }
-
-
 }

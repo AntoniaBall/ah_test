@@ -44,7 +44,7 @@ class TypeProperty
     private $properties;
 
     /**
-     * @ORM\OneToMany(targetEntity=ProprieteTypeProperty::class, mappedBy="type_property")
+     * @ORM\OneToMany(targetEntity=ProprieteTypeProperty::class, mappedBy="typeProperty")
      */
     private $proprieteTypeProperties;
 

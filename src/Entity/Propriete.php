@@ -49,7 +49,6 @@ class Propriete
      */
     private $nom;
 
-   
     /**
      * @Groups("propriete:list")
      * @ORM\ManyToOne(targetEntity=typeproperty::class, inversedBy="proprietes")
@@ -59,25 +58,15 @@ class Propriete
     /**
      * @Groups({"propriete:list", "typeproperty:read","property:read",  "typeproperty:write" })
      * @ORM\Column(type="string")
+     * @Assert\Choice({"integer","booleen","string"})
      */
-    private $type ;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Property::class, mappedBy="proprieties")
-     */
-    private $properties;
-
-  
-
-    
+    private $type;
 
     public function __construct()
     {
         $this->proprieteTypeProperties = new ArrayCollection();
         $this->valeurBools = new ArrayCollection();
         $this->valuerStrings = new ArrayCollection();
-        $this->typeProperty = new ArrayCollection();
-        $this->properties = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -97,12 +86,12 @@ class Propriete
         return $this;
     }
     
-    public function getTypeProperty(): ?typeproperty
+    public function getTypeProperty(): ?TypeProperty
     {
         return $this->typeProperty;
     }
 
-    public function setTypeProperty(?typeproperty $typeProperty): self
+    public function setTypeProperty(?TypeProperty $typeProperty): self
     {
         $this->typeProperty = $typeProperty;
 
@@ -120,34 +109,4 @@ class Propriete
 
         return $this;
     }
-
-    /**
-     * @return Collection|Property[]
-     */
-    public function getProperties(): Collection
-    {
-        return $this->properties;
-    }
-
-    public function addProperty(Property $property): self
-    {
-        if (!$this->properties->contains($property)) {
-            $this->properties[] = $property;
-            $property->addPropriety($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProperty(Property $property): self
-    {
-        if ($this->properties->removeElement($property)) {
-            $property->removePropriety($this);
-        }
-
-        return $this;
-    }
-
-  
-
 }

@@ -25,7 +25,7 @@ class ProprieteTypeProperty
      * @Groups("proprietetypeproperty:read")
      * @ORM\ManyToOne(targetEntity=TypeProperty::class, inversedBy="proprieteTypeProperties")
      */
-    private $type_property;
+    private $typeProperty;
 
 
     public function getId(): ?int
@@ -36,12 +36,12 @@ class ProprieteTypeProperty
 
     public function getTypeProperty(): ?TypeProperty
     {
-        return $this->type_property;
+        return $this->typeProperty;
     }
 
-    public function setTypeProperty(?TypeProperty $type_property): self
+    public function setTypeProperty(?TypeProperty $typeProperty): self
     {
-        $this->type_property = $type_property;
+        $this->typeProperty = $typeProperty;
 
         return $this;
     }
