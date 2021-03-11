@@ -181,8 +181,6 @@ class Property
      */
     private $address;
 
-    
-
     /**
      * @Groups({"property:read", "property:write", "user:write", "disponibility:write", "reservation:read"})
      * @ORM\OneToMany(targetEntity=Disponibility::class, mappedBy="property", cascade={"persist", "remove"})
@@ -216,8 +214,8 @@ class Property
     private $status;
 
     /**
-     * @Groups({"property:read"})
-     * @ORM\OneToMany(targetEntity=Valeur::class, mappedBy="bien")
+     * @Groups({"property:read","property:write", "valeur:write"})
+     * @ORM\OneToMany(targetEntity=Valeur::class, mappedBy="bien", cascade={"persist", "remove"})
      */
     private $valeurs;
 

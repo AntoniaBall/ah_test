@@ -5,8 +5,13 @@ namespace App\Entity;
 use App\Repository\ValeurRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"valeur:read", "enable_max_depth"=true}},
+ *     "denormalization_context"={"groups"={"valeur:write"}}
+ * })
  * @ORM\Entity(repositoryClass=ValeurRepository::class)
  */
 class Valeur
@@ -17,22 +22,21 @@ class Valeur
      * @ORM\Column(type="integer")
      */
     private $id;
-
     /**
-     * @Groups({"property:read"})
-     * @ORM\Column(type="string", length=100)
-     */
-    private $valeur;
-    
-    /**
-     * @Groups({"property:read"})
-     * @ORM\ManyToOne(targetEntity=Propriete::class, inversedBy="valeurs")
+     * @Groups({"property:read", "property:write"   })
+     * @ORM\ManyToOne(targetEntity=Propriete::class, inversedBy="values")
      * @ORM\JoinColumn(nullable=false)
      */
     private $propriete;
-    
+
     /**
-     * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="valeurs")
+     * @Groups({"property:read", "property:write"})
+     * @ORM\Column(type="string", length=100)
+     */
+    private $value;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="values")
      * @ORM\JoinColumn(nullable=false)
      */
     private $bien;
@@ -43,14 +47,14 @@ class Valeur
         return $this->id;
     }
 
-    public function getValeur(): ?string
+    public function getValue(): ?string
     {
-        return $this->valeur;
+        return $this->value;
     }
 
-    public function setValeur(string $valeur): self
+    public function setValue(string $value): self
     {
-        $this->valeur = $valeur;
+        $this->value = $value;
 
         return $this;
     }
