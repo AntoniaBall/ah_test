@@ -215,6 +215,12 @@ class Property
      */
     private $status;
 
+    /**
+     * @Groups({"property:read"})
+     * @ORM\OneToMany(targetEntity=Valeur::class, mappedBy="bien")
+     */
+    private $valeurs;
+
 
     public function __construct()
     {
@@ -523,6 +529,36 @@ class Property
     {
         $this->status = $status;
         
+        return $this;
+    }
+
+    /**
+     * @return Collection|Valeur[]
+     */
+    public function getValeurs(): Collection
+    {
+        return $this->valeurs;
+    }
+
+    public function addValeur(Valeur $valeur): self
+    {
+        if (!$this->valeurs->contains($valeur)) {
+            $this->valeurs[] = $valeur;
+            $valeur->setBien($this);
+        }
+
+        return $this;
+    }
+
+    public function removeValeur(Valeur $valeur): self
+    {
+        if ($this->valeurs->removeElement($valeur)) {
+            // set the owning side to null (unless already changed)
+            if ($valeur->getBien() === $this) {
+                $valeur->setBien(null);
+            }
+        }
+
         return $this;
     }
 }

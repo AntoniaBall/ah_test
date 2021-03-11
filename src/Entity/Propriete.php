@@ -62,11 +62,17 @@ class Propriete
      */
     private $type;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Valeur::class, mappedBy="propriete")
+     */
+    private $valeurs;
+
     public function __construct()
     {
         $this->proprieteTypeProperties = new ArrayCollection();
         $this->valeurBools = new ArrayCollection();
         $this->valuerStrings = new ArrayCollection();
+        $this->valeurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -106,6 +112,36 @@ class Propriete
     public function setType(string $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Valeur[]
+     */
+    public function getValeurs(): Collection
+    {
+        return $this->valeurs;
+    }
+
+    public function addValeur(Valeur $valeur): self
+    {
+        if (!$this->valeurs->contains($valeur)) {
+            $this->valeurs[] = $valeur;
+            $valeur->setPropriete($this);
+        }
+
+        return $this;
+    }
+
+    public function removeValeur(Valeur $valeur): self
+    {
+        if ($this->valeurs->removeElement($valeur)) {
+            // set the owning side to null (unless already changed)
+            if ($valeur->getPropriete() === $this) {
+                $valeur->setPropriete(null);
+            }
+        }
 
         return $this;
     }
