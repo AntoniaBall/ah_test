@@ -13,7 +13,6 @@ use App\Validator\Constraints\MinimalProperties;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Controller\PropertyController;
-use App\Controller\SearchController;
 use App\Controller\ValidationPropertyController;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
@@ -26,8 +25,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
  * },
  * collectionOperations={
  *    "get",
- *    "post"={"security"="is_granted('ROLE_PROPRIO')"},
- *    "searchProperties"={"route_name"="search"}
+ *    "post"={"security"="is_granted('ROLE_PROPRIO')"}
  * },
  * itemOperations={
  *    "get"={"security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY') or is_granted('IS_AUTHENTICATED_FULLY')"},
@@ -56,7 +54,7 @@ class Property
      * @ORM\Column(type="integer")
      */
     private $id;
-    
+
     /**
      * @Groups({"property:read", "property:write", "reservation:read", "typeproperty:read", "user:write", "picture:write", "indisponibility:write", "activities:write"})
      * @ORM\Column(type="string", length=100)
@@ -190,7 +188,7 @@ class Property
      * @ORM\OneToMany(targetEntity=Disponibility::class, mappedBy="property", cascade={"persist", "remove"})
      */
     private $disponibilities;
-    
+
     /**
      * @var Pictures|null
      * @Groups({"property:read", "property:write", "user:write", "picture:write"})

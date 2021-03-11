@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-
 /**
  * @ApiResource(
  *     iri="http://schema.org/MediaObject",
@@ -78,7 +77,7 @@ class Pictures
      * @ORM\Column(type="integer")
      */
     private $maxSize;
-
+    
     /**
      * @ORM\Column(type="array")
      */
