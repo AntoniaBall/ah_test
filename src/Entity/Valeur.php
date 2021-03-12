@@ -47,7 +47,7 @@ class Valeur
     private $bien;
 
     /**
-     * @Groups({"valeur:write","valeur:read","property:write"})
+     * @Groups({"valeur:write","valeur:read","property:write", "property:read","valeur:read"})
      */
     private $value;
 
@@ -69,16 +69,13 @@ class Valeur
     {
         if ($this->propriete->getType() === "booleen"){
             $this->savedValue = var_export($value, true);
-            var_dump($this->savedValue);
         }
 
         if ($this->propriete->getType() === "integer"){
-            var_dump("integer");
             $this->savedValue = (string)$value;
         }
         
         if ($this->propriete->getType() === "string"){
-            var_dump("string");
             $this->savedValue = (string)$value;
         }
         return $this;
@@ -109,7 +106,6 @@ class Valeur
     }
 
     /*
-    *@Groups({"valeur:read","property:read"})
     */
     public function getValue(){
         if ($this->propriete->getType() === "booleen"){
