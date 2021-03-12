@@ -66,7 +66,6 @@ final class BienPersister implements ContextAwareDataPersisterInterface
         ->setBody('Bonjour '.$property->getUser()->getEmail().' your property has been '.$property->getStatus().'by Atypik\'House');
 
         $this->mailer->send($message);
-
     }
 
     private function transformData(Property $property){

@@ -28,26 +28,26 @@ class Valeur
     private $id;
 
     /**
-     * @Groups({"property:read", "property:write"})
+     * @Groups({"property:read", "property:write", "valeur:write"})
      * @ORM\ManyToOne(targetEntity=Propriete::class, inversedBy="valeurs")
      * @ORM\JoinColumn(nullable=false)
      */
     private $propriete;
 
     /**
-     * @Groups({"valeur:read","property:read"})
      * @ORM\Column(type="string", length=100)
      */
     private $savedValue;
 
     /**
+     * @Groups({"valeur:write"})
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="valeurs")
      * @ORM\JoinColumn(nullable=false)
      */
     private $bien;
 
     /**
-     * @Groups({"valeur:write","property:write"})
+     * @Groups({"valeur:write","valeur:read","property:write"})
      */
     private $value;
 
@@ -108,7 +108,20 @@ class Valeur
         return $this;
     }
 
+    /*
+    *@Groups({"valeur:read","property:read"})
+    */
     public function getValue(){
+        if ($this->propriete->getType() === "booleen"){
+            $this->value = (bool)$this->savedValue;
+        }
+        if ($this->propriete->getType() === "string"){
+            $this->value = (string)$this->savedValue;
+
+        }
+        if ($this->propriete->getType() === "integer"){
+            $this->value = (int)$this->savedValue;
+        }
         return $this->value;
     }
 
