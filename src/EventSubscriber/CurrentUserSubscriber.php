@@ -48,10 +48,10 @@ final class CurrentUserSubscriber implements EventSubscriberInterface
         $object->setAuteur($this->tokenStorage->getToken()->getUser());
         $event->setControllerResult($object);
         }
-        if ($object instanceof Valeur) {        
-        $object->setAuthor($this->tokenStorage->getToken()->getUser());
-        $event->setControllerResult($object);
-        }
+        // if ($object instanceof Valeur) {        
+        // $object->setAuthor($this->tokenStorage->getToken()->getUser());
+        // $event->setControllerResult($object);
+        // }
         if ($object instanceof Property){
             // $object->setUser($this->tokenStorage->getToken()->getUser());
             // $event->setControllerResult($object);

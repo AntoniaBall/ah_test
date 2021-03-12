@@ -25,7 +25,9 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
  * },
  * collectionOperations={
  *    "get",
- *    "post"={"security"="is_granted('ROLE_PROPRIO')"}
+ *    "post"={
+ *          "security"="is_granted('ROLE_PROPRIO')"
+ *    }
  * },
  * itemOperations={
  *    "get"={"security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY') or is_granted('IS_AUTHENTICATED_FULLY')"},
@@ -122,7 +124,7 @@ class Property
      * @ORM\Column(type="boolean")
      */
     private $accessHandicap;
-    
+
     /**
      * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "disponibility:write", "activities:write"})
      * @Assert\NotNull
@@ -214,7 +216,7 @@ class Property
     private $status;
 
     /**
-     * @Groups({"property:read","property:write", "valeur:write"})
+     * @Groups({"property:read","property:write","valeur:write"})
      * @ORM\OneToMany(targetEntity=Valeur::class, mappedBy="bien", cascade={"persist", "remove"})
      */
     private $valeurs;

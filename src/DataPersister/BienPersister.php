@@ -5,16 +5,20 @@ namespace App\DataPersister;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use App\Entity\Property;
 // use Symfony\Component\Mailer\MailerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 final class BienPersister implements ContextAwareDataPersisterInterface
 {
     private $decorated;
+    private $entityManager;
     private $mailer;
 
-    public function __construct(ContextAwareDataPersisterInterface $decorated, \Swift_Mailer $mailer)
+    public function __construct(ContextAwareDataPersisterInterface $decorated,
+    \Swift_Mailer $mailer,EntityManagerInterface $entityManager)
     {
         $this->decorated = $decorated;
         $this->mailer = $mailer;
+        $this->entityManager = $entityManager;
     }
 
     public function supports($data, array $context = []): bool
@@ -29,6 +33,7 @@ final class BienPersister implements ContextAwareDataPersisterInterface
         // quand un bien est ajouté par un propriétaire
         if ($data instanceof Property && (($context['collection_operation_name'] ?? null) === 'post')) {
             $this->sendAddPropertyEmail($data);
+            $this->transformData($data);
         }
 
         // quand le statut d'un bien est accepté ou rejeté par l'administrateur
@@ -48,8 +53,8 @@ final class BienPersister implements ContextAwareDataPersisterInterface
         $message=(new \Swift_Message('post property'))
         ->setFrom('admin@yopmail.com')
         ->setTo('antonia.balluais@gmail.com')
-        ->setBody('Bonjour '.$property->getUser()->getEmail().'Votre bien est en cours d\'etude par notre equipe. Nous vous informerons bientot des que nous avons une reponse');
-
+        ->setBody('Bonjour '.$property->getUser()->getEmail().
+            'Votre bien est en cours d\'etude.Nous vous informerons bientot des que nous avons une reponse');
         $this->mailer->send($message);
     }
 
@@ -61,6 +66,19 @@ final class BienPersister implements ContextAwareDataPersisterInterface
         ->setBody('Bonjour '.$property->getUser()->getEmail().' your property has been '.$property->getStatus().'by Atypik\'House');
 
         $this->mailer->send($message);
+
+    }
+
+    private function transformData(Property $property){
+        $valeurs = $property->getValeurs();
+
+        foreach ($valeurs as $valeur){
+            dump("beyonce");
+            $valeur->setSavedValue(($valeur->getValue()));
+            $valeur->getSavedValue();
+            $this->entityManager->persist($valeur);
+            $this->entityManager->flush();
+        }
 
     }
 }
