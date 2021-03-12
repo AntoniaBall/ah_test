@@ -22,8 +22,9 @@ class Valeur
      * @ORM\Column(type="integer")
      */
     private $id;
+
     /**
-     * @Groups({"property:read", "property:write"   })
+     * @Groups({"property:read", "property:write"})
      * @ORM\ManyToOne(targetEntity=Propriete::class, inversedBy="values")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -54,7 +55,22 @@ class Valeur
 
     public function setValue(string $value): self
     {
-        $this->value = $value;
+        // dump((bool)"0");
+        if ($this->propriete->getType() === "booleen"){
+            dump("booleen");
+            dump((bool)$value);
+            $this->value = (bool)$value;
+        }
+        
+        if ($this->propriete->getType() === "integer"){
+            dump("integer");
+            $this->value = (int)$value;
+        }
+
+        if ($this->propriete->getType() === "string"){
+            $this->value = $value;
+        }
+
 
         return $this;
     }
