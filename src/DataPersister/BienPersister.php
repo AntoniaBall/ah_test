@@ -73,12 +73,16 @@ final class BienPersister implements ContextAwareDataPersisterInterface
         $valeurs = $property->getValeurs();
 
         foreach ($valeurs as $valeur){
-            dump("beyonce");
             $valeur->setSavedValue(($valeur->getValue()));
             $valeur->getSavedValue();
             $this->entityManager->persist($valeur);
             $this->entityManager->flush();
         }
+    }
 
+    // Once called this data persister will resume to the next one
+    public function resumable(array $context = []): bool 
+    {
+        return true;
     }
 }
