@@ -47,7 +47,7 @@ class Propriete
      * @Groups({"propriete:list", "typeproperty:read","property:read",  "typeproperty:write"})
      * @ORM\Column(type="string", length=100)
      */
-    private $nom;
+    private $name;
 
     /**
      * @Groups("propriete:list")
@@ -80,14 +80,14 @@ class Propriete
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getName(): ?string
     {
-        return $this->nom;
+        return $this->name;
     }
 
-    public function setNom(string $nom): self
+    public function setName(string $name): self
     {
-        $this->nom = $nom;
+        $this->name = $name;
 
         return $this;
     }

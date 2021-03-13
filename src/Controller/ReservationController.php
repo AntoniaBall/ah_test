@@ -50,7 +50,6 @@ class ReservationController extends AbstractController
             new \DateInterval('P1D'),
             $data->getDateEnd()->modify("+1 day")
         );
-        
         // trouver toutes les réservations de ce bien
         $em = $this->getDoctrine()->getManager();
         
@@ -78,10 +77,24 @@ class ReservationController extends AbstractController
             
         }
 
-        // conserver historique de réservations
-        // $data->setHistorical($data);
-        // var_dump($data->getHistorical());
-        // die();
+        $historique["days"] = $interval->days;
+        $historique["dateStart"] = $data->getDateStart();
+        $historique["dateEnd"] = $data->getDateEnd();
+        $historique["montant"] = $data->getMontant();
+        $historique["nuitee"] = $data->getProperty()->getRate();
+
+        $proprietesBien = $data->getProperty()->getValeurs();
+
+        foreach($proprietesBien as $proprieteBien){
+            $row["propriete"]= $proprieteBien->getPropriete()->getName();
+            $row["value"] = $proprieteBien->getValue();
+            $historique["proprietesBien"][] = $row;
+        }
+
+        $data->setHistorical(json_decode(json_encode($historique)));
+
+        // dump($data->getHistorical());
+
         return $data;
     }
 }

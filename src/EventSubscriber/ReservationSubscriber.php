@@ -43,7 +43,6 @@ final class ReservationSubscriber implements EventSubscriberInterface
         $object = $event->getControllerResult();
         if ($object instanceof Reservation){
             $object->setUser($this->tokenStorage->getToken()->getUser());
-            $object->setHistorical($object);
             $event->setControllerResult($object);
         }
         return true;

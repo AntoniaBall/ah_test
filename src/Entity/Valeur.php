@@ -38,7 +38,7 @@ class Valeur
      * @ORM\Column(type="string", length=100)
      */
     private $savedValue;
-
+    
     /**
      * @Groups({"valeur:write"})
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="valeurs")
@@ -47,7 +47,7 @@ class Valeur
     private $bien;
 
     /**
-     * @Groups({"valeur:write", "valeur:read", "property:write", "property:read", "valeur:read"})
+     * @Groups({"valeur:write", "property:write", "property:read", "valeur:read"})
      */
     private $value;
 
