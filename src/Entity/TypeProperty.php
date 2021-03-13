@@ -16,9 +16,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     collectionOperations={
  *          "get",
  *          "post"={
- *              "security"="is_granted('ROLE_ADMIN')"
+ *              "security"="is_granted('ROLE_ADMIN')",
+ *              "security_message"="Only admin can create type property"
  *          }
- * }
+ *     }
  * )
  * @ORM\Entity(repositoryClass=TypePropertyRepository::class)
  */

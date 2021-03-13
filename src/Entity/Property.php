@@ -26,7 +26,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
  * collectionOperations={
  *    "get",
  *    "post"={
- *          "security"="is_granted('ROLE_PROPRIO')"
+ *          "security"="is_granted('ROLE_PROPRIO') or is_granted('ROLE_ADMIN')"
  *    }
  * },
  * itemOperations={
