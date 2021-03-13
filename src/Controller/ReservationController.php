@@ -73,49 +73,15 @@ class ReservationController extends AbstractController
                 ->getRepository(Reservation::class)
                 ->getCountReservationsByUser($this->security->getUser());
 
-        // dump(
-        //     $this->security->getUser()
-        // );
-        // die();
         if ($userReservationsCount[0][1] > 3){
             throw new HttpException(400, "Vous avez plus de 3 reservations en attente");
             
         }
 
-        // PREPARER PAIEMENT
-        // dump($data->getStripeToken());
-                              
-        // \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
-                              
-        // // $event = \Stripe\Charge::create(array(
-                                                        // //     "amount" => $data->getMontant() * 1000,
-                                                        // //     "currency" => "eur",
-                                                        // //     "source" => "tok_visa",
-                                                        // //     "description" => "First test charge!"
-                                                        // // ));
-                                                        
-                                                        // // create a payment intent event
-                                                        
-                                                        // $event = \Stripe\PaymentIntent::create([
-                                                            //     "amount" => $data->getMontant() * 1000,
-                                                            //     'currency' => 'eur',
-        //     'payment_method_types' => ['card'],
-        //   ]);
-
-        // // enregister le paiement & créer le payment intent
-        // $paiement = new Paiement();
-        // $paiement->setReservation($data);
-        // $paiement->setDatePaiement(new \Datetime('now'));
-        // $paiement->setTokenStripe($data->getStripeToken());
-        // $paiement->setRetourStripe("en attente");
-        // $paiement->setEventId($data->getStripeToken());
-        // $paiement->setMontant($data->getMontant()*100);
-
-        // $em->persist($paiement);
-        // $em->flush();
-
-        // $newReservation = new Reservation();
-        
+        // conserver historique de réservations
+        // $data->setHistorical($data);
+        // var_dump($data->getHistorical());
+        // die();
         return $data;
     }
 }

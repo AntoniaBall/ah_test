@@ -47,7 +47,7 @@ class Valeur
     private $bien;
 
     /**
-     * @Groups({"valeur:write","valeur:read","property:write", "property:read","valeur:read"})
+     * @Groups({"valeur:write", "valeur:read", "property:write", "property:read", "valeur:read"})
      */
     private $value;
 
