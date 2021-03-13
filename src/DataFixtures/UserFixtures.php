@@ -35,6 +35,7 @@ class UserFixtures extends Fixture
 			->setLastname($generator->lastname)
 			->setPhone((int)$generator->phoneNumber)
 			->setIsVerified(rand(0,1))
+			->setIsAdmin(true)
 			->setRoles(["ROLE_ADMIN"]);
 			$password = $this->encoder->encodePassword($userAdmin,'azerty12');
 			
@@ -51,6 +52,7 @@ class UserFixtures extends Fixture
 			->setLastname($generator->lastname)
 			->setPhone((int)$generator->phoneNumber)
 			->setIsVerified(rand(0,1))
+			->setIsAdmin(false)
 			->setRoles(["ROLE_PROPRIO"]);
 			// ->addProperty($this->getReference(PropertyFixtures::CABANES, $userProprio))
 			// ->addProperty($this->getReference(PropertyFixtures::tipis, $userProprio))
@@ -72,6 +74,7 @@ class UserFixtures extends Fixture
 			->setFirstname($generator->firstname())
 			->setLastname($generator->lastname)
 			->setIsVerified(rand(0,1))
+			->setIsAdmin(false)
 			->setRoles(["ROLE_PROPRIO"]);
 			// ->addProperty($this->getReference(PropertyFixtures::CABANES, $userProprio1))
 			// ->addProperty($this->getReference(PropertyFixtures::bulles, $userProprio1))
@@ -90,6 +93,7 @@ class UserFixtures extends Fixture
 						->setLastname($generator->lastname)
 						->setPhone((int)$generator->phoneNumber)
 						->setIsVerified(rand(0,1))
+						->setIsAdmin(false)
 						->setRoles(["ROLE_PROPRIO"]);
 						// ->addProperty($this->getReference(PropertyFixtures::inclassables, $userProprio2))
 						// ->addProperty($this->getReference(PropertyFixtures::CABANES_EAU, $userProprio2));
@@ -110,6 +114,7 @@ class UserFixtures extends Fixture
 			->setLastname($generator->lastname)
 			->setPhone((int)$generator->phoneNumber)
 			->setIsVerified(rand(0,1))
+			->setIsAdmin(false)
 			->setRoles(["ROLE_USER"]);
 		$password = $this->encoder->encodePassword($locataire,'azerty12');
 		$locataire->setPassword($password);
@@ -126,6 +131,7 @@ class UserFixtures extends Fixture
 				->setEmail("user$i@gmail.com")
 				->setFirstname($generator->firstname())
 				->setLastname($generator->lastname)
+				->setIsAdmin(false)
                 ->setPhone((int)$generator->phoneNumber)
 				->setIsVerified(rand(0,1));
 				

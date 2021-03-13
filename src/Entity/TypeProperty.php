@@ -12,7 +12,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(normalizationContext={"groups"={"typeproperty:read"}},
- *     denormalizationContext={"groups"={"typeproperty:write"}})
+ *     denormalizationContext={"groups"={"typeproperty:write"}},
+ *     collectionOperations={
+ *          "get",
+ *          "post"={
+ *              "security"="is_granted('ROLE_ADMIN')"
+ *          }
+ * }
+ * )
  * @ORM\Entity(repositoryClass=TypePropertyRepository::class)
  */
 class TypeProperty

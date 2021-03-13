@@ -139,9 +139,16 @@ class User implements UserInterface
      */
     private $rest_token;
 
+    /**
+     * @ApiProperty(security="is_granted('ROLE_ADMIN')")
+     * @ORM\Column(type="boolean")
+     */
+    private $isAdmin;
+
 
     public function __construct()
     {
+        $this->isAdmin = false;
         $this->reservations = new ArrayCollection();
         $this->properties = new ArrayCollection();
     }
@@ -412,6 +419,18 @@ class User implements UserInterface
     public function setRestToken(?string $rest_token): self
     {
         $this->rest_token = $rest_token;
+
+        return $this;
+    }
+
+    public function getIsAdmin(): ?bool
+    {
+        return $this->isAdmin;
+    }
+
+    public function setIsAdmin(bool $isAdmin): self
+    {
+        $this->isAdmin = $isAdmin;
 
         return $this;
     }

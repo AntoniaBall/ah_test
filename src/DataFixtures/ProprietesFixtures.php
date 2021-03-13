@@ -15,21 +15,21 @@ class ProprietesFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $proprieteCabane = new Propriete();
-        $proprieteCabane->setNom('profondeur de la cabane')
+        $proprieteCabane->setName('profondeur de la cabane')
                     ->setType('string');
 
         $manager->persist($proprieteCabane);
         $this->addReference(self::profondeur, $proprieteCabane);
 
         $proprieteCabane1 = new Propriete();
-        $proprieteCabane1->setNom('barbecue')
+        $proprieteCabane1->setName('barbecue')
                     ->setType('booleen');
         
         $manager->persist($proprieteCabane1);
         $this->addReference(self::barbecue, $proprieteCabane1);
 
         $proprieteLit= new Propriete();
-        $proprieteLit->setNom('lit supplémentaire')
+        $proprieteLit->setName('lit supplémentaire')
                     ->setType('integer');
                     
         $this->addReference(self::proprieteLit, $proprieteLit);
