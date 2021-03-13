@@ -117,7 +117,7 @@ class Reservation
     private $comments;
     
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="json", nullable=true)
      * @Groups({"reservation:read", "reservation:write"})
      */
     private $historical;

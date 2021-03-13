@@ -71,10 +71,9 @@ class ReservationController extends AbstractController
         $userReservationsCount = $this->getDoctrine()
                 ->getRepository(Reservation::class)
                 ->getCountReservationsByUser($this->security->getUser());
-
+        
         if ($userReservationsCount[0][1] > 3){
             throw new HttpException(400, "Vous avez plus de 3 reservations en attente");
-            
         }
 
         $historique["days"] = $interval->days;
@@ -85,10 +84,12 @@ class ReservationController extends AbstractController
 
         $proprietesBien = $data->getProperty()->getValeurs();
 
-        foreach($proprietesBien as $proprieteBien){
-            $row["propriete"]= $proprieteBien->getPropriete()->getName();
-            $row["value"] = $proprieteBien->getValue();
-            $historique["proprietesBien"][] = $row;
+        if ($proprieteBien !== []){
+            foreach($proprietesBien as $proprieteBien){
+                $row["propriete"]= $proprieteBien->getPropriete()->getName();
+                $row["value"] = $proprieteBien->getValue();
+                $historique["proprietesBien"][] = $row;
+            }
         }
 
         $data->setHistorical(json_decode(json_encode($historique)));
