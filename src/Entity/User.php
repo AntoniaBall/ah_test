@@ -20,7 +20,8 @@ use App\Controller\RegistrationController;
 *     denormalizationContext={"groups"={"user:write"}},
 *     collectionOperations={
 *           "get"={
-*                   "security"="is_granted('ROLE_ADMIN')"
+*                   "security"="is_granted('ROLE_ADMIN')",
+*                   "security_message"="Only admin can view users list and privileges"
 *           },
 *           "register"={
 *                   "method"="POST",
@@ -138,13 +139,6 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $rest_token;
-
-    /**
-     * @ApiProperty(security="is_granted('ROLE_ADMIN')")
-     * @ORM\Column(type="boolean")
-     */
-    private $isAdmin;
-
 
     public function __construct()
     {
@@ -423,17 +417,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getIsAdmin(): ?bool
-    {
-        return $this->isAdmin;
-    }
-
-    public function setIsAdmin(bool $isAdmin): self
-    {
-        $this->isAdmin = $isAdmin;
-
-        return $this;
-    }
 
     
 }
