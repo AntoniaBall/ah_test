@@ -67,7 +67,7 @@ class Valeur
 
     public function setSavedValue($value): self
     {
-        if ($this->propriete->getType() === "booleen"){
+        if ($this->propriete->getType() === "boolean"){
             $this->savedValue = var_export($value, true);
         }
 
@@ -76,14 +76,9 @@ class Valeur
         }
         
         if ($this->propriete->getType() === "string"){
-            $this->savedValue = (string)$value;
+            $this->savedValue = $value;
         }
         return $this;
-    }
-
-    public function getPropriete(): ?Propriete
-    {
-        return $this->propriete;
     }
 
     public function setPropriete(?Propriete $propriete): self
@@ -106,6 +101,16 @@ class Valeur
     }
 
     public function getValue(){
+        if ($this->propriete->getType() === "integer"){
+            $this->value = \intval($this->savedValue);
+        }
+        if ($this->propriete->getType() === "string"){
+            $this->value = \strval($this->savedValue);
+        }
+        if ($this->propriete->getType() === "boolean"){
+            $this->value =filter_var($this->savedValue, FILTER_VALIDATE_BOOLEAN);;
+
+        }
         return $this->value;
     }
 
@@ -116,14 +121,12 @@ class Valeur
      */ 
     public function setValue($value)
     {
-        if ($this->propriete->getType() === "booleen"){
-            dump("booleen");
-            dump((bool)$value);
-            $this->value = var_export($value, true);
+        if ($this->propriete->getType() === "boolean"){
+            $this->value = $value;
         }
 
         if ($this->propriete->getType() === "integer"){
-            $this->value = (int)$value; // 2
+            $this->value = (int)$value;
         }
 
         if ($this->propriete->getType() === "string"){

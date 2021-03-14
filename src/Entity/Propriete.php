@@ -44,7 +44,7 @@ class Propriete
     private $id;
 
     /**
-     * @Groups({"propriete:list", "typeproperty:read","property:read",  "typeproperty:write"})
+     * @Groups({"propriete:list", "typeproperty:read","property:read","typeproperty:write"})
      * @ORM\Column(type="string", length=100)
      */
     private $name;
@@ -56,7 +56,7 @@ class Propriete
     private $typeProperty;
 
     /**
-     * @Groups({"propriete:list", "typeproperty:read","property:read",  "typeproperty:write" })
+     * @Groups({"propriete:list", "typeproperty:read","property:read","typeproperty:write" })
      * @ORM\Column(type="string")
      * @Assert\Choice({"integer","booleen","string"})
      */
