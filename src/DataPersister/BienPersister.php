@@ -51,25 +51,13 @@ final class BienPersister implements ContextAwareDataPersisterInterface
 
     private function sendAddPropertyEmail(Property $property)
     {
-        // $message=(new \Swift_Message('post property'))
-        // ->setFrom('admin@yopmail.com')
-        // ->setTo('antonia.balluais@gmail.com')
-        // ->setBody('Bonjour '.$property->getUser()->getEmail().
-        //     'Votre bien est en cours d\'etude.Nous vous informerons bientot des que nous avons une reponse');
-        $email = (new NotificationEmail())
-        ->from('m.manet@yopmail.com')
-        ->to('b.derrien12@yopmail.com')
-        ->subject('Votre demande d\'ajout d\'un bien')
-        ->markdown(<<<EOF
-                Bonjour \'.$property->getUser()->getEmail().
-                'Votre bien est en cours d\'etude.
-                Nous vous informerons bientot dès que l'examen de votre bien sera terminé
-            EOF
-        )
-        ->action('More info?', 'https://example.com/')
-        ->importance(NotificationEmail::IMPORTANCE_HIGH);
-        $this->mailer->send($email);
-
+        $message=(new \Swift_Message('Atypik\'House vous a envoyé une notification'))
+        ->setFrom('m.manet@yopmail.com')
+        ->setTo('b.derrien12@yopmail.com')
+        // ->setTo($property->getUser()->getEmail())
+        ->setBody('Bonjour '.$property->getUser()->getEmail().
+            ' Votre bien est en cours d\'etude.Nous vous informerons bientot des que nous avons une reponse');
+        $this->mailer->send($message);
     }
 
     private function sendResponseAdmissionEmail(Property $property)
