@@ -84,7 +84,7 @@ class ValidationReservationController extends AbstractController
             $data->setStatus("acceptee");
 
             // trouver et bloquer les dates
-          
+            
         } else{
             // si reservation rejetee
             $this->paimentService->cancelPayment($data->getStripeToken());

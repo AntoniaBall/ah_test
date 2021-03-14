@@ -85,21 +85,19 @@ class ReservationController extends AbstractController
         $proprietesBien = $data->getProperty()->getValeurs();
 
         if (!isset($proprieteBien)){
-            $historique["propriete"] = [];
+            $historique["proprietes"] = [];
         }
 
         if ($proprietesBien !== []){
             foreach($proprietesBien as $proprieteBien){
-                $row["propriete"]= $proprieteBien->getPropriete()->getName();
+                $row["proprietes"]= $proprieteBien->getPropriete()->getName();
                 $row["value"] = $proprieteBien->getValue();
                 $historique["proprietesBien"][] = $row;
             }
         }
 
         $data->setHistorical(json_decode(json_encode($historique)));
-
-        // dump($data->getHistorical());
-
+        
         return $data;
     }
 }
