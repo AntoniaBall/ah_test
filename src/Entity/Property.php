@@ -7,6 +7,7 @@ use App\Repository\PropertyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\SearchController;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Validator\Constraints\MinimalProperties;
@@ -27,7 +28,9 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
  *    "get",
  *    "post"={
  *          "security"="is_granted('ROLE_PROPRIO') or is_granted('ROLE_ADMIN')"
- *    }
+ *    },
+ *    "searchProperties"={"route_name"="search"}
+ * 
  * },
  * itemOperations={
  *    "get"={"security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY') or is_granted('IS_AUTHENTICATED_FULLY')"},
