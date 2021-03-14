@@ -20,7 +20,8 @@ use App\Controller\RegistrationController;
 *     denormalizationContext={"groups"={"user:write"}},
 *     collectionOperations={
 *           "get"={
-*                   "security"="is_granted('ROLE_ADMIN')"
+*                   "security"="is_granted('ROLE_ADMIN')",
+*                   "security_message"="Only admin can view users list and privileges"
 *           },
 *           "register"={
 *                   "method"="POST",
@@ -139,9 +140,9 @@ class User implements UserInterface
      */
     private $rest_token;
 
-
     public function __construct()
     {
+        $this->isAdmin = false;
         $this->reservations = new ArrayCollection();
         $this->properties = new ArrayCollection();
     }
@@ -415,6 +416,7 @@ class User implements UserInterface
 
         return $this;
     }
+
 
     
 }

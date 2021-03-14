@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\Security;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Expr\Join;
 
-final class CurrentUserExtensions implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
+final class PropertyExtensions implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
     private $security;
 
@@ -33,29 +33,17 @@ final class CurrentUserExtensions implements QueryCollectionExtensionInterface, 
     
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
     {
-        if (Reservation::class !== $resourceClass || $this->security->isGranted('ROLE_ADMIN') || 
+        if (Property::class !== $resourceClass || $this->security->isGranted('ROLE_ADMIN') || 
         null === $user = $this->security->getUser()) {
             return;
         }
         
-        $rootAlias = $queryBuilder->getRootAliases()[0];
-
-        // si l'utilisateur est un locataire voir les réservations uniquement faites par lui
         if ($this->security->isGranted('ROLE_USER')){
-            $queryBuilder->andWhere(sprintf('%s.user = :current_user', $rootAlias));
-            $queryBuilder->setParameter('current_user', $this->security->getUser());
-            // dump($queryBuilder->getQuery());
-            
+            $rootAlias = $queryBuilder->getRootAliases()[0];
+            $queryBuilder->andWhere(sprintf('%s.isPublished = :isPublished', $rootAlias))
+                        ->setParameter('isPublished', true);
         }
 
-        // si l'utilisateur est proprio voir la liste de toutes les reservations sur ses biens
-        if ($this->security->isGranted('ROLE_PROPRIO')){
-            // $queryBuilder->innerJoin(Property::class, 'p', Join::WITH, '%s.property = p.id');
-            $queryBuilder->innerJoin(Property::class, 'p', Join::WITH, sprintf('%s.property = p.id', $rootAlias));
-            // $queryBuilder->leftJoin(sprintf('%s.property', $rootAlias), 'property')->addSelect('property');
-            $queryBuilder->andWhere(sprintf('p.user = :user'));
-            $queryBuilder->setParameter('user', $this->security->getUser());
-        }
     }
     private function getItem(QueryBuilder $queryBuilder, string $resourceClass): void
     {

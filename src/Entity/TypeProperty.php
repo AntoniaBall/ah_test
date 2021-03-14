@@ -12,7 +12,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(normalizationContext={"groups"={"typeproperty:read"}},
- *     denormalizationContext={"groups"={"typeproperty:write"}})
+ *     denormalizationContext={"groups"={"typeproperty:write"}},
+ *     collectionOperations={
+ *          "get",
+ *          "post"={
+ *              "security"="is_granted('ROLE_ADMIN')",
+ *              "security_message"="Only admin can create type property"
+ *          }
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=TypePropertyRepository::class)
  */
 class TypeProperty
@@ -38,18 +46,18 @@ class TypeProperty
     private $description;
     
     /**
-     * @Groups("typeproperty:read")
+     * @Groups("typeproperty:read",  "typeproperty:write")
      * @ORM\OneToMany(targetEntity=Property::class, mappedBy="typeProperty", orphanRemoval=true)
      */
     private $properties;
 
     /**
-     * @ORM\OneToMany(targetEntity=ProprieteTypeProperty::class, mappedBy="type_property")
+     * @ORM\OneToMany(targetEntity=ProprieteTypeProperty::class, mappedBy="typeProperty")
      */
     private $proprieteTypeProperties;
 
     /**
-     * @Groups("typeproperty:read")
+     * @Groups({"typeproperty:read", "property:read"})
      * @ORM\OneToMany(targetEntity=Propriete::class, mappedBy="typeProperty")
      */
     private $proprietes;

@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
+ *  attributes={"fetchEager": true},
  *   normaizationContext={"groups"={"propriete:list"}},
  *  collectionoperations={
  *       "get",
@@ -43,12 +44,11 @@ class Propriete
     private $id;
 
     /**
-     * @Groups({"propriete:list"})
+     * @Groups({"propriete:list", "typeproperty:read","property:read",  "typeproperty:write"})
      * @ORM\Column(type="string", length=100)
      */
-    private $nom;
+    private $name;
 
-   
     /**
      * @Groups("propriete:list")
      * @ORM\ManyToOne(targetEntity=typeproperty::class, inversedBy="proprietes")
@@ -56,18 +56,23 @@ class Propriete
     private $typeProperty;
 
     /**
-     * @Groups({"propriete:list"})
+     * @Groups({"propriete:list", "typeproperty:read","property:read",  "typeproperty:write" })
      * @ORM\Column(type="string")
+     * @Assert\Choice({"integer","booleen","string"})
      */
-    private $type ;
+    private $type;
 
-    
+    /**
+     * @ORM\OneToMany(targetEntity=Valeur::class, mappedBy="propriete")
+     */
+    private $valeurs;
 
     public function __construct()
     {
         $this->proprieteTypeProperties = new ArrayCollection();
         $this->valeurBools = new ArrayCollection();
         $this->valuerStrings = new ArrayCollection();
+        $this->valeurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -75,26 +80,24 @@ class Propriete
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getName(): ?string
     {
-        return $this->nom;
+        return $this->name;
     }
 
-    public function setNom(string $nom): self
+    public function setName(string $name): self
     {
-        $this->nom = $nom;
+        $this->name = $name;
 
         return $this;
     }
-
-  
-
-    public function getTypeProperty(): ?typeproperty
+    
+    public function getTypeProperty(): ?TypeProperty
     {
         return $this->typeProperty;
     }
 
-    public function setTypeProperty(?typeproperty $typeProperty): self
+    public function setTypeProperty(?TypeProperty $typeProperty): self
     {
         $this->typeProperty = $typeProperty;
 
@@ -113,4 +116,33 @@ class Propriete
         return $this;
     }
 
+    /**
+     * @return Collection|Valeur[]
+     */
+    public function getValeurs(): Collection
+    {
+        return $this->valeurs;
+    }
+
+    public function addValeur(Valeur $valeur): self
+    {
+        if (!$this->valeurs->contains($valeur)) {
+            $this->valeurs[] = $valeur;
+            $valeur->setPropriete($this);
+        }
+
+        return $this;
+    }
+
+    public function removeValeur(Valeur $valeur): self
+    {
+        if ($this->valeurs->removeElement($valeur)) {
+            // set the owning side to null (unless already changed)
+            if ($valeur->getPropriete() === $this) {
+                $valeur->setPropriete(null);
+            }
+        }
+
+        return $this;
+    }
 }

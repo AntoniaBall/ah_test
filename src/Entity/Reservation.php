@@ -117,10 +117,10 @@ class Reservation
     private $comments;
     
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="json", nullable=true)
      * @Groups({"reservation:read", "reservation:write"})
      */
-    private $historical = [];
+    private $historical;
     
     /**
      * @Groups({"reservation:read"})
@@ -281,12 +281,12 @@ class Reservation
         return $this;
     }
 
-    public function getHistorical(): ?array
+    public function getHistorical()
     {
         return $this->historical;
     }
 
-    public function setHistorical(array $historical): self
+    public function setHistorical($historical): self
     {
         $this->historical = $historical;
 

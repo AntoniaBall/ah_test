@@ -47,4 +47,63 @@ class DisponibilityRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function getJourDisposBetweenDatesByProperty($property, $dateStart, $dateEnd){
+        $qb = $this->createQueryBuilder('d')
+        ->select('d.jourDispo')
+        ->andWhere('d.property = :val')
+        ->setParameter('val', $property)
+        ->andWhere('d.jourDispo >= :dateStart and d.jourDispo<= :dateEnd')
+        ->setParameter('dateStart', $dateStart)
+        ->setParameter('dateEnd', $dateEnd)
+        ->getQuery()
+        ->getResult()
+        ;
+
+        $response = [];
+
+        $response["property"] = $property;
+        foreach ($qb as $rowDispo){
+            $jours []= $rowDispo["jourDispo"]->format('Y-m-d');
+        }
+
+        $response["data"] = $jours;
+
+        return $response;
+    }
+ /**
+    * @return Disponibility[] Returns an array of Disponibility objects
+    */
+    public function findDisponibilitiesBetweenDates($dateStart, $dateEnd){
+        $qb = $this->createQueryBuilder('d')
+            ->andWhere('d.property = :val')
+            ->setParameter('val', $propertyId)
+            ->orderBy('d.id', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        dump($qb);
+
+        return $qb;
+    }
+
+    /**
+    * @return Disponibility[] Returns an array of Disponibility objects
+    */
+    public function findDisponibilitiesByJourDispo($property, $jourDispo){
+
+        $qb = $this->createQueryBuilder('d')
+        ->andWhere('d.jourDispo = :val')
+            ->setParameter('val', $jourDispo)
+            ->andWhere('d.property = :val')
+            ->setParameter('val', $property)
+            ->getQuery()
+            ->getResult();
+
+        dump($qb);
+
+        return $qb;
+        ;
+    }
+
 }

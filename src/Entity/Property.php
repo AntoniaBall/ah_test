@@ -7,6 +7,7 @@ use App\Repository\PropertyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\SearchController;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Validator\Constraints\MinimalProperties;
@@ -25,7 +26,11 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
  * },
  * collectionOperations={
  *    "get",
- *    "post"={"security"="is_granted('ROLE_PROPRIO')"}
+ *    "post"={
+ *          "security"="is_granted('ROLE_PROPRIO') or is_granted('ROLE_ADMIN')"
+ *    },
+ *    "searchProperties"={"route_name"="search"}
+ * 
  * },
  * itemOperations={
  *    "get"={"security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY') or is_granted('IS_AUTHENTICATED_FULLY')"},
@@ -122,7 +127,7 @@ class Property
      * @ORM\Column(type="boolean")
      */
     private $accessHandicap;
-    
+
     /**
      * @Groups({"property:read", "property:write", "typeproperty:read", "picture:write", "disponibility:write", "activities:write"})
      * @Assert\NotNull
@@ -181,8 +186,6 @@ class Property
      */
     private $address;
 
-    
-
     /**
      * @Groups({"property:read", "property:write", "user:write", "disponibility:write", "reservation:read"})
      * @ORM\OneToMany(targetEntity=Disponibility::class, mappedBy="property", cascade={"persist", "remove"})
@@ -216,18 +219,26 @@ class Property
     private $status;
 
     /**
-     * @Groups("property:read")
-     * @ORM\OneToMany(targetEntity=Propriete::class, mappedBy="typeProperty")
+     * @Groups({"property:read","property:write","valeur:write"})
+     * @ORM\OneToMany(targetEntity=Valeur::class, mappedBy="bien", cascade={"persist", "remove"})
      */
-    private $proprietes;
+    private $valeurs;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isPublished;
+
 
     public function __construct()
     {
         $this->status="draft";
+        $this->isPublished=false;
         $this->reservations = new ArrayCollection();
         $this->disponibilities = new ArrayCollection();
         $this->pictures = new ArrayCollection();
         $this->activities = new ArrayCollection();
+        $this->valeurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -526,36 +537,48 @@ class Property
     public function setStatus(string $status): self
     {
         $this->status = $status;
-
+        
         return $this;
     }
 
-     /**
-     * @return Collection|Propriete[]
+    /**
+     * @return Collection|Valeur[]
      */
-    public function getProprietes(): Collection
+    public function getValeurs(): Collection
     {
-        return $this->proprietes;
+        return $this->valeurs;
     }
 
-    public function addPropriete(Propriete $propriete): self
+    public function addValeur(Valeur $valeur): self
     {
-        if (!$this->proprietes->contains($propriete)) {
-            $this->proprietes[] = $propriete;
-            $propriete->setTypeProperty($this);
+        if (!$this->valeurs->contains($valeur)) {
+            $this->valeurs[] = $valeur;
+            $valeur->setBien($this);
         }
 
         return $this;
     }
 
-    public function removePropriete(Propriete $propriete): self
+    public function removeValeur(Valeur $valeur): self
     {
-        if ($this->proprietes->removeElement($propriete)) {
+        if ($this->valeurs->removeElement($valeur)) {
             // set the owning side to null (unless already changed)
-            if ($propriete->getTypeProperty() === $this) {
-                $propriete->setTypeProperty(null);
+            if ($valeur->getBien() === $this) {
+                $valeur->setBien(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsPublished(): ?bool
+    {
+        return $this->isPublished;
+    }
+
+    public function setIsPublished(bool $isPublished): self
+    {
+        $this->isPublished = $isPublished;
 
         return $this;
     }

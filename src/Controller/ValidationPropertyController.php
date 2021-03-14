@@ -33,11 +33,7 @@ class ValidationPropertyController extends AbstractController
     public function __invoke(Property $data, Request $request) : Property
     {
         $bodyRequest = json_decode($request->getContent(), true);
-        // $currentDisponibilities= $data->getProperty()->getDisponibilities();
-        // foreach ($currentDisponibilities as $currentDisponibility){
-        //     dump($currentDisponibility->getJourDispo());
-        // }
-        // die();   
+        
         if (!$bodyRequest){
             throw new HttpException(400, "Please provide a valid JSON");
         }
@@ -46,6 +42,9 @@ class ValidationPropertyController extends AbstractController
             throw new HttpException(400, "Please provide a correct answer");
         }
         
+        if($bodyRequest["status"] === "acceptee"){
+            $data->setIsPublished(true);
+        }
         $data->setStatus($bodyRequest["status"]);
         return $data;
     }
