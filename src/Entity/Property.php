@@ -224,10 +224,16 @@ class Property
      */
     private $valeurs;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isPublished;
+
 
     public function __construct()
     {
         $this->status="draft";
+        $this->isPublished=false;
         $this->reservations = new ArrayCollection();
         $this->disponibilities = new ArrayCollection();
         $this->pictures = new ArrayCollection();
@@ -561,6 +567,18 @@ class Property
                 $valeur->setBien(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsPublished(): ?bool
+    {
+        return $this->isPublished;
+    }
+
+    public function setIsPublished(bool $isPublished): self
+    {
+        $this->isPublished = $isPublished;
 
         return $this;
     }

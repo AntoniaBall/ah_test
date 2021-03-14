@@ -42,6 +42,9 @@ class ValidationPropertyController extends AbstractController
             throw new HttpException(400, "Please provide a correct answer");
         }
         
+        if($bodyRequest["status"] === "acceptee"){
+            $data->setIsPublished(true);
+        }
         $data->setStatus($bodyRequest["status"]);
         return $data;
     }
