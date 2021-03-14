@@ -35,10 +35,11 @@ class ValidationReservationController extends AbstractController
     {
         $bodyRequest = json_decode($request->getContent(), true);
         $currentDisponibilities= $data->getProperty()->getDisponibilities();
-        // foreach ($currentDisponibilities as $currentDisponibility){
-        //     dump($currentDisponibility->getJourDispo());
-        // }
-        // die();   
+        
+        if ($data->getIsPublished() === false){
+            throw new HttpException(400, "Le bien que vous essayez de réserver est masqué");
+        }
+
         if (!$bodyRequest){
             throw new HttpException(400, "Please provide a valid JSON");
         }
@@ -55,9 +56,6 @@ class ValidationReservationController extends AbstractController
             throw new HttpException(400, "Vous avez plus de 2 reservations en attente");
         }
 
-        // dump($data->getNumberTraveler());
-        // dump($data->getProperty()->getMaxTravelers());
-        // die();
         $periodes = new \DatePeriod(
             $data->getDateStart(),
             new \DateInterval('P1D'),

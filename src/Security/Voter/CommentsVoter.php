@@ -38,7 +38,6 @@ class CommentsVoter extends Voter
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         /** ... check if the user is anonymous ... **/
-
         switch ($attribute) {
             case 'EDIT_COMMENTS':
                 if ( $this->security->isGranted(Role::ROLE_USER) ) { return true; }  

@@ -81,10 +81,14 @@ class ReservationController extends AbstractController
         $historique["dateEnd"] = $data->getDateEnd();
         $historique["montant"] = $data->getMontant();
         $historique["nuitee"] = $data->getProperty()->getRate();
-        
+
         $proprietesBien = $data->getProperty()->getValeurs();
 
-        if ($proprieteBien !== []){
+        if (!isset($proprieteBien)){
+            $historique["propriete"] = [];
+        }
+
+        if ($proprietesBien !== []){
             foreach($proprietesBien as $proprieteBien){
                 $row["propriete"]= $proprieteBien->getPropriete()->getName();
                 $row["value"] = $proprieteBien->getValue();
