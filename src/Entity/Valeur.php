@@ -105,19 +105,7 @@ class Valeur
         return $this;
     }
 
-    /*
-    */
     public function getValue(){
-        if ($this->propriete->getType() === "booleen"){
-            $this->value = (bool)$this->savedValue;
-        }
-        if ($this->propriete->getType() === "string"){
-            $this->value = (string)$this->savedValue;
-
-        }
-        if ($this->propriete->getType() === "integer"){
-            $this->value = (int)$this->savedValue;
-        }
         return $this->value;
     }
 
@@ -128,6 +116,19 @@ class Valeur
      */ 
     public function setValue($value)
     {
+        if ($this->propriete->getType() === "booleen"){
+            dump("booleen");
+            dump((bool)$value);
+            $this->value = var_export($value, true);
+        }
+
+        if ($this->propriete->getType() === "integer"){
+            $this->value = (int)$value; // 2
+        }
+
+        if ($this->propriete->getType() === "string"){
+            $this->value = $value;
+        }
         $this->value = $value;
 
         return $this;

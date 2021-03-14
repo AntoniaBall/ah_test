@@ -83,8 +83,11 @@ final class BienPersister implements ContextAwareDataPersisterInterface
         $valeurs = $property->getValeurs();
 
         foreach ($valeurs as $valeur){
+            dump("getValue()");
             $valeur->setSavedValue(($valeur->getValue()));
-            $valeur->getSavedValue();
+            // $valeur->getSavedValue();
+            dump($valeur->getSavedValue());
+
             $this->entityManager->persist($valeur);
             $this->entityManager->flush();
         }
