@@ -30,7 +30,6 @@ final class BienPersister implements ContextAwareDataPersisterInterface
     public function persist($data, array $context = [])
     {
         $result = $this->decorated->persist($data, $context);
-
         if ($data instanceof Property && (($context['collection_operation_name'] ?? null) === 'post')) {
             $this->sendAddPropertyEmail($data);
             $this->transformData($data);
@@ -83,13 +82,21 @@ final class BienPersister implements ContextAwareDataPersisterInterface
         $valeurs = $property->getValeurs();
 
         foreach ($valeurs as $valeur){
-            $valeur->setSavedValue(($valeur->getValue()));
+        
+            if ($valeur->getPropriete()->getType() === "integer"){
+                $valeur->setSavedValue(\intval($valeur->getValue()));
+            }
+            if ($valeur->getPropriete()->getType() === "boolean"){
+                $valeur->setSavedValue(var_export($valeur->getValue(), true));
+            }
+            if ($valeur->getPropriete()->getType() === "string"){
+                $valeur->setSavedValue($valeur->getValue());
+            }
             $this->entityManager->persist($valeur);
             $this->entityManager->flush();
         }
     }
 
-    // Once called this data persister will resume to the next one
     public function resumable(array $context = []): bool 
     {
         return true;

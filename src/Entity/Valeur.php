@@ -35,7 +35,7 @@ class Valeur
     private $propriete;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $savedValue;
     
@@ -47,37 +47,33 @@ class Valeur
     private $bien;
 
     /**
-     * @Groups({"valeur:write", "property:write", "property:read", "valeur:read"})
-     */
+     * @Groups({"valeur:write", "property:write"})
+     */ 
     private $value;
 
-    public function __construct()
-    {
-        $this->savedValue="";
-    }
     public function getId(): ?int
     {
         return $this->id;
     }
+    
 
-    public function getSavedValue(): ?string
+    public function getSavedValue()
     {
-        return $this->savedValue;
+        if ($this->propriete->getType() === "integer"){
+            return \intval($this->savedValue);
+        }
+        if ($this->propriete->getType() === "string"){
+            return $this->savedValue;
+        }
+        if ($this->propriete->getType() === "boolean"){
+            return filter_var($this->savedValue, FILTER_VALIDATE_BOOLEAN);
+        }
     }
 
     public function setSavedValue($value): self
     {
-        if ($this->propriete->getType() === "boolean"){
-            $this->savedValue = var_export($value, true);
-        }
+        $this->savedValue = $value;
 
-        if ($this->propriete->getType() === "integer"){
-            $this->savedValue = (string)$value;
-        }
-        
-        if ($this->propriete->getType() === "string"){
-            $this->savedValue = $value;
-        }
         return $this;
     }
 
@@ -86,6 +82,11 @@ class Valeur
         $this->propriete = $propriete;
 
         return $this;
+    }
+
+    public function getPropriete()
+    {
+        return  $this->propriete;
     }
 
     public function getBien(): ?Property
@@ -101,39 +102,30 @@ class Valeur
     }
 
     public function getValue(){
-        if ($this->propriete->getType() === "integer"){
-            $this->value = \intval($this->savedValue);
-        }
-        if ($this->propriete->getType() === "string"){
-            $this->value = \strval($this->savedValue);
-        }
-        if ($this->propriete->getType() === "boolean"){
-            $this->value =filter_var($this->savedValue, FILTER_VALIDATE_BOOLEAN);;
 
-        }
         return $this->value;
     }
 
-    /**
-     * Set the value of value
-     *
-     * @return  self
-     */ 
     public function setValue($value)
     {
-        if ($this->propriete->getType() === "boolean"){
-            $this->value = $value;
-        }
-
-        if ($this->propriete->getType() === "integer"){
-            $this->value = (int)$value;
-        }
-
-        if ($this->propriete->getType() === "string"){
-            $this->value = $value;
-        }
         $this->value = $value;
-
         return $this;
+    }
+
+    /**
+     * @Groups({"property:read","valeur:read"})
+     * @SerializedName("value")
+     */
+    public function getTestValues(){
+        if ($this->getPropriete()->getType() === "integer"){
+            return \intval($this->getSavedValue());
+        }
+        if ($this->getPropriete()->getType() === "boolean"){
+            return filter_var($this->getSavedValue(), FILTER_VALIDATE_BOOLEAN);
+
+        }
+        if ($this->getPropriete()->getType() === "string"){
+            return $this->getSavedValue();
+        }
     }
 }
