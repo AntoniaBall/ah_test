@@ -52,7 +52,7 @@ class SearchController extends AbstractController
         $properties = $this->getDoctrine()
                         ->getRepository(Property::class)
                         ->findPropertiesBySearch($dateStart, $dateEnd, $maxTraveler, $town);
-
+                   
         $dates = $dateService->displayDates($dateStart, $dateEnd);
 
         foreach($properties as $property){
@@ -60,11 +60,18 @@ class SearchController extends AbstractController
             $jourDispos = $this->getDoctrine()
                     ->getRepository(Disponibility::class)
                     ->getJourDisposBetweenDatesByProperty($property->getId(), $dateStart, $dateEnd);
+            
+            //dump($jourDispos);
 
             if (array_diff($dates,$jourDispos["data"]) === []){
-                $response[] = $objectNormalizer->normalize($property, 'jsonld');
+                $response[] = $property;
+                // dump($property->getId());
+
             }
+
         }
+        // dump($response);
+
 
         return $response;
     }
