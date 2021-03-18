@@ -44,6 +44,20 @@ class PropertyRepository extends ServiceEntityRepository
 
             return $query->getResult();
     }
+
+    public function getCountPropertiesByUser($userId){
+        // get all demandes of a property
+        $qb = $this->createQueryBuilder('p')
+                ->select('COUNT(p.id)')
+                ->andWhere('p.status = :status')
+                ->setParameter('status', 'en attente')
+                ->andWhere('p.user = :userId')
+                ->setParameter('userId', $userId);
+                
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+    }
     // /**
     //  * @return Property[] Returns an array of Property objects
     //  */

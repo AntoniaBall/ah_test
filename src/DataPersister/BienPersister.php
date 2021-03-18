@@ -40,8 +40,6 @@ final class BienPersister implements ContextAwareDataPersisterInterface
             $data->setIsPublished(false);
             $this->entityManager->persist($data);
             $this->entityManager->flush();
-            // $data->setStatus("en attente");
-            // $this->transformData($data);
         }
 
         if ($data instanceof Property && (($context['item_operation_name'] ?? null) === 'patch')) {
