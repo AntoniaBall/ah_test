@@ -94,7 +94,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="user", orphanRemoval=true)
      * 
-     * @Groups({"user:write"})
+     * @Groups({"user:write","admin:write","admin:read"})
      * @ORM\Column(type="json")
      */
     private $roles = [];

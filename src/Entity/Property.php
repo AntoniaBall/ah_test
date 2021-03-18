@@ -23,6 +23,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
  * @ApiResource(attributes={
  *     "normalization_context"={"groups"={"property:read", "enable_max_depth"=true}},
  *     "denormalization_context"={"groups"={"property:write"}},
+ *     "pagination_items_per_page"=20
  * },
  * collectionOperations={
  *    "get",
@@ -44,8 +45,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
  *          "controller"=ValidationPropertyController::class,
  *          "security_message"="Only admin can validate a property"
  *     }
- * },
- * attributes={"pagination_items_per_page"=20}
+ * }
  * )
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
  * @ApiFilter(SearchFilter::class, properties={"id": "exact", "typeProperty": "exact", "title": "exact", "description": "exact", "equipment":"exact", "user":"exact", "disponibilities":"exact", "address.town":"exact", "activities":"exact", "disponibilities":"exact", "user": "exact", "maxTravelers": "exact"})
@@ -226,11 +226,11 @@ class Property
     private $valeurs;
 
     /**
+     * @Groups({"admin:write","admin:read"})
      * @ORM\Column(type="boolean")
      */
     private $isPublished;
-
-
+    
     public function __construct()
     {
         $this->status="en attente";
