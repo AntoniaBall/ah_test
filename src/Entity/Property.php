@@ -208,7 +208,7 @@ class Property
     private $activities;
 
     /**
-     * @Groups({"property:read", "admin:write", "user:write", "disponibility:write"})
+     * @Groups({"property:read", "admin:write", "admin:read", "user:write", "disponibility:write"})
      * @Assert\Type(
      *      type="string",
      *      message="This value must be a string"
