@@ -34,11 +34,12 @@ class ValidationReservationController extends AbstractController
     public function __invoke(Reservation $data, Request $request) : Reservation
     {
         $bodyRequest = json_decode($request->getContent(), true);
+
         $currentDisponibilities= $data->getProperty()->getDisponibilities();
-        
-        if ($data->getIsPublished() === false){
-            throw new HttpException(400, "Le bien que vous essayez de réserver est masqué");
-        }
+
+        // if ($data->getIsPublished() === false){
+        //     throw new HttpException(400, "Le bien que vous essayez de réserver est masqué");
+        // }
 
         if (!$bodyRequest){
             throw new HttpException(400, "Please provide a valid JSON");
@@ -49,11 +50,11 @@ class ValidationReservationController extends AbstractController
         }
 
         $userReservationsCount = $this->getDoctrine()
-        ->getRepository(Reservation::class)
-        ->getCountReservationsByUser($data->getUser());
+            ->getRepository(Reservation::class)
+            ->getCountReservationsByUser($data->getUser());
 
-        if ($userReservationsCount[0][1] > 10){
-            throw new HttpException(400, "Vous avez plus de 2 reservations en attente");
+        if ($userReservationsCount[0][1] > 3){
+            throw new HttpException(400, "Vous avez plus de 3 reservations en attente");
         }
 
         $periodes = new \DatePeriod(
@@ -65,7 +66,8 @@ class ValidationReservationController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         if($data->getNumberTraveler() > $data->getProperty()->getMaxTravelers()) {
-            throw new HttpException(400, "Le nombre de voyageurs est supérieur à la capacité du bien que vous voulez réserver");
+            throw new HttpException(400, "Le nombre de voyageurs est supérieur
+                        à la capacité du bien que vous voulez réserver");
         }
 
         if ($bodyRequest["status"] === "acceptee"){
@@ -75,6 +77,7 @@ class ValidationReservationController extends AbstractController
                 ->getOtherWaitingReservations($period, $data->getProperty()->getId(), $data->getId());
                 $reservations[] = $result;
             }
+
             foreach ($reservations[0] as $reservation){
                 $reservation->setStatus("rejetee");
             }
@@ -84,7 +87,7 @@ class ValidationReservationController extends AbstractController
             $data->setStatus("acceptee");
 
             // trouver et bloquer les dates
-          
+            
         } else{
             // si reservation rejetee
             $this->paimentService->cancelPayment($data->getStripeToken());
