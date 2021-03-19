@@ -44,7 +44,6 @@ final class PropertyExtensions implements QueryCollectionExtensionInterface, Que
                         ->setParameter('isPublished', true)
                         ->andWhere(sprintf('%s.status = :status', $rootAlias))
                         ->setParameter('status', "acceptee");
-
         }
 
     }
