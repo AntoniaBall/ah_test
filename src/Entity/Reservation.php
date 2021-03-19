@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Type;
 use ApiPlatform\Core\Serializer\Filter\GroupFilter;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 
 /**
  * @ApiResource(normalizationContext={"groups"={"reservation:read"}},
@@ -41,6 +42,9 @@ use ApiPlatform\Core\Annotation\ApiFilter;
  * }
  * )
  * @ORM\Entity(repositoryClass=ReservationRepository::class)
+ * @ApiFilter(DateFilter::class, properties={"dateStart"})
+ * 
+ * 
  */
 class Reservation
 {

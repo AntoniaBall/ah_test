@@ -22,12 +22,15 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 /**
  * @ApiResource(attributes={
  *     "normalization_context"={"groups"={"property:read", "enable_max_depth"=true}},
- *     "denormalization_context"={"groups"={"property:write"}}
+ *     "denormalization_context"={"groups"={"property:write"}},
+ *     "pagination_items_per_page"=20
  * },
  * collectionOperations={
  *    "get",
  *    "post"={
- *          "security"="is_granted('ROLE_PROPRIO') or is_granted('ROLE_ADMIN')"
+ *          "security"="is_granted('ROLE_PROPRIO')",
+ *          "security_message"="Only proprio can add property",
+ *          "controller"=PropertyController::class
  *    },
  *    "searchProperties"={"route_name"="search"}
  * 
@@ -207,7 +210,7 @@ class Property
     private $activities;
 
     /**
-     * @Groups({"property:read", "admin:write", "user:write", "disponibility:write"})
+     * @Groups({"property:read", "admin:write", "admin:read", "user:write", "disponibility:write"})
      * @Assert\Type(
      *      type="string",
      *      message="This value must be a string"
@@ -225,14 +228,14 @@ class Property
     private $valeurs;
 
     /**
+     * @Groups({"admin:write","admin:read"})
      * @ORM\Column(type="boolean")
      */
     private $isPublished;
-
-
+    
     public function __construct()
     {
-        $this->status="draft";
+        $this->status="en attente";
         $this->isPublished=false;
         $this->reservations = new ArrayCollection();
         $this->disponibilities = new ArrayCollection();

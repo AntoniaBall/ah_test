@@ -49,3 +49,8 @@ services:
     App\Services\PaymentService:
         arguments:
             $clientSecret: '%stripe_secret_key%'
+    
+    App\Serializer\AdminContextBuilder:
+        decorates: 'api_platform.serializer.context_builder'
+        arguments: [ '@App\Serializer\AdminContextBuilder.inner' ]
+        autoconfigure: false
