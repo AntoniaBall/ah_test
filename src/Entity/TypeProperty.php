@@ -94,13 +94,6 @@ class TypeProperty
         return $this;
     }
 
-    /**
-     * @return Collection|ProprieteTypeProperty[]
-     */
-    public function getProprieteTypeProperties(): Collection
-    {
-        return $this->proprieteTypeProperties;
-    }
     
     
     /**
@@ -123,12 +116,9 @@ class TypeProperty
 
     public function removeProperty(Property $property): self
     {
-        if ($this->proprieteTypeProperties->removeElement($property)) {
-            // set the owning side to null (unless already changed)
             if ($property->getTypeProperty() === $this) {
                 $property->setTypeProperty(null);
             }
-        }
 
         return $this;
     }
