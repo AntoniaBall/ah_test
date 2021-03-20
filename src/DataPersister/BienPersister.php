@@ -49,6 +49,10 @@ final class BienPersister implements ContextAwareDataPersisterInterface
         if ($data instanceof Property && (($context['item_operation_name'] ?? null) === 'patch')) {
             $this->sendResponseAdmissionEmail($data);
         }
+
+        if ($data instanceof Propriete && (($context['collection_operation_name'] ?? null) === 'post')) {
+            $this->sendOwnerEmails($data);
+        }
         return $result;
     }
 
@@ -86,14 +90,13 @@ final class BienPersister implements ContextAwareDataPersisterInterface
                         .$property->getStatus().' par Atypik\'House');
         
         $this->mailer->send($message);
-        $this->notificationService->sendNotificationMessage($data->getUser(), 'Votre bien a été '.$property->getStatus().' par Atypik\'House');
+        $this->notificationService->sendNotificationMessage($property->getUser(), 'Votre bien a été '.$property->getStatus().' par Atypik\'House');
     }
-
+    
     private function transformData(Property $property){
         $valeurs = $property->getValeurs();
 
         foreach ($valeurs as $valeur){
-        
             if ($valeur->getPropriete()->getType() === "integer"){
                 $valeur->setSavedValue(\intval($valeur->getValue()));
             }
@@ -111,5 +114,10 @@ final class BienPersister implements ContextAwareDataPersisterInterface
     public function resumable(array $context = []): bool 
     {
         return true;
+    }
+
+    private function sendOwnerEmails(Propriete $data){
+        dump("coucou");
+        die();
     }
 }
