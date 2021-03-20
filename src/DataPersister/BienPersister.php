@@ -7,6 +7,7 @@ use App\Entity\Property;
 use App\Entity\UserNotifications;
 // use Symfony\Component\Mailer\MailerInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Services\NotificationService;
 use Symfony\Bridge\Twig\Mime\NotificationEmail;
 
 final class BienPersister implements ContextAwareDataPersisterInterface
@@ -14,13 +15,15 @@ final class BienPersister implements ContextAwareDataPersisterInterface
     private $decorated;
     private $entityManager;
     private $mailer;
+    private $notificationService;
 
     public function __construct(ContextAwareDataPersisterInterface $decorated,
-    \Swift_Mailer $mailer,EntityManagerInterface $entityManager)
+    \Swift_Mailer $mailer,EntityManagerInterface $entityManager, NotificationService $notificationService)
     {
         $this->decorated = $decorated;
         $this->mailer = $mailer;
         $this->entityManager = $entityManager;
+        $this->notificationService = $notificationService;
     }
 
     public function supports($data, array $context = []): bool
@@ -64,26 +67,26 @@ final class BienPersister implements ContextAwareDataPersisterInterface
                 ' Votre bien est en cours d\'etude. Nous vous informerons
                 bientot des que nous avons une reponse');
         $this->mailer->send($message);
+        $this->notificationService->sendNotificationMessage($property->getUser(), 'Votre bien est en cours d\"etude par notre équipe');
         // enregistrer notifications dans userNotifications
-        $notifications = new UserNotifications();
-        $notifications->setNotificationText('votre demande d\'ajout de bien a été enregistrée');
-        $notifications->setUser($property->getUser());
-        $this->entityManager->persist($notifications);
-        $this->entityManager->flush();
-        // dump($notifications);
-        // die();
+        // $notifications = new UserNotifications();
+        // $notifications->setNotificationText('votre demande d\'ajout de bien a été enregistrée');
+        // $notifications->setUser($property->getUser());
+        // $this->entityManager->persist($notifications);
+        // $this->entityManager->flush();
     }
 
     private function sendResponseAdmissionEmail(Property $property)
     {
         $message=(new \Swift_Message($property->getUser()->getEmail().
         ' Nous avons terminé d\'examiner votre bien'))
-        ->setFrom('m.manet@yopmail.com')
-        ->setTo('b.derrien12@yopmail.com')
-        ->setBody('Bonjour '.$property->getUser()->getEmail().' Votre bien a été '
-                .$property->getStatus().' par Atypik\'House');
+                ->setFrom('m.manet@yopmail.com')
+                ->setTo('b.derrien12@yopmail.com')
+                ->setBody('Bonjour '.$property->getUser()->getEmail().' Votre bien a été '
+                        .$property->getStatus().' par Atypik\'House');
         
         $this->mailer->send($message);
+        $this->notificationService->sendNotificationMessage($data->getUser(), 'Votre bien a été '.$property->getStatus().' par Atypik\'House');
     }
 
     private function transformData(Property $property){
