@@ -4,6 +4,7 @@ namespace App\DataPersister;
 
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use App\Entity\Property;
+use App\Entity\UserNotifications;
 // use Symfony\Component\Mailer\MailerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\NotificationEmail;
@@ -60,9 +61,17 @@ final class BienPersister implements ContextAwareDataPersisterInterface
                 ->setTo('b.derrien12@yopmail.com')
                 // ->setTo($property->getUser()->getEmail())
                 ->setBody('Bonjour '.$property->getUser()->getEmail().
-                    ' Votre bien est en cours d\'etude.Nous vous informerons
-                    bientot des que nous avons une reponse');
+                ' Votre bien est en cours d\'etude. Nous vous informerons
+                bientot des que nous avons une reponse');
         $this->mailer->send($message);
+        // enregistrer notifications dans userNotifications
+        $notifications = new UserNotifications();
+        $notifications->setNotificationText('votre demande d\'ajout de bien a été enregistrée');
+        $notifications->setUser($property->getUser());
+        $this->entityManager->persist($notifications);
+        $this->entityManager->flush();
+        // dump($notifications);
+        // die();
     }
 
     private function sendResponseAdmissionEmail(Property $property)

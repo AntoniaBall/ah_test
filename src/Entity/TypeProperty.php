@@ -97,7 +97,7 @@ class TypeProperty
     
     
     /**
-     * @return Collection|ProprieteTypeProperty[]
+     * @return Collection|Property[]
      */
     public function getProperties(): Collection
     {

@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Controller\RegistrationController;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 
 /**
 * @ApiResource(normalizationContext={"groups"={"user:read"}},
@@ -43,7 +44,12 @@ use App\Controller\RegistrationController;
 *                   "security"="is_granted('ROLE_ADMIN') or object == user",
 *                   "security_message"= "You are not the owner of this profile"
 *           }
-*      }
+*      },
+*      subresourceOperations={
+ *          "users_get_subresource"={ 
+ *              "path"="/users/{id}/user_notifications"
+ *          }
+ *     }
 *)
 * 
 * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -140,11 +146,18 @@ class User implements UserInterface
      */
     private $rest_token;
 
+    /**
+     * @ApiSubresource()
+     * @ORM\OneToMany(targetEntity=UserNotifications::class, mappedBy="user")
+     */
+    private $userNotifications;
+
     public function __construct()
     {
         $this->isAdmin = false;
         $this->reservations = new ArrayCollection();
         $this->properties = new ArrayCollection();
+        $this->userNotifications = new ArrayCollection();
     }
 
 
@@ -413,6 +426,36 @@ class User implements UserInterface
     public function setRestToken(?string $rest_token): self
     {
         $this->rest_token = $rest_token;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserNotifications[]
+     */
+    public function getUserNotifications(): Collection
+    {
+        return $this->userNotifications;
+    }
+
+    public function addUserNotification(UserNotifications $userNotification): self
+    {
+        if (!$this->userNotifications->contains($userNotification)) {
+            $this->userNotifications[] = $userNotification;
+            $userNotification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserNotification(UserNotifications $userNotification): self
+    {
+        if ($this->userNotifications->removeElement($userNotification)) {
+            // set the owning side to null (unless already changed)
+            if ($userNotification->getUser() === $this) {
+                $userNotification->setUser(null);
+            }
+        }
 
         return $this;
     }

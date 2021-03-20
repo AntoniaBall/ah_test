@@ -69,7 +69,6 @@ class Propriete
 
     public function __construct()
     {
-        $this->proprieteTypeProperties = new ArrayCollection();
         $this->valeurBools = new ArrayCollection();
         $this->valuerStrings = new ArrayCollection();
         $this->valeurs = new ArrayCollection();
