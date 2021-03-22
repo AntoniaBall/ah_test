@@ -13,7 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ApiResource(
  *  attributes={"fetchEager": true},
- *   normaizationContext={"groups"={"propriete:list"}},
+ *   normalizationContext={"groups"={"propriete:list"}},
+ *   denormalizationContext={"groups"={"propriete:write"}},
  *  collectionoperations={
  *       "get",
  *       "post"={
@@ -44,19 +45,19 @@ class Propriete
     private $id;
 
     /**
-     * @Groups({"propriete:list", "typeproperty:read","property:read","typeproperty:write"})
+     * @Groups({"propriete:list", "propriete:write","typeproperty:read","property:read","typeproperty:write"})
      * @ORM\Column(type="string", length=100)
      */
     private $name;
 
     /**
-     * @Groups("propriete:list")
+     * @Groups({"propriete:list","propriete:write"})
      * @ORM\ManyToOne(targetEntity=typeproperty::class, inversedBy="proprietes")
      */
     private $typeProperty;
 
     /**
-     * @Groups({"propriete:list", "typeproperty:read","property:read","typeproperty:write" })
+     * @Groups({"propriete:list", "propriete:write", "typeproperty:read","property:read","typeproperty:write" })
      * @ORM\Column(type="string")
      * @Assert\Choice({"integer","booleen","string"})
      */
