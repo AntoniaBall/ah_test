@@ -71,13 +71,8 @@ final class BienPersister implements ContextAwareDataPersisterInterface
                 ' Votre bien est en cours d\'etude. Nous vous informerons
                 bientot des que nous avons une reponse');
         $this->mailer->send($message);
-        $this->notificationService->sendNotificationMessage($property->getUser(), 'Votre bien est en cours d\"etude par notre équipe');
-        // enregistrer notifications dans userNotifications
-        // $notifications = new UserNotifications();
-        // $notifications->setNotificationText('votre demande d\'ajout de bien a été enregistrée');
-        // $notifications->setUser($property->getUser());
-        // $this->entityManager->persist($notifications);
-        // $this->entityManager->flush();
+        $this->notificationService->sendNotificationMessage($property->getUser(), 
+        'Votre bien est en cours d\"etude par notre équipe');
     }
 
     private function sendResponseAdmissionEmail(Property $property)
@@ -110,14 +105,8 @@ final class BienPersister implements ContextAwareDataPersisterInterface
             $this->entityManager->flush();
         }
     }
-
     public function resumable(array $context = []): bool 
     {
         return true;
-    }
-
-    private function sendOwnerEmails(Propriete $data){
-        dump("coucou");
-        die();
     }
 }

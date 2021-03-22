@@ -46,4 +46,8 @@ final class UserPersister implements DataPersisterInterface
         $this->entityManager->remove($data);
         $this->entityManager->flush();
     }
+    public function resumable(array $context = []): bool 
+    {
+        return true;
+    }
 }
