@@ -57,7 +57,7 @@ class Propriete
     private $typeProperty;
 
     /**
-     * @Groups({"propriete:list", "propriete:write", "typeproperty:read","property:read","typeproperty:write" })
+     * @Groups({"propriete:list", "propriete:write","typeproperty:read","property:read","typeproperty:write" })
      * @ORM\Column(type="string")
      * @Assert\Choice({"integer","booleen","string"})
      */
@@ -70,7 +70,6 @@ class Propriete
 
     public function __construct()
     {
-        $this->proprieteTypeProperties = new ArrayCollection();
         $this->valeurBools = new ArrayCollection();
         $this->valuerStrings = new ArrayCollection();
         $this->valeurs = new ArrayCollection();
