@@ -46,6 +46,7 @@ final class CurrentUserSubscriber implements EventSubscriberInterface
         $object = $event->getControllerResult();
         if ($object instanceof Comments) {        
         $object->setAuteur($this->tokenStorage->getToken()->getUser());
+        $object->setPublishedAt(new \Datetime('now'));
         $event->setControllerResult($object);
         }
         // if ($object instanceof Valeur) {        
