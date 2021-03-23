@@ -5,6 +5,7 @@ namespace App\Security\Voter;
 
 use App\Entity\Comments;
 use App\Entity\User;
+use App\Entity\Reservation;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -19,11 +20,12 @@ class CommentsVoter extends Voter
     public function __construct(Security $security)
     {
         $this->security = $security;
+    
     }
 
     protected function supports($attribute, $subject): bool
     {
-        $supportsAttribute = in_array($attribute, ['EDIT_COMMENTS']);
+        $supportsAttribute = in_array($attribute, ['EDIT_COMMENTS', 'POST_COMMENTS']);
         $supportsSubject = $subject instanceof Comments;
 
         return $supportsAttribute && $supportsSubject;
@@ -42,7 +44,9 @@ class CommentsVoter extends Voter
             case 'EDIT_COMMENTS':
                 if ( $this->security->isGranted(Role::ROLE_USER) ) { return true; }  
                 break;
-           
+            case 'POST_COMMENTS':
+                if ( $this->security->isGranted(Role::ROLE_USER) ) { return true; }  
+                break;
         }
 
         return false;
