@@ -46,6 +46,12 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
  *          "path"="/properties/{id}/status",
  *          "controller"=ValidationPropertyController::class,
  *          "security_message"="Only admin can validate a property"
+ *     },
+ *     "put"={
+ *          "security"="object.getProperty().getUser() == user",
+ *          "path"="/properties/{id}/disponibilities",
+ *          "controller"=DisponibilitiesController::class,
+ *          "security_message"="Only the owner can update the disponibilities"
  *     }
  * }
  * )
