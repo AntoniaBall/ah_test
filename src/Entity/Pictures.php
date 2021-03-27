@@ -127,7 +127,7 @@ class Pictures
     {
         return $this->id;
     }
-    
+
     /**
      * @Groups({"picture:read", "picture:write", "property:read"})
      * @ApiProperty(iri="http://schema.org/contentUrl")
