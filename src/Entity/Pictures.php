@@ -120,6 +120,7 @@ class Pictures
         $this->status = "en modération";
         $this->url = "/images/uploads";
         $this->maxSize=300;
+        $this->updatedAt=new \DateTime('now');
     }
     
     public function getId(): ?int
