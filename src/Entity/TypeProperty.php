@@ -133,7 +133,15 @@ class TypeProperty
      */
     public function getProperties(): Collection
     {
-        return $this->properties;
+        # return only published properties
+        $properties = $this->properties;
+        $response = new ArrayCollection();
+        foreach($properties as $property){
+            if ($property->getIsPublished() === true){
+                $response[] = $property;
+            }
+        }
+        return $response;
     }
 
     public function addProperty(Property $property): self
