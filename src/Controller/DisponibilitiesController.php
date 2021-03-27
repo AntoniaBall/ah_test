@@ -15,26 +15,27 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-
 class DisponibilitiesController extends AbstractController{
+
     public function __invoke(Property $data, Request $request, EntityManagerInterface $entityManager){
+
         $bodyRequest = json_decode($request->getContent(), true);
 
         $newDisponibilities = $bodyRequest["disponibilities"];
         
         $propertyDisponibilities = $data->getDisponibilities();
+
         foreach ($propertyDisponibilities as $disponibility){
             $data->removeDisponibility($disponibility);
         }
 
         foreach ($newDisponibilities as $newDisponibility){
             try{
-                $jour = new \DateTime($newDisponibility);
+                $jour = new \DateTime($newDisponibility["jourDispo"]);
             }
             catch(\Exception $e){
                 throw new HttpException(404, "The date you try to send is not valid");
             }
-            
             $disponibilityNew = new Disponibility();
             $disponibilityNew->setJourDispo($jour);
             $disponibilityNew->setProperty($data);

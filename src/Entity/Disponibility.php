@@ -14,13 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ApiResource(
  *     normalizationContext={"groups"={"disponibility:read"}},
- *     denormalizationContext={"groups"={"disponibility:write"}},
- *     itemOperations={
- *     "put"={
- *          "path"= "/properties/{id}/disponibilities",
- *          "controller"= DisponibilitiesController::class,
- *         }
- *     }
+ *     denormalizationContext={"groups"={"disponibility:write"}}
  * )
  * @ORM\Entity(repositoryClass=DisponibilityRepository::class)
  */
