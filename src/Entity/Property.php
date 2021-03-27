@@ -33,8 +33,9 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
  *          "security_message"="Only proprio can add property",
  *          "controller"=PropertyController::class
  *    },
- *    "searchProperties"={"route_name"="search"}
- * 
+ *    "searchProperties"={
+ *          "route_name"="search"
+ *     }
  * },
  * itemOperations={
  *    "get"={"security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY') or is_granted('IS_AUTHENTICATED_FULLY')"},
@@ -73,7 +74,6 @@ class Property
      * maxMessage = "La longueur du titre doit être inférieure à {{ limit }} caractères"
      * )
      * @Assert\NotNull
-     * @Groups({"valeurBool:list"})
      */
     private $title;
     
