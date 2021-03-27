@@ -66,7 +66,7 @@ class Pictures
     private $id;
 
     /**
-     * @Groups({"picture:read", "picture:write", "property:read"})
+     * @Groups({"picture:write","picture:read"})
      * 
      * @ApiProperty(iri="http://schema.org/contentUrl")
      * @ORM\Column(type="string", length=255)
@@ -118,7 +118,7 @@ class Pictures
     
     public function __construct(){
         $this->status = "en modération";
-        $this->url = "/images/uploads";
+        $this->url = "/images/products";
         $this->maxSize=300;
         $this->updatedAt=new \DateTime('now');
     }
@@ -129,8 +129,7 @@ class Pictures
     }
 
     /**
-     * @Groups({"picture:read", "picture:write", "property:read"})
-     * @ApiProperty(iri="http://schema.org/contentUrl")
+     * @Groups({"property:read"})
      */
     public function getUrl(): ?string
     {
