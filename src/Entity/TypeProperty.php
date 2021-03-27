@@ -131,9 +131,7 @@ class TypeProperty
     /**
      * @return Collection|ProprieteTypeProperty[]
      */
-    public function getProperties(): Collection
-    {
-        # return only published properties
+    public function getProperties(): Collection{
         $properties = $this->properties;
         $response = new ArrayCollection();
         foreach($properties as $property){
