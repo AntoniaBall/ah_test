@@ -17,9 +17,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     denormalizationContext={"groups"={"disponibility:write"}},
  *     itemOperations={
  *     "put"={
- *          "path"= "/properties/{id}/changeDisponibilities",
+ *          "path"= "/properties/{id}/disponibilities",
  *          "controller"= DisponibilitiesController::class,
- *     }
+ *         }
  *     }
  * )
  * @ORM\Entity(repositoryClass=DisponibilityRepository::class)

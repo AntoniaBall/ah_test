@@ -25,13 +25,16 @@ class DisponibilitiesController extends AbstractController{
         $propertyDisponibilities = $data->getDisponibilities();
         foreach ($propertyDisponibilities as $disponibility){
             $data->removeDisponibility($disponibility);
-            $entityManager->persist($data);
         }
+
         foreach ($newDisponibilities as $newDisponibility){
-            $jour = new \DateTime($newDisponibility);
-            if ($jour === null ){ // si pas une date
-                throw new HttpException(400, "Date not valid");
+            try{
+                $jour = new \DateTime($newDisponibility);
             }
+            catch(\Exception $e){
+                throw new HttpException(404, "The date you try to send is not valid");
+            }
+            
             $disponibilityNew = new Disponibility();
             $disponibilityNew->setJourDispo($jour);
             $disponibilityNew->setProperty($data);
