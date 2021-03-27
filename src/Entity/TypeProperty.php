@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-
 /**
  * @ApiResource(normalizationContext={"groups"={"typeproperty:read"}},
  *     denormalizationContext={"groups"={"typeproperty:write"}},
