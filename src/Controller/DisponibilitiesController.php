@@ -21,17 +21,12 @@ class DisponibilitiesController extends AbstractController{
         $bodyRequest = json_decode($request->getContent(), true);
 
         $newDisponibilities = $bodyRequest["disponibilities"];
-
-        // supprimer les disponibilités du bien
+        
         $propertyDisponibilities = $data->getDisponibilities();
         foreach ($propertyDisponibilities as $disponibility){
             $data->removeDisponibility($disponibility);
             $entityManager->persist($data);
-            // dump($disponibility->getId());
-
         }
-        // dump($data->getDisponibilities()->count());
-        // die();
         foreach ($newDisponibilities as $newDisponibility){
             $jour = new \DateTime($newDisponibility);
             if ($jour === null ){ // si pas une date
@@ -41,7 +36,6 @@ class DisponibilitiesController extends AbstractController{
             $disponibilityNew->setJourDispo($jour);
             $disponibilityNew->setProperty($data);
             $entityManager->persist($disponibilityNew);
-            // dump($disponibilityNew);
         }
 
         $entityManager->flush();
