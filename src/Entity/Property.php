@@ -15,6 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Controller\PropertyController;
 use App\Controller\ValidationPropertyController;
+use App\Controller\DisponibilitiesController;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
@@ -32,8 +33,9 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
  *          "security_message"="Only proprio can add property",
  *          "controller"=PropertyController::class
  *    },
- *    "searchProperties"={"route_name"="search"}
- * 
+ *    "searchProperties"={
+ *          "route_name"="search"
+ *     }
  * },
  * itemOperations={
  *    "get"={"security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY') or is_granted('IS_AUTHENTICATED_FULLY')"},
@@ -46,6 +48,10 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
  *          "path"="/properties/{id}/status",
  *          "controller"=ValidationPropertyController::class,
  *          "security_message"="Only admin can validate a property"
+ *     },
+ *     "put"={
+ *          "path"= "/properties/{id}/disponibilities",
+ *          "controller"= DisponibilitiesController::class
  *     }
  * }
  * )
@@ -64,7 +70,7 @@ class Property
     private $id;
 
     /**
-     * @Groups({"property:read", "property:write", "reservation:read", "typeproperty:read", "user:write", "picture:write", "indisponibility:write", "activities:write"})
+     * @Groups({"property:read", "property:write", "reservation:read", "typeproperty:read", "user:write", "picture:write", "disponibility:write", "activities:write"})
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank
      * @Assert\Length(
@@ -72,7 +78,6 @@ class Property
      * maxMessage = "La longueur du titre doit être inférieure à {{ limit }} caractères"
      * )
      * @Assert\NotNull
-     * @Groups({"valeurBool:list"})
      */
     private $title;
     
@@ -191,7 +196,7 @@ class Property
 
     /**
      * @Groups({"property:read", "property:write", "user:write", "disponibility:write", "reservation:read"})
-     * @ORM\OneToMany(targetEntity=Disponibility::class, mappedBy="property", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=Disponibility::class, mappedBy="property", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $disponibilities;
 
@@ -468,8 +473,15 @@ class Property
 
      public function removeDisponibility(Disponibility $disponibility): self
      {
+        // if ($this->disponibilities->removeElement($disponibility)) {
+        //     return $this;
+        // }
+
+        // return $this;
         if ($this->disponibilities->removeElement($disponibility)) {
-            return $this;
+            if ($disponibility->getProperty() === $this) {
+                $disponibility->setProperty(null);
+            }
         }
 
         return $this;

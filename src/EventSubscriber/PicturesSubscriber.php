@@ -52,7 +52,7 @@ final class PicturesSubscriber implements EventSubscriberInterface
             }
 
             $picture->setUrl($this->storage->resolveUri($picture, 'file'));
-            // var_dump($picture->getUrl());
+            $picture->setUpdatedAt(new \DateTime('now'));
         }
     }
 }
