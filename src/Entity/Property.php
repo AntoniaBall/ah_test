@@ -19,6 +19,7 @@ use App\Controller\DisponibilitiesController;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 /**
  * @ApiResource(attributes={
@@ -58,6 +59,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
  * @ApiFilter(SearchFilter::class, properties={"id": "exact", "typeProperty": "exact", "title": "exact", "description": "exact", "equipment":"exact", "user":"exact", "disponibilities":"exact", "address.town":"exact", "activities":"exact", "disponibilities":"exact", "user": "exact", "maxTravelers": "exact"})
  * @ApiFilter(RangeFilter::class, properties={"maxTravelers"})
+ * @ApiFilter(BooleanFilter::class, properties={"isPublished"})
  * [ApiFilter(DateFilter::class, properties: ['disponibilities'])]
  */
 class Property
