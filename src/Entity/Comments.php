@@ -27,17 +27,17 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 *    collectionoperations={
 *        "get", 
 *        "post"={
-*            "security"="is_granted('POST_COMMENTS', object)",
+*            "security"="is_granted('ROLE_USER')"
 *        }},
 *   itemOperations={
 *    "get"={
 *        "normalizations_context"={"groups"={"comments:list", "read:full:comment"}},
 *    },
 *    "put"={
-*        "security"="is_granted('EDIT_COMMENTS', object) and object.Auteur == user"
+*        "security"="is_granted('ROLE_USER') or  object.Auteur == user"
 *    },
 *    "delete"={
-*        "security"="is_granted('EDIT_COMMENTS', object)"
+*       "security"="is_granted('ROLE_ADMIN') or object.Auteur == user"
 *    },
 *    }
 * )
@@ -57,7 +57,7 @@ class Comments
 
     /**
      *
-     * @Groups({"comments:list"})
+     * @Groups({"comments:list", "activities:read"})
      * @ORM\Column(type="string", length=255, nullable=true)
     
      * @Assert\Length(
@@ -70,27 +70,21 @@ class Comments
 
     /**
      *
-     * @Groups({"comments:list"})
+     * @Groups({"comments:list","activities:read","property:read"})
      * @ORM\OneToMany(targetEntity=Pictures::class, mappedBy="comments")
      */
     private $pictures;
 
-    /**
-     * 
-     * @ORM\Column(type="array")
-     *
-     */
-    private $forbidden_words = [];
 
     /**
      *
-     * @Groups({"comments:list"})
+     * @Groups({"comments:list","activities:read","property:read"})
      * @ORM\ManyToOne(targetEntity=Activities::class, inversedBy="comments")
      */
     private $activities;
 
     /**
-     * @Groups({"comments:list"})
+     * @Groups({"comments:list","activities:read","property:read"})
      * @ORM\ManyToOne(targetEntity=Reservation::class, inversedBy="comments")
      *
      */
