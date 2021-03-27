@@ -128,9 +128,13 @@ class Pictures
         return $this->id;
     }
     
+    /**
+     * @Groups({"picture:read", "picture:write", "property:read"})
+     * @ApiProperty(iri="http://schema.org/contentUrl")
+     */
     public function getUrl(): ?string
     {
-        return $this->url;
+        return $this->url.'/'.$this->filePath;
     }
 
     public function setUrl(string $url = null): self
