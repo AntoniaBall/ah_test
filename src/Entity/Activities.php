@@ -62,7 +62,7 @@ class Activities
     private $property;
 
     /**
-     * 
+     * @Groups({"property:read"})
      * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="activities")
      * @Groups("activities:read")
      */
