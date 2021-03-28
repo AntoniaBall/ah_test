@@ -57,7 +57,7 @@ class Comments
 
     /**
      *
-     * @Groups({"comments:list", "activities:read"})
+     * @Groups({"comments:list", "activities:read","property:read"})
      * @ORM\Column(type="string", length=255, nullable=true)
     
      * @Assert\Length(
