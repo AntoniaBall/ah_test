@@ -37,9 +37,9 @@ class ValidationReservationController extends AbstractController
 
         $currentDisponibilities= $data->getProperty()->getDisponibilities();
 
-        // if ($data->getIsPublished() === false){
-        //     throw new HttpException(400, "Le bien que vous essayez de réserver est masqué");
-        // }
+        if ($data->getIsPublished() === false){
+            throw new HttpException(400, "Le bien que vous essayez de réserver est masqué");
+        }
 
         if (!$bodyRequest){
             throw new HttpException(400, "Please provide a valid JSON");
@@ -93,6 +93,8 @@ class ValidationReservationController extends AbstractController
             $this->paimentService->cancelPayment($data->getStripeToken());
             $data->setStatus("rejetee");
         }
+
+        
         $em->persist($data);
         $em->flush();
         return $data;

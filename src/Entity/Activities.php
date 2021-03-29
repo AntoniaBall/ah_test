@@ -37,7 +37,7 @@ class Activities
      * maxMessage = "La longeur de votre activité doit être inférieure à {{ limit }} caractères"
      * 
      * )
-     * @Groups({"activities:read", "activities:write", "property:write", "property:read"})
+     * @Groups({"activities:read", "activities:write", "property:write", "property:read", "reservation:read"})
      */
     private $description;
 

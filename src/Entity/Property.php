@@ -211,7 +211,7 @@ class Property
     private $pictures;
 
     /**
-     * @Groups({"property:read", "property:write", "user:write", "activities:write"})
+     * @Groups({"property:read", "property:write", "user:write", "activities:write","reservation:read"})
      * @ORM\ManyToMany(targetEntity=Activities::class, mappedBy="property", cascade={"persist", "remove"})
      */
     private $activities;
