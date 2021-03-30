@@ -51,7 +51,7 @@ class Activities
      * minMessage = "Le titre de votre activité doit être supérieure à {{ limit }} caractères",
      * maxMessage = "Le titre de votre activité doit être inférieure à {{ limit }} caractères"
      * )
-     * @Groups({"activities:read", "activities:write", "property:write", "property:read"})
+     * @Groups({"activities:read", "activities:write", "property:write", "property:read","reservation:read"})
      */
     private $title;
     
