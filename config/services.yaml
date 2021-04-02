@@ -46,8 +46,8 @@ services:
     App\DataPersister\BienPersister:
         decorates: 'api_platform.doctrine.orm.data_persister'
 
-    App\DataPersister\ProprietePersister:
-        decorates: 'api_platform.doctrine.orm.data_persister'
+    # App\DataPersister\ProprietePersister:
+    #     decorates: 'api_platform.doctrine.orm.data_persister'
         
     App\Services\PaymentService:
         arguments:

@@ -4,6 +4,7 @@ namespace App\DataPersister;
 
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use App\Entity\Property;
+use App\Entity\Propriete;
 use App\Entity\UserNotifications;
 // use Symfony\Component\Mailer\MailerInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -105,6 +106,17 @@ final class BienPersister implements ContextAwareDataPersisterInterface
             $this->entityManager->flush();
         }
     }
+
+    private function sendOwnerEmails(Propriete $data){
+        $properties=$data->getTypeProperty()->getProperties();
+        foreach ($properties as $property){
+
+            var_dump($property->getUser());
+        }
+        // get properties by type property id
+        die();
+    }
+
     public function resumable(array $context = []): bool 
     {
         return true;
