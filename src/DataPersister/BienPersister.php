@@ -52,7 +52,15 @@ final class BienPersister implements ContextAwareDataPersisterInterface
         }
 
         if ($data instanceof Propriete && (($context['collection_operation_name'] ?? null) === 'post')) {
-            $this->sendOwnerEmails($data);
+            $this->sendOwnerEmailsAdd($data);
+        }
+
+        if ($data instanceof Propriete && (($context['item_operation_name'] ?? null) === 'put')) {
+            $this->sendOwnerEmailsUpdate($data);
+        }
+
+        if ($data instanceof Propriete && (($context['item_operation_name'] ?? null) === 'delete')) {
+            $this->sendOwnerEmailsDelete($data);
         }
         return $result;
     }
@@ -107,16 +115,54 @@ final class BienPersister implements ContextAwareDataPersisterInterface
         }
     }
 
-    private function sendOwnerEmails(Propriete $data){
+    private function sendOwnerEmailsAdd(Propriete $data){
         $properties=$data->getTypeProperty()->getProperties();
         foreach ($properties as $property){
+            $this->notificationService->sendNotificationMessage($property->getUser(), 'Une nouvelle propriété a été ajouté à la catégorie '.$data->getTypeProperty()->getTitle().' par Atypik\'House');
 
-            var_dump($property->getUser());
+            $message=(new \Swift_Message($property->getUser()->getEmail().
+            ' Une propriété a été ajoutée à votre catégorie de biens'))
+                ->setFrom('m.manet@yopmail.com')
+                ->setTo($property->getUser()->getEmail())
+                ->setBody('Bonjour '.$property->getUser()->getEmail().' Une propriété 
+                dynamique a été ajoutée à votre catégorie de biens sur Atypik\'House');
+        $this->mailer->send($message);
         }
-        // get properties by type property id
-        die();
     }
 
+    private function sendOwnerEmailsUpdate(Propriete $data){
+        $properties=$data->getTypeProperty()->getProperties();
+
+        if ($properties !== []){
+            foreach ($properties as $property){
+                $this->notificationService->sendNotificationMessage($property->getUser(), 'La propriété '.$data->getName().' a été modifié par Atypik\'House');
+                
+                $message=(new \Swift_Message($property->getUser()->getEmail().
+                ' Une propriété a été ajoutée à votre catégorie de biens'))
+                    ->setFrom('m.manet@yopmail.com')
+                    ->setTo($property->getUser()->getEmail())
+                    ->setBody('Bonjour '.$property->getUser()->getEmail().'La propriété '.$data->getName().' a été modifié par Atypik\'House');
+            $this->mailer->send($message);
+            }
+        }
+    }
+
+    private function sendOwnerEmailsDelete(Propriete $data){
+        $properties=$data->getTypeProperty()->getProperties();
+
+        if ($properties !== []){
+            foreach ($properties as $property){
+                $this->notificationService->sendNotificationMessage($property->getUser(), 'La propriété '.$data->getName().' a été supprimée par Atypik\'House');
+                
+                $message=(new \Swift_Message($property->getUser()->getEmail().
+                ' Une propriété a été ajoutée à votre catégorie de biens'))
+                    ->setFrom('m.manet@yopmail.com')
+                    ->setTo($property->getUser()->getEmail())
+                    ->setBody('Bonjour '.$property->getUser()->getEmail().'La propriété '.$data->getName().' a été supprimée par Atypik\'House');
+            $this->mailer->send($message);
+            }
+        }
+    }
     public function resumable(array $context = []): bool 
     {
         return true;
