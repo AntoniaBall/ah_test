@@ -37,14 +37,15 @@ final class AProposExtensions implements QueryCollectionExtensionInterface, Quer
         if (APropos::class !== $resourceClass || $this->security->isGranted('ROLE_ADMIN')) {
             return;
         }
+
         $rootAlias = $queryBuilder->getRootAliases()[0];
 
-        // si l'utilisateur est anonyme ou est un user, il voit le a propos publié
         if ($this->security->isGranted('ROLE_USER') || null === $user = $this->security->getUser()){
             $queryBuilder->andWhere(sprintf('%s.isActived =:isActived', $rootAlias));
             $queryBuilder->setParameter('isActived', true);
         }
     }
+    
     private function getItem(QueryBuilder $queryBuilder, string $resourceClass): void
     {
         return ;
