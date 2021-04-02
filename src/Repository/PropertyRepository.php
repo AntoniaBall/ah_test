@@ -58,6 +58,7 @@ class PropertyRepository extends ServiceEntityRepository
 
         return $query->getResult();
     }
+
     // /**
     //  * @return Property[] Returns an array of Property objects
     //  */

@@ -6,7 +6,7 @@ use App\Entity\Paiement;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PaymentService {
-
+    
     private $clientSecret;
     private $entityManager;
 

@@ -32,7 +32,7 @@ class PropertyController extends AbstractController
                 ->getRepository(Property::class)
                 ->getCountPropertiesByUser($data->getUser()->getId());
         
-        if ($countProperties[0][1] > 3){
+        if ($countProperties[0][1] > 30){
             throw new HttpException(400, "Vous avez plus de 3 demandes d'ajout de biens en attente");
         }
         
