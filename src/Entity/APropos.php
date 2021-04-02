@@ -44,7 +44,6 @@ class APropos
     private $createdAt;
 
     /**
-     * @Groups({"apropos:read"})
      * @ORM\Column(type="boolean")
      */
     private $isActived;
