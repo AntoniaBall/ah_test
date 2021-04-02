@@ -20,7 +20,6 @@ class AProposController extends AbstractController{
     public function __invoke(APropos $data, Request $request, EntityManagerInterface $entityManager){
         $bodyRequest = json_decode($request->getContent(), true);
 
-        // dépublier toutes les autres descriptions
         $apropos = new APropos();
         $activities = $entityManager->getRepository(APropos::class)->findAll();
 
@@ -31,9 +30,11 @@ class AProposController extends AbstractController{
 
         $apropos->setIsActived(true);
         $apropos->setDescription($bodyRequest["description"]);
+        
         $entityManager->persist($apropos);
 
         $entityManager->flush();
+
         return $data;
     }
 }

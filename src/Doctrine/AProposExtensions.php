@@ -34,8 +34,7 @@ final class AProposExtensions implements QueryCollectionExtensionInterface, Quer
     
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
     {
-        if (APropos::class !== $resourceClass || $this->security->isGranted('ROLE_ADMIN') || 
-        null === $user = $this->security->getUser()) {
+        if (APropos::class !== $resourceClass || $this->security->isGranted('ROLE_ADMIN')) {
             return;
         }
         $rootAlias = $queryBuilder->getRootAliases()[0];
@@ -45,27 +44,9 @@ final class AProposExtensions implements QueryCollectionExtensionInterface, Quer
             $queryBuilder->andWhere(sprintf('%s.isActived =:isActived', $rootAlias));
             $queryBuilder->setParameter('isActived', true);
         }
-
-        // // si l'utilisateur est proprio voir la liste de toutes les reservations sur ses biens
-        // if ($this->security->isGranted('ROLE_PROPRIO')){
-        //     // $queryBuilder->innerJoin(Property::class, 'p', Join::WITH, '%s.property = p.id');
-        //     $queryBuilder->innerJoin(Property::class, 'p', Join::WITH, sprintf('%s.property = p.id', $rootAlias));
-        //     // $queryBuilder->leftJoin(sprintf('%s.property', $rootAlias), 'property')->addSelect('property');
-        //     $queryBuilder->andWhere(sprintf('p.user = :user'));
-        //     $queryBuilder->setParameter('user', $this->security->getUser());
-        // }
     }
     private function getItem(QueryBuilder $queryBuilder, string $resourceClass): void
     {
-        
-        // if ($this->security->isGranted('ROLE_PROPRIO')){
-        // $rootAlias = $queryBuilder->getRootAliases()[0];
-        // if ($this->security->isGranted('ROLE_USER')){
-        //     $queryBuilder->andWhere(sprintf('%s.user = :current_user', $rootAlias));
-        //     $queryBuilder->setParameter('current_user', $this->security->getUser());
-        //     dump($queryBuilder->getQuery());
-        //     // dump($queryBuilder->getQuery());
-        // }
         return ;
     }
 }
