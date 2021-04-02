@@ -35,14 +35,14 @@ class ReservationController extends AbstractController
         // CREER DEMANDE DE RESERVATION AVEC INFOS DE PAIEMENT
         $disponibilities = $data->getProperty()->getDisponibilities()->toArray();
 
+        if ($disponibilities === []){
+            throw new HttpException(400, "Le bien n'a aucune disponibilité");
+        }
         $interval = date_diff($data->getDateEnd(), $data->getDateStart()); // 6 days
         
         if (!$data->getStripeToken()) {
             throw new HttpException(400, "Aucun paiement initié pour cette réservation");
         }
-        // $data->setMontant($interval * $data->getProperty()->getRate());
-        // dump($data->getMontant());
-        // die();
 
         // récupérer tous les jours de reservations
         $periodes = new \DatePeriod(
@@ -75,6 +75,7 @@ class ReservationController extends AbstractController
         if ($userReservationsCount[0][1] > 3){
             throw new HttpException(400, "Vous avez plus de 3 reservations en attente");
         }
+
 
         $historique["days"] = $interval->days;
         $historique["dateStart"] = $data->getDateStart();

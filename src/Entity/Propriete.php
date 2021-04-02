@@ -52,7 +52,7 @@ class Propriete
 
     /**
      * @Groups({"propriete:list","propriete:write"})
-     * @ORM\ManyToOne(targetEntity=typeproperty::class, inversedBy="proprietes")
+     * @ORM\ManyToOne(targetEntity=TypeProperty::class, inversedBy="proprietes")
      */
     private $typeProperty;
 

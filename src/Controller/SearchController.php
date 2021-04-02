@@ -24,7 +24,6 @@ class SearchController extends AbstractController
      *          "_api_resource_class"=Property::class,
      *          "_api_collection_operation_name"="searchProperties"}     
      * )
-     *     
      */
     public function __invoke(Request $request,DateService $dateService, IriConverterInterface $iriConverter,
     NormalizerInterface $objectNormalizer, SerializerInterface $serializer)
