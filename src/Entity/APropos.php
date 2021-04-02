@@ -51,7 +51,7 @@ class APropos
 
     public function __construct(){
         $this->createdAt = new \DateTime();
-        $this->isActived = false;
+        $this->isActived = true;
     }
 
     public function getId(): ?int
