@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 *      paginationitemsPerPage=10,
  
 *    normalizationContext={"groups"={"comments:list"}},
-*    collectionoperations={
+*    collectionOperations={
 *        "get", 
 *        "post"={
 *            "security"="is_granted('ROLE_USER')"
