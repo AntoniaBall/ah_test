@@ -66,7 +66,7 @@ class Pictures
     private $id;
 
     /**
-     * @Groups({"picture:write","picture:read"})
+     * @Groups({"picture:write","picture:read","typeproperty:read"})
      * 
      * @ApiProperty(iri="http://schema.org/contentUrl")
      * @ORM\Column(type="string", length=255)

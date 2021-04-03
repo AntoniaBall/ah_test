@@ -70,7 +70,7 @@ class Property
      * @ORM\Column(type="integer")
      */
     private $id;
-
+    
     /**
      * @Groups({"property:read", "property:write", "reservation:read", "typeproperty:read", "user:write", "picture:write", "disponibility:write", "activities:write"})
      * @ORM\Column(type="string", length=100)
@@ -204,7 +204,7 @@ class Property
 
     /**
      * @var Pictures|null
-     * @Groups({"property:read", "property:write", "user:write", "picture:write"})
+     * @Groups({"property:read", "typeproperty:read","property:write", "user:write", "picture:write"})
      * @ORM\OneToMany(targetEntity=Pictures::class, mappedBy="property", cascade={"persist", "remove"})
      * @ApiProperty(iri="http://schema.org/image")
      */

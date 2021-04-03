@@ -52,7 +52,7 @@ class TypeProperty
 
 
     /**
-     * @Groups({"typeproperty:read", "property:read"})
+     * @Groups({"typeproperty:read", "property:read","picture:read"})
      * @ORM\OneToMany(targetEntity=Propriete::class, mappedBy="typeProperty")
      */
     private $proprietes;
