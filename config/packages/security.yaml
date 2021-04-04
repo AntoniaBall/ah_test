@@ -19,11 +19,9 @@ security:
         api:
             pattern: ^/api/
             stateless: true
-            anonymous: true
-            provider: app_user_provider
             guard:
                 authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
+                    - app.jwt_token_authenticator
         main:
             anonymous: true
             json_login:
@@ -41,10 +39,11 @@ security:
                 # target: app_any_route
 
     access_control:
+        - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
        # - { path: ^/api/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } 
         - { path: ^/api/properties, roles: IS_AUTHENTICATED_ANONYMOUSLY } 
         - { path: ^/api/register, roles: IS_AUTHENTICATED_ANONYMOUSLY } 
         - { path: ^/api/type_properties, roles: IS_AUTHENTICATED_ANONYMOUSLY } 
+        - { path: ^/api/verify/email/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
       # - { path: ^/api/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } 
-        - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

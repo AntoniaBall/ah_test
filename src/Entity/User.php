@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
@@ -14,6 +15,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Controller\RegistrationController;
+use App\Controller\WhoAmIController;
+use App\Controller\VerifyEmailController;
+use App\Controller\ResetRequestController;
+use App\Controller\ResetPasswordController;
 
 /**
 * @ApiResource(normalizationContext={"groups"={"user:read"}},
@@ -29,7 +34,21 @@ use App\Controller\RegistrationController;
 *                   "controller"=RegistrationController::class,
 *                   "read"=false
 *           },
+*           "whoami"= {
+*              "method"="GET",
+*              "path"="/whoami",
+*              "controller"=WhoAmIController::class,
+*          },
+*          "reset_request"={
+*                   "security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY')",
+*                   "method"="POST",
+*                   "path"="/password/forgot",
+*                   "controller"=ResetRequestController::class,
+*                   "read"=false
+*           },
+*         
 *     },
+*
 *     itemOperations={
 *           "put"={
 *                   "security"="is_granted('ROLE_ADMIN') or object == user",
@@ -42,7 +61,23 @@ use App\Controller\RegistrationController;
 *           "get"={
 *                   "security"="is_granted('ROLE_ADMIN') or object == user",
 *                   "security_message"= "You are not the owner of this profile"
-*           }
+*           }, 
+*           "app_verify_email"={
+*                   "security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY')",
+*                   "method"="POST",
+*                   "path"="/verify/email/{token}",
+*                   "controller"=VerifyEmailController::class,
+*                   "read"=false
+*           },
+*        
+*          "reset_password"={
+*                   "security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY')",
+*                   "method"="PATCH",
+*                   "path"="/password/forgot/{token}",
+*                   "controller"=ResetPasswordController::class,
+*                   "groups"={"password:write"},
+*                   "read"=false
+*           },
 *      }
 *)
 * 
@@ -65,14 +100,14 @@ class User implements UserInterface
      * @Assert\Email(
      * message = "The email'{{ value }}' is not a valid email.")
      * 
-     * @Groups({"user:read", "user:write", "property:read","comments:list"})
+     * @Groups({"user:read", "user:write", "password:write","property:read","comments:list"})
      */
     private $email;
     
     /**
      * @ORM\Column(type="string", length=255)
      * @var string The hashed password
-     * @Groups({"user:write"})
+     * @Groups({"user:write","user-res-p:write"})
      * 
      */
     private $password;
@@ -99,11 +134,8 @@ class User implements UserInterface
      */
     private $roles = [];
     
-    /*
-    * @ORM\Column(type="boolean")
-    */
-    private $isVerified = false;
-    
+   
+
     /**
      * @ORM\Column(type="string", length=50)
      * @Groups({"user:read", "user:write", "property:read", "read:comment"})
@@ -128,7 +160,7 @@ class User implements UserInterface
      */
     private $properties;
 
-    private UserPasswordEncoderInterface $encoder;
+    
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
@@ -139,6 +171,12 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $rest_token;
+
+    /**
+     * @Groups({"user:read", "user:write"})
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerified = false;
 
     public function __construct()
     {
@@ -267,18 +305,7 @@ class User implements UserInterface
     //     return $this;
     // }
 
-    public function getReservation(): ?int
-    {
-        return $this->reservation;
-    }
-
-    public function setReservation(int $reservation): self
-    {
-        $this->reservation = $reservation;
-
-        return $this;
-    }
-
+    
     /**
      * @return Collection|Reservation[]
      */
@@ -296,6 +323,7 @@ class User implements UserInterface
         }
 
         return $this;
+    
     }
 
     public function removeReservation(Reservation $reservation): self
@@ -417,6 +445,7 @@ class User implements UserInterface
         return $this;
     }
 
+   
 
     
 }

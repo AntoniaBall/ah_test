@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Repository\UserRepository;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Mailer\MailerInterface;
 
 
-class RegistrationController extends AbstractController
+class ResetRequestController extends AbstractController
 {
     private $emailVerifier;
    
@@ -31,25 +31,30 @@ class RegistrationController extends AbstractController
     }
 
     
-    public function __invoke(User $data,Request $request,GuardAuthenticatorHandler $guardHandler, UserAuthenticationAuthenticator $authenticator,TokenGeneratorInterface $tokenGenerator, \Swift_Mailer $mailer): User
+    public function __invoke(User $data,Request $request,UserRepository $usersRepo,GuardAuthenticatorHandler $guardHandler, UserAuthenticationAuthenticator $authenticator,TokenGeneratorInterface $tokenGenerator, \Swift_Mailer $mailer): User
     {
             $content = json_decode($request->getContent());
+            $donnees = $data;
+            $data = $usersRepo->findOneByEmail($donnees->getEmail());
+            //dd($data);
             $token = $tokenGenerator->generateToken();
-            $url = $this->generateUrl('api_users_app_verify_email_item', ['token' => $token],UrlGeneratorInterface::ABSOLUTE_URL);
-            $data->setActivationToken($token);
+            $url = $this->generateUrl('api_users_reset_password_item', ['token' => $token],UrlGeneratorInterface::ABSOLUTE_URL);
+            $data->setRestToken($token);
             
-            $message = (new \Swift_Message('Compte activation'))
+           
+            $message = (new \Swift_Message('Mot de passe oublié'))
             ->setFrom('anouar.deve@gmail.com')
             ->setTo($data->getEmail())
             ->setBody(
-                "<p>Bonjour,</p><p> Please confirm your email address by clicking the following link: <br><br>
-                <a href='https://f2i-dev-14-ba-ka-pc.vercel.app/' >Confirm my Email  </a><br><br> votre code d'activation est :  $token </p>",
+                "<p>Bonjour,</p><p> Une demande de réinitialisation de mot de passe a été effectuée pour le site Atypikhouse.fr. Veuillez cliquer sur le lien suivant : <br><br>
+                <a href='https://f2i-dev-14-ba-ka-pc.vercel.app/' >ici </a><br><br> Entrer ce code pour confirmer votre demande :  $token</p>",
                 'text/html'
                 )
             ;
          
             $mailer->send($message);
     return $data;
-    }
-    
+}
+
+ 
 }

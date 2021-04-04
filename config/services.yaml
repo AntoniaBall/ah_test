@@ -49,3 +49,20 @@ services:
     App\Services\PaymentService:
         arguments:
             $clientSecret: '%stripe_secret_key%'
+
+    League\OAuth2\Client\Provider\Google:
+        class: League\OAuth2\Client\Provider\Google
+        arguments:
+            - {clientId: '%env(OAUTH_GOOGLE_ID)%', clientSecret: '%env(OAUTH_GOOGLE_SECRET)%'}
+    
+    app.jwt_token_authenticator:
+        class: App\Security\Guard\JWTTokenAuthenticator
+        parent: lexik_jwt_authentication.security.guard.jwt_token_authenticator
+
+    acme_api.event.jwt_decoded_listener:
+        class: App\EventListener\JWTDecodedListener
+        arguments: [ '@request_stack' ]
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_decoded, method: onJWTDecoded }
+        
+  
