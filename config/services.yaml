@@ -7,7 +7,9 @@ parameters:
     pictures-directory: '%env(pictures_directory)%'
     stripe_public_key: '%env(STRIPE_PUBLIC_KEY)%'
     stripe_secret_key: '%env(STRIPE_SECRET_KEY)%'
-
+    AWS_ACCESS_KEY_ID: '%env(AWS_ACCESS_KEY_ID)%'
+    AWS_SECRET_ACCESS_KEY: '%env(AWS_SECRET_ACCESS_KEY)%'
+    
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -67,3 +69,12 @@ services:
         decorates: 'api_platform.serializer.context_builder'
         arguments: [ '@App\Serializer\AdminContextBuilder.inner' ]
         autoconfigure: false
+
+    Aws\S3\S3Client:
+        arguments:
+            -
+                version: '2021-04-05'
+                region: 'us-east-2'
+                credentials:
+                    key: '%env(AWS_ACCESS_KEY_ID)%'
+                    secret: '%env(AWS_SECRET_ACCESS_KEY)%'
