@@ -79,8 +79,6 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 *                   "groups"={"password:write"},
 *                   "read"=false
 *           },
-*      }
-*           }
 *      },
 *      subresourceOperations={
  *          "users_get_subresource"={ 
@@ -185,6 +183,8 @@ class User implements UserInterface
      * @ORM\Column(type="boolean")
      */
     private $isVerified = false;
+
+    /** 
      * @ApiSubresource()
      * @ORM\OneToMany(targetEntity=UserNotifications::class, mappedBy="user")
      */
