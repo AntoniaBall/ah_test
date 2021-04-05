@@ -185,6 +185,8 @@ class User implements UserInterface
      * @ORM\Column(type="boolean")
      */
     private $isVerified = false;
+
+    /**
      * @ApiSubresource()
      * @ORM\OneToMany(targetEntity=UserNotifications::class, mappedBy="user")
      */
