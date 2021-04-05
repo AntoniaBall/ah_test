@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Entity;
@@ -39,7 +40,7 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 *              "method"="GET",
 *              "path"="/whoami",
 *              "controller"=WhoAmIController::class,
-*          },
+*           },
 *          "reset_request"={
 *                   "security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY')",
 *                   "method"="POST",
@@ -47,9 +48,7 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 *                   "controller"=ResetRequestController::class,
 *                   "read"=false
 *           },
-*         
 *     },
-*
 *     itemOperations={
 *           "put"={
 *                   "security"="is_granted('ROLE_ADMIN') or object == user",
@@ -79,8 +78,6 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 *                   "groups"={"password:write"},
 *                   "read"=false
 *           },
-*      }
-*           }
 *      },
 *      subresourceOperations={
  *          "users_get_subresource"={ 
