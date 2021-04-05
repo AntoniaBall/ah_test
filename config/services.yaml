@@ -53,6 +53,16 @@ services:
         arguments:
             $clientSecret: '%stripe_secret_key%'
     
+    app.jwt_token_authenticator:
+        class: App\Security\Guard\JWTTokenAuthenticator
+        parent: lexik_jwt_authentication.security.guard.jwt_token_authenticator
+
+    acme_api.event.jwt_decoded_listener:
+        class: App\EventListener\JWTDecodedListener
+        arguments: [ '@request_stack' ]
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_decoded, method: onJWTDecoded }
+        
     App\Serializer\AdminContextBuilder:
         decorates: 'api_platform.serializer.context_builder'
         arguments: [ '@App\Serializer\AdminContextBuilder.inner' ]
