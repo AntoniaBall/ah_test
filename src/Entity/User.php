@@ -69,7 +69,6 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 *                   "controller"=VerifyEmailController::class,
 *                   "read"=false
 *           },
-*        
 *          "reset_password"={
 *                   "security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY')",
 *                   "method"="PATCH",
