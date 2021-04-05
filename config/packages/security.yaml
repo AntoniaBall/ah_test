@@ -19,6 +19,8 @@ security:
         api:
             pattern: ^/api/
             stateless: true
+            anonymous: true
+            provider: app_user_provider
             guard:
                 authenticators:
                     - app.jwt_token_authenticator
