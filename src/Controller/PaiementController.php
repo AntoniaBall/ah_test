@@ -21,8 +21,6 @@ class PaiementController extends AbstractController
     public function index(Request $request) : Response
     {
         $event = json_decode($request->getContent(), true);
-        
-        
         if (!$event){
             throw new HttpException(400, "No JSON Body from Stripe");
         }
@@ -30,12 +28,13 @@ class PaiementController extends AbstractController
         $repository = $this->getDoctrine()->getRepository(Paiement::class);
         
         // $paiement = $repository->findPaiementByEvent($event["object"]["id"]);
-        $paiement = $repository->findPaiementByEvent($event["object"]["id"]);
+        $paiement = $repository->findPaiementByEvent($event["data"]["object"]["id"]);
         
+        // dump($paiement);
+
         if (!$paiement){
             throw new HttpException(404, "No payment found");
         }
-
         $em = $this->getDoctrine()->getManager();
 
         $reservation = $paiement[0]->getReservation();

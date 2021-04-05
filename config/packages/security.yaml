@@ -42,8 +42,11 @@ security:
         - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
        # - { path: ^/api/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } 
         - { path: ^/api/properties, roles: IS_AUTHENTICATED_ANONYMOUSLY } 
+        - { path: ^/api/pictures, roles: IS_AUTHENTICATED_ANONYMOUSLY } 
         - { path: ^/api/register, roles: IS_AUTHENTICATED_ANONYMOUSLY } 
         - { path: ^/api/type_properties, roles: IS_AUTHENTICATED_ANONYMOUSLY } 
         - { path: ^/api/verify/email/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/type_properties, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/a_propos, roles: IS_AUTHENTICATED_ANONYMOUSLY }
       # - { path: ^/api/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } 
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

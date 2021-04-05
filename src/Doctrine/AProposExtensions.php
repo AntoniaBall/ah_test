@@ -7,12 +7,13 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use App\Entity\Reservation;
 use App\Entity\Property;
+use App\Entity\APropos;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Security;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Expr\Join;
 
-final class PropertyExtensions implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
+final class AProposExtensions implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
     private $security;
 
@@ -33,31 +34,20 @@ final class PropertyExtensions implements QueryCollectionExtensionInterface, Que
     
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
     {
-        if (Property::class !== $resourceClass || $this->security->isGranted('ROLE_ADMIN')) {
+        if (APropos::class !== $resourceClass || $this->security->isGranted('ROLE_ADMIN')) {
             return;
         }
-        
-        if ($this->security->isGranted('ROLE_USER') 
-            || null === $user = $this->security->getUser() ){
-            $rootAlias = $queryBuilder->getRootAliases()[0];
-            $queryBuilder->andWhere(sprintf('%s.isPublished = :isPublished', $rootAlias))
-                        ->setParameter('isPublished', true)
-                        ->andWhere(sprintf('%s.status = :status', $rootAlias))
-                        ->setParameter('status', "acceptee");
-        }
 
+        $rootAlias = $queryBuilder->getRootAliases()[0];
+
+        if ($this->security->isGranted('ROLE_USER') || null === $user = $this->security->getUser()){
+            $queryBuilder->andWhere(sprintf('%s.isActived =:isActived', $rootAlias));
+            $queryBuilder->setParameter('isActived', true);
+        }
     }
+    
     private function getItem(QueryBuilder $queryBuilder, string $resourceClass): void
     {
-        
-        // if ($this->security->isGranted('ROLE_PROPRIO')){
-        // $rootAlias = $queryBuilder->getRootAliases()[0];
-        // if ($this->security->isGranted('ROLE_USER')){
-        //     $queryBuilder->andWhere(sprintf('%s.user = :current_user', $rootAlias));
-        //     $queryBuilder->setParameter('current_user', $this->security->getUser());
-        //     dump($queryBuilder->getQuery());
-        //     // dump($queryBuilder->getQuery());
-        // }
         return ;
     }
 }

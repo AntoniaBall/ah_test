@@ -7,12 +7,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\DisponibilitiesController;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource(normalizationContext={"groups"={"disponibility:read"}},
- *     denormalizationContext={"groups"={"disponibility:write"}})
+ * @ApiResource(
+ *     normalizationContext={"groups"={"disponibility:read"}},
+ *     denormalizationContext={"groups"={"disponibility:write"}}
+ * )
  * @ORM\Entity(repositoryClass=DisponibilityRepository::class)
  */
 class Disponibility
@@ -29,7 +32,7 @@ class Disponibility
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="disponibilities", cascade={"persist"})
      */
     private $property;
-    
+
     /**
      * @Groups({"disponibility:read", "disponibility:write", "property:write", "property:read"})
      * @Assert\Type(

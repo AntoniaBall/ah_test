@@ -13,7 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ApiResource(
  *  attributes={"fetchEager": true},
- *   normaizationContext={"groups"={"propriete:list"}},
+ *   normalizationContext={"groups"={"propriete:list"}},
+ *   denormalizationContext={"groups"={"propriete:write"}},
  *  collectionoperations={
  *       "get",
  *       "post"={
@@ -44,19 +45,19 @@ class Propriete
     private $id;
 
     /**
-     * @Groups({"propriete:list", "typeproperty:read","property:read","typeproperty:write"})
+     * @Groups({"propriete:list", "propriete:write","typeproperty:read","property:read","typeproperty:write"})
      * @ORM\Column(type="string", length=100)
      */
     private $name;
 
     /**
-     * @Groups("propriete:list")
-     * @ORM\ManyToOne(targetEntity=typeproperty::class, inversedBy="proprietes")
+     * @Groups({"propriete:list","propriete:write"})
+     * @ORM\ManyToOne(targetEntity=TypeProperty::class, inversedBy="proprietes")
      */
     private $typeProperty;
 
     /**
-     * @Groups({"propriete:list", "typeproperty:read","property:read","typeproperty:write" })
+     * @Groups({"propriete:list", "propriete:write","typeproperty:read","property:read","typeproperty:write" })
      * @ORM\Column(type="string")
      * @Assert\Choice({"integer","booleen","string"})
      */
@@ -69,7 +70,6 @@ class Propriete
 
     public function __construct()
     {
-        $this->proprieteTypeProperties = new ArrayCollection();
         $this->valeurBools = new ArrayCollection();
         $this->valuerStrings = new ArrayCollection();
         $this->valeurs = new ArrayCollection();

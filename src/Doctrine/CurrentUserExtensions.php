@@ -47,7 +47,7 @@ final class CurrentUserExtensions implements QueryCollectionExtensionInterface, 
             // dump($queryBuilder->getQuery());
             
         }
-
+        
         // si l'utilisateur est proprio voir la liste de toutes les reservations sur ses biens
         if ($this->security->isGranted('ROLE_PROPRIO')){
             // $queryBuilder->innerJoin(Property::class, 'p', Join::WITH, '%s.property = p.id');

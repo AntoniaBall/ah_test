@@ -66,7 +66,7 @@ class Pictures
     private $id;
 
     /**
-     * @Groups({"picture:read", "picture:write", "property:read"})
+     * @Groups({"picture:write","picture:read","typeproperty:read"})
      * 
      * @ApiProperty(iri="http://schema.org/contentUrl")
      * @ORM\Column(type="string", length=255)
@@ -110,7 +110,7 @@ class Pictures
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $filePath;
-
+    
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -118,18 +118,22 @@ class Pictures
     
     public function __construct(){
         $this->status = "en modération";
-        $this->url = "/images/uploads";
+        $this->url = "/images/products";
         $this->maxSize=300;
+        $this->updatedAt=new \DateTime('now');
     }
     
     public function getId(): ?int
     {
         return $this->id;
     }
-    
+
+    /**
+     * @Groups({"property:read"})
+     */
     public function getUrl(): ?string
     {
-        return $this->url;
+        return $this->url.'/'.$this->filePath;
     }
 
     public function setUrl(string $url = null): self

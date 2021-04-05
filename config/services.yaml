@@ -46,14 +46,12 @@ services:
     App\DataPersister\BienPersister:
         decorates: 'api_platform.doctrine.orm.data_persister'
 
+    # App\DataPersister\ProprietePersister:
+    #     decorates: 'api_platform.doctrine.orm.data_persister'
+        
     App\Services\PaymentService:
         arguments:
             $clientSecret: '%stripe_secret_key%'
-
-    League\OAuth2\Client\Provider\Google:
-        class: League\OAuth2\Client\Provider\Google
-        arguments:
-            - {clientId: '%env(OAUTH_GOOGLE_ID)%', clientSecret: '%env(OAUTH_GOOGLE_SECRET)%'}
     
     app.jwt_token_authenticator:
         class: App\Security\Guard\JWTTokenAuthenticator
@@ -65,4 +63,7 @@ services:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_decoded, method: onJWTDecoded }
         
-  
+    App\Serializer\AdminContextBuilder:
+        decorates: 'api_platform.serializer.context_builder'
+        arguments: [ '@App\Serializer\AdminContextBuilder.inner' ]
+        autoconfigure: false

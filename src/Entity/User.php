@@ -19,6 +19,7 @@ use App\Controller\WhoAmIController;
 use App\Controller\VerifyEmailController;
 use App\Controller\ResetRequestController;
 use App\Controller\ResetPasswordController;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 
 /**
 * @ApiResource(normalizationContext={"groups"={"user:read"}},
@@ -79,6 +80,13 @@ use App\Controller\ResetPasswordController;
 *                   "read"=false
 *           },
 *      }
+*           }
+*      },
+*      subresourceOperations={
+ *          "users_get_subresource"={ 
+ *              "path"="/users/{id}/user_notifications"
+ *          }
+ *     }
 *)
 * 
 * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -129,7 +137,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="user", orphanRemoval=true)
      * 
-     * @Groups({"user:write"})
+     * @Groups({"user:write","admin:write","admin:read"})
      * @ORM\Column(type="json")
      */
     private $roles = [];
@@ -177,12 +185,17 @@ class User implements UserInterface
      * @ORM\Column(type="boolean")
      */
     private $isVerified = false;
+     * @ApiSubresource()
+     * @ORM\OneToMany(targetEntity=UserNotifications::class, mappedBy="user")
+     */
+    private $userNotifications;
 
     public function __construct()
     {
         $this->isAdmin = false;
         $this->reservations = new ArrayCollection();
         $this->properties = new ArrayCollection();
+        $this->userNotifications = new ArrayCollection();
     }
 
 
@@ -445,7 +458,34 @@ class User implements UserInterface
         return $this;
     }
 
-   
+    /**
+     * @return Collection|UserNotifications[]
+     */
+    public function getUserNotifications(): Collection
+    {
+        return $this->userNotifications;
+    }
 
+    public function addUserNotification(UserNotifications $userNotification): self
+    {
+        if (!$this->userNotifications->contains($userNotification)) {
+            $this->userNotifications[] = $userNotification;
+            $userNotification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserNotification(UserNotifications $userNotification): self
+    {
+        if ($this->userNotifications->removeElement($userNotification)) {
+            // set the owning side to null (unless already changed)
+            if ($userNotification->getUser() === $this) {
+                $userNotification->setUser(null);
+            }
+        }
+
+        return $this;
+    }
     
 }

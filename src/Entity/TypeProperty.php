@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-
 /**
  * @ApiResource(normalizationContext={"groups"={"typeproperty:read"}},
  *     denormalizationContext={"groups"={"typeproperty:write"}},
@@ -51,13 +50,9 @@ class TypeProperty
      */
     private $properties;
 
-    /**
-     * @ORM\OneToMany(targetEntity=ProprieteTypeProperty::class, mappedBy="typeProperty")
-     */
-    private $proprieteTypeProperties;
 
     /**
-     * @Groups({"typeproperty:read", "property:read"})
+     * @Groups({"typeproperty:read", "property:read","picture:read"})
      * @ORM\OneToMany(targetEntity=Propriete::class, mappedBy="typeProperty")
      */
     private $proprietes;
@@ -66,7 +61,6 @@ class TypeProperty
     public function __construct()
     {
         $this->properties = new ArrayCollection();
-        $this->proprieteTypeProperties = new ArrayCollection();
         $this->proprietes = new ArrayCollection();
     }
 
@@ -99,42 +93,20 @@ class TypeProperty
         return $this;
     }
 
-    /**
-     * @return Collection|ProprieteTypeProperty[]
-     */
-    public function getProprieteTypeProperties(): Collection
-    {
-        return $this->proprieteTypeProperties;
-    }
     
-    public function addProprieteTypeProperty(ProprieteTypeProperty $proprieteTypeProperty): self
-    {
-        if (!$this->proprieteTypeProperties->contains($proprieteTypeProperty)) {
-            $this->proprieteTypeProperties[] = $proprieteTypeProperty;
-            $proprieteTypeProperty->setTypeProperty($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProprieteTypeProperty(ProprieteTypeProperty $proprieteTypeProperty): self
-    {
-        if ($this->proprieteTypeProperties->removeElement($proprieteTypeProperty)) {
-            // set the owning side to null (unless already changed)
-            if ($proprieteTypeProperty->getTypeProperty() === $this) {
-                $proprieteTypeProperty->setTypeProperty(null);
+    
+    /**
+     * @return Collection|Property[]
+     */
+    public function getProperties(): Collection{
+        $properties = $this->properties;
+        $response = new ArrayCollection();
+        foreach($properties as $property){
+            if ($property->getIsPublished() === true){
+                $response[] = $property;
             }
         }
-
-        return $this;
-    }
-    
-    /**
-     * @return Collection|ProprieteTypeProperty[]
-     */
-    public function getProperties(): Collection
-    {
-        return $this->properties;
+        return $response;
     }
 
     public function addProperty(Property $property): self
@@ -149,12 +121,9 @@ class TypeProperty
 
     public function removeProperty(Property $property): self
     {
-        if ($this->proprieteTypeProperties->removeElement($property)) {
-            // set the owning side to null (unless already changed)
             if ($property->getTypeProperty() === $this) {
                 $property->setTypeProperty(null);
             }
-        }
 
         return $this;
     }

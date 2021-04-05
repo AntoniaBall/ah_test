@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 *      paginationitemsPerPage=10,
  
 *    normalizationContext={"groups"={"comments:list"}},
-*    collectionoperations={
+*    collectionOperations={
 *        "get", 
 *        "post"={
 *            "security"="is_granted('ROLE_USER')"
@@ -57,7 +57,7 @@ class Comments
 
     /**
      *
-     * @Groups({"comments:list", "activities:read"})
+     * @Groups({"comments:list", "activities:read","property:read"})
      * @ORM\Column(type="string", length=255, nullable=true)
     
      * @Assert\Length(
