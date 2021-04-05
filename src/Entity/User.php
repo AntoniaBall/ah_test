@@ -73,7 +73,7 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 *        
 *          "reset_password"={
 *                   "security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY')",
-*                   "method"="PATCH",
+*                   "method"="PUT",
 *                   "path"="/password/forgot/{token}",
 *                   "controller"=ResetPasswordController::class,
 *                   "groups"={"password:write"},
@@ -112,7 +112,7 @@ class User implements UserInterface
     
     /**
      * @ORM\Column(type="string", length=255)
-     * @var string The hashed password
+     * 
      * @Groups({"user:write","user-res-p:write"})
      * 
      */

@@ -17,6 +17,7 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 
 class RegistrationController extends AbstractController
@@ -31,13 +32,13 @@ class RegistrationController extends AbstractController
     }
 
     
-    public function __invoke(User $data,Request $request,GuardAuthenticatorHandler $guardHandler, UserAuthenticationAuthenticator $authenticator,TokenGeneratorInterface $tokenGenerator, \Swift_Mailer $mailer): User
+    public function __invoke(User $data,Request $request,GuardAuthenticatorHandler $guardHandler, UserAuthenticationAuthenticator $authenticator,TokenGeneratorInterface $tokenGenerator, \Swift_Mailer $mailer,UserPasswordEncoderInterface $passwordEncoder): User
     {
             $content = json_decode($request->getContent());
             $token = $tokenGenerator->generateToken();
             $url = $this->generateUrl('api_users_app_verify_email_item', ['token' => $token],UrlGeneratorInterface::ABSOLUTE_URL);
             $data->setActivationToken($token);
-            
+            $data->setPassword($passwordEncoder->encodePassword($data, $data->getPassword('password')));
             $message = (new \Swift_Message('Compte activation'))
             ->setFrom('anouar.deve@gmail.com')
             ->setTo($data->getEmail())
@@ -47,7 +48,7 @@ class RegistrationController extends AbstractController
                 'text/html'
                 )
             ;
-         
+            //dd($token);
             $mailer->send($message);
     return $data;
     }
