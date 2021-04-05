@@ -17,6 +17,9 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Vich\UploaderBundle\Storage\StorageInterface;
 use Aws\S3\Exception\S3Exception;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\Cache\Simple\FilesystemCache;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 final class PicturesController extends AbstractController  
 {
@@ -32,6 +35,7 @@ final class PicturesController extends AbstractController
     public function __invoke(Request $request): Pictures
     {
         $uploadedFile = $request->files->get('file');
+        $mediaObject = new Pictures();
 
         if (!$uploadedFile) {
             throw new BadRequestHttpException('file is required');
@@ -39,9 +43,11 @@ final class PicturesController extends AbstractController
         }
 
         // // "https://atypikhouse-pictures.s3.us-east-2.amazonaws.com/article1.jpg"
-        
+        $filesystem = new Filesystem();
+        $filesystem->mkdir('/tmp/images/', 0700);
+        $imageFilePath = '/tmp/images/'.$uploadedFile->getClientOriginalName();
+
         try {
-            echo "coucou";
             $credentials = new Credentials($this->getParameter('AWS_ACCESS_KEY_ID'),
                  $this->getParameter('AWS_SECRET_ACCESS_KEY'));
 
@@ -52,34 +58,23 @@ final class PicturesController extends AbstractController
             ]);
 
             $client->putObject([
-                'Bucket' => "docdisplay-dev-cdn",
+                'Bucket' => "atypikhouse-pictures",
                 'Key' => $uploadedFile->getClientOriginalName(),
             ]);
 
-            var_dump($uploadedFile->getClientOriginalName()); die();
-            // $s3->putObject([
-            //     'Bucket' => 'atypikhouse-pictures',
-            //     'Key'    => $uploadedFile->getOriginalName(),
-            //     // 'Body'   => fopen('/path/to/file', 'r'),
-            //     'ACL'    => 'public-read',
-            //     ]);
+            $mediaObject->setFilePath($uploadedFile->getClientOriginalName());
 
-            // var_dump($s3); die();
+            $mediaObject->setUrl('https://atypikhouse-pictures.s3.us-east-2.amazonaws.com/'.$uploadedFile->getClientOriginalName());
+
+            var_dump($mediaObject->getUrl());
+            die();
 
         } catch (Aws\S3\Exception\S3Exception $e) {
             echo "There was an error uploading the file.\n";
         }
 
-  
-            
-            $mediaObject = new Pictures();
-
+        $mediaObject = new Pictures();
         $mediaObject->file = $uploadedFile;
-
-        // var_dump($uploadedFile);
-        // die();
-
-        // $mediaObject->setUrl($this->storage->resolveUri($mediaObject, 'file'));
 
         return $mediaObject;
     }

@@ -133,7 +133,8 @@ class Pictures
      */
     public function getUrl(): ?string
     {
-        return $this->url.'/'.$this->filePath;
+        // return $this->url.'/'.$this->filePath;
+        return $this->url;
     }
 
     public function setUrl(string $url = null): self
