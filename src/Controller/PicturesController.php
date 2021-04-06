@@ -66,8 +66,8 @@ final class PicturesController extends AbstractController
 
             $mediaObject->setUrl('https://atypikhouse-pictures.s3.us-east-2.amazonaws.com/'.$uploadedFile->getClientOriginalName());
 
-            var_dump($mediaObject->getUrl());
-            die();
+            // var_dump($mediaObject->getUrl());
+            // die();
 
         } catch (Aws\S3\Exception\S3Exception $e) {
             echo "There was an error uploading the file.\n";
