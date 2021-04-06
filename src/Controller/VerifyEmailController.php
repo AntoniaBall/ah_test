@@ -29,14 +29,14 @@ class VerifyEmailController extends AbstractController
     }
 
     
-    public function __invoke(User $data,Request $request,GuardAuthenticatorHandler $guardHandler, UserAuthenticationAuthenticator $authenticator,$token): User
+    public function __invoke(User $data,Request $request,$token): User
     {
        
-       $content = json_decode($request->getContent());
-       $data = $this->getDoctrine()->getRepository(User::class)->findOneBy(['activation_token' => $token]);
-       $data->setIsVerified(true);
-       $data->setActivationToken(null);
-       //dd($data,$token);
+      //$data = json_decode($request->getContent());
+      $data = $this->getDoctrine()->getRepository(User::class)->findOneBy(['activation_token' => $token]);
+      $data->setIsVerified(true);
+      $data->setActivationToken(null);
+    
 
     return $data;
     }
