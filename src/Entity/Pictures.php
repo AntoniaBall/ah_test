@@ -118,7 +118,7 @@ class Pictures
     
     public function __construct(){
         $this->status = "en modération";
-        $this->url = "/images/products";
+        // $this->url = "/images/products";
         $this->maxSize=300;
         $this->updatedAt=new \DateTime('now');
     }
@@ -133,7 +133,8 @@ class Pictures
      */
     public function getUrl(): ?string
     {
-        return $this->url.'/'.$this->filePath;
+        // return $this->url.'/'.$this->filePath;
+        return $this->url;
     }
 
     public function setUrl(string $url = null): self
