@@ -118,7 +118,7 @@ class Pictures
     
     public function __construct(){
         $this->status = "en modération";
-        $this->url = "/images/products";
+        // $this->url = "/images/products";
         $this->maxSize=300;
         $this->updatedAt=new \DateTime('now');
     }

@@ -42,39 +42,45 @@ final class PicturesController extends AbstractController
             return new Response('file is required');
         }
 
-        // // "https://atypikhouse-pictures.s3.us-east-2.amazonaws.com/article1.jpg"
         $filesystem = new Filesystem();
         $filesystem->mkdir('/tmp/images/', 0700);
         $imageFilePath = '/tmp/images/'.$uploadedFile->getClientOriginalName();
 
+        // var_dump($imageFilePath);
+        // die();
+
         try {
-            $credentials = new Credentials($this->getParameter('AWS_ACCESS_KEY_ID'),
-                 $this->getParameter('AWS_SECRET_ACCESS_KEY'));
+            if (!$filesystem->exists($imageFilePath)) {
+                $filesystem->touch($imageFilePath);
+                $filesystem->chmod($imageFilePath, 0700);
+                // $filesystem->dumpFile($imageFilePath, $imageFilePath);
 
-            $client = new S3Client([
-                'region'=> 'us-east-2',
-                'version'=> 'latest',
-                'credentials'=> $credentials
-            ]);
+                $credentials = new \Aws\Credentials\Credentials($this->getParameter('AWS_ACCESS_KEY_ID'),
+                $this->getParameter('AWS_SECRET_ACCESS_KEY'));
 
-            $client->putObject([
-                'Bucket' => "atypikhouse-pictures",
-                'Key' => $uploadedFile->getClientOriginalName(),
-            ]);
+                $client = new S3Client([
+                    'region'=> 'us-east-2',
+                    'version'=> 'latest',
+                    'credentials'=> $credentials
+                ]);
 
-            $mediaObject->setFilePath($uploadedFile->getClientOriginalName());
+                $client->putObject([
+                    'Bucket' => "atypikhouse-pictures",
+                    'Key' => $uploadedFile->getClientOriginalName(),
+                    'Body' => fopen($uploadedFile, 'r+')
+                    // 'SourceFile' => $uploadedFile,
+                ]);
+                $filesystem->remove('/tmp/images/');
+                
+                $mediaObject->setFilePath($uploadedFile->getClientOriginalName());
 
-            $mediaObject->setUrl('https://atypikhouse-pictures.s3.us-east-2.amazonaws.com/'.$uploadedFile->getClientOriginalName());
-
-            // var_dump($mediaObject->getUrl());
-            // die();
-
+                $mediaObject->setUrl('https://atypikhouse-pictures.s3.us-east-2.amazonaws.com/'.$uploadedFile->getClientOriginalName());
+                $mediaObject->file = $uploadedFile;
+            }
         } catch (Aws\S3\Exception\S3Exception $e) {
-            echo "There was an error uploading the file.\n";
+            echo "FILE ALREADY EXIST";
         }
-
-        $mediaObject = new Pictures();
-        $mediaObject->file = $uploadedFile;
+        
 
         return $mediaObject;
     }
