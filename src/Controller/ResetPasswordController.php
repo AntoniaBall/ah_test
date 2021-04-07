@@ -39,17 +39,11 @@ class ResetPasswordController extends AbstractController
        
        $content = json_decode($request->getContent());
        $data = $this->getDoctrine()->getRepository(User::class)->findOneBy(['rest_token' => $token]);
-       
-       $data->setPassword($passwordEncoder->encodePassword($data, $data->getPassword('password')));
-       //dd($data);
+       $data->setPassword($passwordEncoder->encodePassword($data, $content->password));
        $data->setRestToken(null);
-
-       $entityManager = $this->getDoctrine()->getManager();
-       $entityManager->persist($data);
-       $entityManager->flush();
-       //dd($data,$token);
-
-    return $data;
+           
+       return $data;
     }
 
 }
+

@@ -19,6 +19,8 @@ security:
         api:
             pattern: ^/api/
             stateless: true
+            anonymous: true
+            provider: app_user_provider
             guard:
                 authenticators:
                     - app.jwt_token_authenticator
@@ -50,3 +52,5 @@ security:
         - { path: ^/api/a_propos, roles: IS_AUTHENTICATED_ANONYMOUSLY }
       # - { path: ^/api/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } 
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/password/forgot, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/password/forgot/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
