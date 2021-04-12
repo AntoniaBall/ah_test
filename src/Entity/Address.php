@@ -68,7 +68,7 @@ class Address
      * minMessage = "La ville doit être supérieure à {{ limit }} caractères",
      * maxMessage = "La ville doit être inférieure à {{ limit }} caractères"
      * )
-     * @Groups({"adress:read", "adress:write", "property:read"})
+     * @Groups({"adress:read", "adress:write", "property:read","typeproperty:read"})
      */
     private $town;
 

@@ -189,7 +189,7 @@ class Property
     private $equipment;
     
     /**
-     * @Groups({"property:read", "property:write", "user:write", "address:write"})
+     * @Groups({"property:read", "property:write", "user:write", "address:write","typeproperty:read"})
      * 
      * @Assert\Valid
      * @ORM\OneToOne(targetEntity=Address::class, inversedBy="property", cascade={"persist", "remove"})
