@@ -79,7 +79,7 @@ class Address
      * max = 80,
      * maxMessage = "La longueur du champ doit être inférieure à {{ limit }} caractères"
      * )
-     * @Groups({"adress:read", "adress:write", "property:read"})
+     * @Groups({"adress:read", "adress:write", "property:read","typeproperty:read"})
      */
     private $region;
 
