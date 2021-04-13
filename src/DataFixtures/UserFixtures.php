@@ -16,7 +16,7 @@ class UserFixtures extends Fixture
 	public const LOC_USER_REFERENCE = 'locataire-user';
 	public const PROP_USER_REFERENCE = 'proprio-user';
 	public const PROP1_USER_REFERENCE = 'proprio-user1';
-
+    const DEFAULT_USER = ['email' => 'user@gmail.com', 'password' => 'azerty12'];
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
@@ -28,6 +28,19 @@ class UserFixtures extends Fixture
     {
 		$generator = Faker\Factory::create("fr_FR");
 		
+		$defaultUser = new User();
+        $passHash = $this->encoder->encodePassword($defaultUser, self::DEFAULT_USER['password']);
+
+        $defaultUser->setEmail(self::DEFAULT_USER['email'])
+            ->setPassword($passHash)
+			->setFirstname($generator->firstname())
+			->setLastname($generator->lastname)
+			->setPhone((int)$generator->phoneNumber)
+			->setIsVerified(1)
+			->setRoles(["ROLE_ADMIN"]);
+
+        $manager->persist($defaultUser);
+
 		$userAdmin = new User();
 		$userAdmin
 			->setEmail("admin@yopmail.com")
