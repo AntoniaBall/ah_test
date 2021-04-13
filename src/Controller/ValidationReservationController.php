@@ -48,14 +48,14 @@ class ValidationReservationController extends AbstractController
         if (!in_array($bodyRequest["status"], ["acceptee", "rejetee"])){
             throw new HttpException(400, "Please provide a correct answer");
         }
+        
+        // $userReservationsCount = $this->getDoctrine()
+        //     ->getRepository(Reservation::class)
+        //     ->getCountReservationsByUser($data->getUser());
 
-        $userReservationsCount = $this->getDoctrine()
-            ->getRepository(Reservation::class)
-            ->getCountReservationsByUser($data->getUser());
-
-        if ($userReservationsCount[0][1] > 3){
-            throw new HttpException(400, "Vous avez plus de 3 reservations en attente");
-        }
+        // if ($userReservationsCount[0][1] > 3){
+        //     throw new HttpException(400, "Vous avez plus de 3 reservations en attente");
+        // }
 
         $periodes = new \DatePeriod(
             $data->getDateStart(),
@@ -87,6 +87,9 @@ class ValidationReservationController extends AbstractController
             $data->setStatus("acceptee");
 
             // trouver et bloquer les dates
+            foreach($currentDisponibilities as $currentDisponibility){
+                $data->getProperty()->removeDisponibility($currentDisponibility);
+            }
             
         } else{
             // si reservation rejetee
