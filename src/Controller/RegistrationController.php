@@ -44,7 +44,7 @@ class RegistrationController extends AbstractController
             ->setTo($data->getEmail())
             ->setBody(
                 "<p>Bonjour,</p><p> Please confirm your email address by clicking the following link: <br><br>
-                <a href='https://f2i-dev-14-ba-ka-pc.vercel.app/' >Confirm my Email  </a><br><br> votre code d'activation est :  $token </p>",
+                <a href='https://f2i-dev-14-ba-ka-pc.vercel.app/verification-compte' >Confirm my Email  </a><br><br> votre code d'activation est :  $token </p>",
                 'text/html'
                 )
             ;
