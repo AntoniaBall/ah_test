@@ -188,6 +188,11 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=UserNotifications::class, mappedBy="user")
      */
     private $userNotifications;
+   /**
+     * @Groups({"user:read", "user:write"})
+     * @ORM\Column(type="boolean")
+     */
+    private $checkedNewsLetters;
 
     public function __construct()
     {
@@ -483,6 +488,18 @@ class User implements UserInterface
                 $userNotification->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCheckedNewsLetters(): ?bool
+    {
+        return $this->checkedNewsLetters;
+    }
+
+    public function setCheckedNewsLetters(bool $checkedNewsLetters): self
+    {
+        $this->checkedNewsLetters = $checkedNewsLetters;
 
         return $this;
     }
