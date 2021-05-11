@@ -34,7 +34,7 @@ class newsletterCommand extends Command
    
          
         $listeUser = $this->em->getRepository(User::class)->findOneBy(['checkedNewsLetters' => true]);
-        dd($listeUser);
+        //dd($listeUser);
         $nbMail = 0;
         
         //$listeUser = $this->getDoctrine()->getManager()->getRepository(User::class)->findAll();
