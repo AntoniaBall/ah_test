@@ -33,7 +33,7 @@ class newsletterCommand extends Command
     {
    
          
-        $listeUser = $this->em->getRepository(User::class)->findOneBy(['checkedNewsLetters' => true]);
+        $listeUser = $this->em->getRepository(User::class)->findBy(['checkedNewsLetters' => true]);
         //dd($listeUser);
         $nbMail = 0;
         
@@ -43,7 +43,7 @@ class newsletterCommand extends Command
 
             foreach($listeUser as $user){
                     $message = (new \Swift_Message('Compte activation'))
-                        ->setSubject('Nouveau offert disponible')
+                        ->setSubject('Nouveau offers disponible')
                         ->setFrom('anouar.deve@gmail.com')
                         ->setTo($user->getEmail())
                         ->setBody("<p>Bonjour,</p><p> Noueau offrs sont disponible sur notre site, cliquer sur le lien suivant pou en savoir plus <br><br>
